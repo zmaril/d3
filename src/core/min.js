@@ -12,3 +12,5 @@ d3.min = function(array, f) {
   }
   return a;
 };
+
+//Next: [core/max.js](/d3/src/core/max.html)

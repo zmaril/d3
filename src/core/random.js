@@ -13,3 +13,5 @@ d3.random = {
     };
   }
 };
+
+//Next: [core/number.js](/d3/src/core/number.html)

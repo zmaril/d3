@@ -19,3 +19,5 @@ d3.extent = function(array, f) {
   }
   return [a, c];
 };
+
+//Next: [core/random.js](/d3/src/core/random.html)

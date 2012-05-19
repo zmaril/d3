@@ -11,3 +11,5 @@ d3.zip = function() {
 function d3_zipLength(d) {
   return d.length;
 }
+
+//Next: [core/bisect.js](/d3/src/core/bisect.html)

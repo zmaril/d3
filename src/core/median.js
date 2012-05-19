@@ -3,3 +3,5 @@ d3.median = function(array, f) {
   array = array.filter(d3_number);
   return array.length ? d3.quantile(array.sort(d3.ascending), .5) : undefined;
 };
+
+//Next: [core/min.js](/d3/src/core/min.html)

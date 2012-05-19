@@ -12,3 +12,5 @@ d3.sum = function(array, f) {
 
   return s;
 };
+
+//Next: [core/quantile.js](/d3/src/core/quantile.html)

@@ -6,3 +6,5 @@ d3.quantile = function(values, p) {
       e = H - h;
   return e ? v + e * (values[h] - v) : v;
 };
+
+//Next: [core/transpose.js](/d3/src/core/transpose.html)
