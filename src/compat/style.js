@@ -25,3 +25,5 @@ try {
     d3_style_setProperty.call(this, name, value + "", priority);
   };
 }
+
+//Next: [core/core.js](/d3/src/core/core.html)
