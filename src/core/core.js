@@ -15,3 +15,5 @@
 //
 //Seriously, read [semver.org](http://semver.org). It does an excellent job of outlining what exactly mbostock has promised to provide and why he should (hint: fully public documentation of the API). 
 d3 = {version: "2.9.2"}; // semver
+
+//Next: [core/class.js](/d3/src/core/class.html)

@@ -95,3 +95,5 @@ d3_class(d3_Map, {
 //The code that prevents collisions from happening within the code. Used to prefix all of the keys when they are being inserted into the map. 
 var d3_map_prefix = "\0", // prevent collision with built-ins
     d3_map_prefixCode = d3_map_prefix.charCodeAt(0);
+
+//Next: [core/identity.js](/d3/src/core/identity.html)

@@ -33,3 +33,5 @@ function d3_rebind(target, source, method) {
     return arguments.length ? target : value;
   };
 }
+
+//Next: [core/ascending.js](/d3/src/core/ascending.html)

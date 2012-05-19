@@ -17,3 +17,5 @@ function d3_class(ctor, properties) {
     ctor.prototype = properties;
   }
 }
+
+//Next: [core/array.js](/d3/src/core/array.html)

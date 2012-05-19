@@ -34,3 +34,5 @@ function(array, prototype) {
 function(array, prototype) {
   for (var property in prototype) array[property] = prototype[property];
 };
+
+//Next: [core/map.js](/d3/src/core/map.html)
