@@ -39,3 +39,5 @@ d3_selectionPrototype.on = function(type, listener, capture) {
     }
   });
 };
+
+//Next: [core/selection-each.js](/d3/src/core/selection-each.html)
