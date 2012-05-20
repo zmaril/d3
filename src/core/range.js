@@ -22,3 +22,5 @@ function d3_range_integerScale(x) {
   while (x * k % 1) k *= 10;
   return k;
 }
+
+//Next: [core/requote.js](/d3/src/core/requote.html)

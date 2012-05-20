@@ -3,3 +3,5 @@ d3.json = function(url, callback) {
     callback(text ? JSON.parse(text) : null);
   });
 };
+
+//Next: [core/html.js](/d3/src/core/html.html)

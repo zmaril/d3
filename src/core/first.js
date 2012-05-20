@@ -11,3 +11,5 @@ d3.first = function(array, f) {
   }
   return a;
 };
+
+//Next: [core/last.js](/d3/src/core/last.html)

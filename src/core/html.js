@@ -8,3 +8,5 @@ d3.html = function(url, callback) {
     callback(text);
   });
 };
+
+//Next: [core/xml.js](/d3/src/core/xml.html)

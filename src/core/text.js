@@ -8,3 +8,5 @@ d3.text = function(url, mime, callback) {
   }
   d3.xhr(url, mime, ready);
 };
+
+//Next: [core/json.js](/d3/src/core/json.html)

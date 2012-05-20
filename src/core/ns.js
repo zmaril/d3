@@ -20,3 +20,5 @@ d3.ns = {
         : name;
   }
 };
+
+//Next: [core/dispatch.js](/d3/src/core/dispatch.html)

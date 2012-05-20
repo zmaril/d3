@@ -8,3 +8,5 @@ d3.xml = function(url, mime, callback) {
   }
   d3.xhr(url, mime, ready);
 };
+
+//Next: [core/ns.js](/d3/src/core/ns.html)

@@ -12,3 +12,5 @@ d3.xhr = function(url, mime, callback) {
   };
   req.send(null);
 };
+
+//Next: [core/text.js](/d3/src/core/text.html)

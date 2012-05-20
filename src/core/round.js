@@ -3,3 +3,5 @@ d3.round = function(x, n) {
       ? Math.round(x * (n = Math.pow(10, n))) / n
       : Math.round(x);
 };
+
+//Next: [core/xhr.js](/d3/src/core/xhr.html)

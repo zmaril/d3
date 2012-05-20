@@ -19,3 +19,5 @@ d3.split = function(array, f) {
 function d3_splitter(d) {
   return d == null;
 }
+
+//Next: [core/collapse.js](/d3/src/core/collapse.html)
