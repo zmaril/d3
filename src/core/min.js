@@ -1,3 +1,4 @@
+//Finds the minimum element of an array. 
 d3.min = function(array, f) {
   var i = -1,
       n = array.length,
