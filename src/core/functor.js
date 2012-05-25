@@ -18,4 +18,4 @@ function d3_functor(v) {
 //Include the functor into the d3 object. 
 d3.functor = d3_functor;
 
-//Next: [core/identity.js](/d3/src/core/rebind.html)
+//Next: [core/rebind.js](/d3/src/core/rebind.html)

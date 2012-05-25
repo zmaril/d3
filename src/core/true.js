@@ -4,4 +4,4 @@ function d3_true() {
   return true;
 }
 
-//Next: [core/identity.js](/d3/src/core/functor.html)
+//Next: [core/functor.js](/d3/src/core/functor.html)
