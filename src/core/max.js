@@ -1,3 +1,4 @@
+//Finds the maximum element of an array. If you pass it a function, it will apply the function first to all of the elements, and then find the minimum.
 d3.max = function(array, f) {
   var i = -1,
       n = array.length,
