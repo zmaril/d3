@@ -2,10 +2,6 @@
 // 
 //              d3.mean([1,2,3])== 2
 //              d3.mean([1,2,3],function(d,i){return d+i;})== 3
-
-
-
-
 //Calls a function on each element as well. 
 d3.mean = function(array, f) {
   var n = array.length,
