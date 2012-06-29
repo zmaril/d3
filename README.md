@@ -11,4 +11,4 @@ what exactly is happening under the hood. Let's go!
 
 # A single step
 
-Start [here](/d3/src/start.html).
+Start [here](/d3/src/start.html). Savor the code.
