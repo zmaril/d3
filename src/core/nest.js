@@ -1,3 +1,4 @@
+//d3.nest may be one of the most underappericated set of functions of d3. Take a look at the [API wiki for the overview of what nest and it's functions do](https://github.com/mbostock/d3/wiki/Arrays). What nest does is allow a developer to create a hierarchy for a flat set of objects. 
 d3.nest = function() {
   var nest = {},
       keys = [],
