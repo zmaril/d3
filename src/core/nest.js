@@ -19,7 +19,6 @@
 //             var BooksByAuthor = d3.nest()
 //                  .key(function(d){ return d.author})
 //                  .entries(books)
-//Test
 
 //Boolean function that tells whether or not the key is in the map. 
 // 
@@ -32,6 +31,9 @@
 //                 {title: "Harry Potter and the Order of the Phoenix", author: "J.K. Rowling"},
 //                 {title: "If I did it", author: "O.J. Simpson"}
 //              ] 
+//             var BooksByAuthor = d3.nest()
+//                  .key(function(d){ return d.author})
+//                  .entries(books)
 
 d3.nest = function() {
   var nest = {},
