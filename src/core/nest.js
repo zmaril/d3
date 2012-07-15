@@ -116,6 +116,9 @@ d3.nest = function() {
     return nest;
   };
 
+  //Sets the rollup function for the leaves. This is just a
+  //[fold/reduce](http://en.wikipedia.org/wiki/Reduce_(higher-order_function))
+  //that is used on the leaves once all the nesting is done.
   nest.rollup = function(f) {
     rollup = f;
     return nest;
