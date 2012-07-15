@@ -4,7 +4,8 @@
 //nest does is allow a developer to create a hierarchy for a flat set of
 //objects. So, if you have a big csv of items, you can start grouping
 //them by their characteristics. Here's an example of how to use d3.nest
-// 
+//
+//             d3.map({a:1}).get('a') == 1
 //             var books = [ 
 //                 {title: "Hackers & Painters", author: "Paul Graham"},
 //                 {title: "On Lisp", author: "Paul Graham"},
@@ -16,7 +17,7 @@
 //              var BooksByAuthor = d3.nest()
 //                  .key(function(d){ return d.author})
 //                  .entries(books)
-
+//Test
 
 d3.nest = function() {
   var nest = {},
