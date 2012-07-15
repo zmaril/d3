@@ -5,7 +5,8 @@
 //objects. So, if you have a big csv of items, you can start grouping
 //them by their characteristics. Here's an example of how to use d3.nest
 //
-//    var books = [ 
+// 
+//     var books = [ 
 //        {title: "Hackers & Painters", author: "Paul Graham"},
 //        {title: "On Lisp", author: "Paul Graham"},
 //        {title: "Harry Potter and the Philsopher's Stone", author: "J.K. Rowling"},
