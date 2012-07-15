@@ -4,6 +4,8 @@
 //nest does is allow a developer to create a hierarchy for a flat set of
 //objects. So, if you have a big csv of items, you can start grouping
 //them by their characteristics. Here's an example of how to use d3.nest
+
+//Boolean function that tells whether or not the key is in the map. 
 // 
 //             d3.map({a:1}).has('a') == true
 //             var books = [ 
