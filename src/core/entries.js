@@ -4,7 +4,7 @@
 //           
 // 
 //              var ob = {a:1, b:2, c:3}
-//              d3.entries(ob)// [{a:1}, {b:2}, {c:3}]
+//              d3.entries(ob)// [{key: "a", value:1},{key: "b", value:2},{key: "c", value:3}]
 
 d3.entries = function(map) {
   var entries = [];
