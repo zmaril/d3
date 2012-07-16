@@ -24,8 +24,8 @@ d3.split = function(array, f) {
   return arrays;
 };
 
-//Used as a default for d3.split. Probably want to replace this to be
-//more useful.
+//Used as a default for d3.split. You will probably want to replace
+//this to be more useful for your given problem.
 function d3_splitter(d) {
   return d == null;
 }
