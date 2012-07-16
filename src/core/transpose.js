@@ -2,7 +2,7 @@
 //[transpose operation](http://en.wikipedia.org/wiki/Transpose). To
 //understand what is going on, let's create a much longer example of how
 //to to create a transpose function.
-// 
+ 
 // We want to be able to turn:
 // 
 //              [[0,1,2,0],

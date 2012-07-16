@@ -1,5 +1,7 @@
 //A function which provides information about how to divide an array
-//into two parts. Let's look at a few simple examples first:
+//into two parts. 
+
+// Let's look at a few simple examples first:
 //                 d3.bisect([1,2,3,4],1) == 1
 //                 d3.bisect([1,2,3,4],3) == 3
 //                 d3.bisect([1,2,3,4],4) == 5

@@ -1,5 +1,6 @@
 //This function takes in a variable number of arrays and then "zips"
 //them up together. That means it takes the nth element from each array and puts all of them together in one array. 
+
 //Example:
 // 
 //                 d3.zip([1,2,3],[4,5,6],[9,10,11]) == [[1,4,9],[2,5,10],[3,6,11]]
