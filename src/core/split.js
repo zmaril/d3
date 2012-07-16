@@ -1,3 +1,11 @@
+//Splits an array based on a given function. It just goes through collecting values, waiting until f returns true, and then it pushs the collected values and starts a new collection. Note that it disgards the element that triggers the predicate function. 
+
+//Simple example: 
+// 
+//              var arr = [1,2,3,null,10]
+//              d3.split(arr) //[[1,2,3],[10]]
+//              d3.split(arr,function(n){return n==3;}) //[[1,2],[null,10]]
+
 d3.split = function(array, f) {
   var arrays = [],
       values = [],
@@ -16,6 +24,8 @@ d3.split = function(array, f) {
   return arrays;
 };
 
+//Used as a default for d3.split. Probably want to replace this to be
+//more useful.
 function d3_splitter(d) {
   return d == null;
 }
