@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › bisect.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>bisect.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>A function which provides information about how to divide an array
+into two parts. </p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Let's look at a few simple examples first:
+                d3.bisect([1,2,3,4],1) == 1
+                d3.bisect([1,2,3,4],3) == 3
+                d3.bisect([1,2,3,4],4) == 5
+                d3.bisect([1,2,3,4],0) == 0
+What's going on exactly? From some of the <a href="https://github.com/mbostock/d3/blob/6ba3097766e39ab68cb3d04e4c8b81b6f51a29c5/src/core/bisect.js">orgininal documentation</a>: 
+<code>Locate the insertion point for x in a to maintain sorted order. The
+arguments lo and hi may be used to specify a subset of the array which should
+be considered; by default the entire array is used. If x is already present
+in a, the insertion point will be before (to the left of) any existing
+entries. The return value is suitable for use as the first argument to
+`array.splice` assuming that a is already sorted.</code>
+TODO: FINISH explaining this</p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">bisector</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">left</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">lo</span><span class="p">,</span> <span class="nx">hi</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="nx">lo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="nx">hi</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="nx">lo</span> <span class="o">&lt;</span> <span class="nx">hi</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">mid</span> <span class="o">=</span> <span class="nx">lo</span> <span class="o">+</span> <span class="nx">hi</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">a</span><span class="p">[</span><span class="nx">mid</span><span class="p">],</span> <span class="nx">mid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">)</span> <span class="nx">lo</span> <span class="o">=</span> <span class="nx">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">else</span> <span class="nx">hi</span> <span class="o">=</span> <span class="nx">mid</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">lo</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">right</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">lo</span><span class="p">,</span> <span class="nx">hi</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="nx">lo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="nx">hi</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="nx">lo</span> <span class="o">&lt;</span> <span class="nx">hi</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">mid</span> <span class="o">=</span> <span class="nx">lo</span> <span class="o">+</span> <span class="nx">hi</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">f</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">a</span><span class="p">[</span><span class="nx">mid</span><span class="p">],</span> <span class="nx">mid</span><span class="p">))</span> <span class="nx">hi</span> <span class="o">=</span> <span class="nx">mid</span><span class="p">;</span>
+        <span class="k">else</span> <span class="nx">lo</span> <span class="o">=</span> <span class="nx">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">lo</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">d3_bisector</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">bisector</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">;</span> <span class="p">});</span>
+<span class="nx">d3</span><span class="p">.</span><span class="nx">bisectLeft</span> <span class="o">=</span> <span class="nx">d3_bisector</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
+<span class="nx">d3</span><span class="p">.</span><span class="nx">bisect</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">bisectRight</span> <span class="o">=</span> <span class="nx">d3_bisector</span><span class="p">.</span><span class="nx">right</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Next: <a href="/d3/src/core/first.html">core/first.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

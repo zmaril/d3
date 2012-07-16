@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › nest.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>nest.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>d3.nest may be one of the most underappericated set of functions of
+d3. Take a look at the <a href="https://github.com/mbostock/d3/wiki/Arrays">API wiki for the overview of what nest and
+it's functions do</a>. What
+nest does is allow a developer to create a hierarchy for a flat set of
+objects. For example, if you have a big csv of items, you can start grouping
+them by their characteristics. </p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Here's an example of how to use d3.nest.</p>
+
+<pre><code>        var books = [ 
+            {title: "Hackers &amp; Painters", author: "Paul Graham"},
+            {title: "On Lisp", author: "Paul Graham"},
+            {title: "Harry Potter and the Philsopher's Stone", author: "J.K. Rowling"},
+            {title: "Harry Potter and the Chamber of Secrets", author: "J.K. Rowling"},
+            {title: "Harry Potter and the Order of the Phoenix", author: "J.K. Rowling"},
+            {title: "If I did it", author: "O.J. Simpson"}
+         ] 
+        var BooksByAuthor = d3.nest()
+             .key(function(d){ return d.author})
+             .map(books)
+        BooksByAuthor["Paul Graham"].length == 2
+</code></pre></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>This sets up the nest function to use several closed over variables
+to do all of the calculations. When you can <code>nest().key</code>, you are
+pushing functions onto a stack that will later determine the structure of the object returned. </p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">nest</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">nest</span> <span class="o">=</span> <span class="p">{},</span>
+      <span class="nx">keys</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">sortKeys</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">sortValues</span><span class="p">,</span>
+      <span class="nx">rollup</span><span class="p">;</span>
+    </pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>An internal method that allows for nesting at any depth within the
+object. Uses <a href="./d3/src/core/map.html">d3.map</a> to create an associative
+array of key and object pairs. Selects the key for the current
+depth, grabs all of the needed objects from the given array, and
+then puts them in the right places. </p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">map</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">&gt;=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">rollup</span>
+        <span class="o">?</span> <span class="nx">rollup</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">nest</span><span class="p">,</span> <span class="nx">array</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="nx">sortValues</span>
+        <span class="o">?</span> <span class="nx">array</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="nx">sortValues</span><span class="p">)</span>
+        <span class="o">:</span> <span class="nx">array</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">key</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">[</span><span class="nx">depth</span><span class="o">++</span><span class="p">],</span>
+        <span class="nx">keyValue</span><span class="p">,</span>
+        <span class="nx">object</span><span class="p">,</span>
+        <span class="nx">valuesByKey</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">d3_Map</span><span class="p">,</span>
+        <span class="nx">values</span><span class="p">,</span>
+        <span class="nx">o</span> <span class="o">=</span> <span class="p">{};</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">values</span> <span class="o">=</span> <span class="nx">valuesByKey</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">keyValue</span> <span class="o">=</span> <span class="nx">key</span><span class="p">(</span><span class="nx">object</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">])))</span> <span class="p">{</span>
+        <span class="nx">values</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">valuesByKey</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">keyValue</span><span class="p">,</span> <span class="p">[</span><span class="nx">object</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">valuesByKey</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">keyValue</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">o</span><span class="p">[</span><span class="nx">keyValue</span><span class="p">]</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">valuesByKey</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">keyValue</span><span class="p">),</span> <span class="nx">depth</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">o</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Takes in a d3.map, and gets all of the entries out of it for the current depth. This means
+<code>{a:1 b:2}-&gt; [{key: "a", value: 1},{key:"b", value:2}]</code>. If a sortKey
+function was given as part of the d3.nest setup, then the sortKey function will be applied. </p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">entries</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">&gt;=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">map</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">sortKey</span> <span class="o">=</span> <span class="nx">sortKeys</span><span class="p">[</span><span class="nx">depth</span><span class="o">++</span><span class="p">],</span>
+        <span class="nx">key</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nx">key</span> <span class="k">in</span> <span class="nx">map</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">a</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">key</span><span class="o">:</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">values</span><span class="o">:</span> <span class="nx">entries</span><span class="p">(</span><span class="nx">map</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">depth</span><span class="p">)});</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">sortKey</span><span class="p">)</span> <span class="nx">a</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">sortKey</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">key</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">a</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Uses the previously defined map function to create an object that nests according to the given keys. </p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nest</span><span class="p">.</span><span class="nx">map</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">map</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>Uses the <code>map</code> and <code>entries</code> functions to create an array of key value pairs. </p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nest</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">entries</span><span class="p">(</span><span class="nx">map</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>Pushes a key onto the keys stack. </p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nest</span><span class="p">.</span><span class="nx">key</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">keys</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">nest</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>Specifies the order for the most-recently specified key.
+Note: only applies to entries. Map keys are unordered!</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nest</span><span class="p">.</span><span class="nx">sortKeys</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">order</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">sortKeys</span><span class="p">[</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">order</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">nest</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-10"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-10">&#182;</a></div><p>Specifies the order for leaf values.
+Applies to both maps and entries array.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nest</span><span class="p">.</span><span class="nx">sortValues</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">order</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">sortValues</span> <span class="o">=</span> <span class="nx">order</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">nest</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-11"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-11">&#182;</a></div><p>Sets the rollup function for the leaves. This is just a
+<a href="http://en.wikipedia.org/wiki/Reduce_(higher-order_function)">fold/reduce</a>
+that is used on the leaves once all the nesting is done.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nest</span><span class="p">.</span><span class="nx">rollup</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">rollup</span> <span class="o">=</span> <span class="nx">f</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">nest</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">nest</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p>Next: <a href="/d3/src/core/keys.html">core/keys.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

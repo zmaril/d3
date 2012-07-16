@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › layout › treemap.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>treemap.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Squarified Treemaps by Mark Bruls, Kees Huizing, and Jarke J. van Wijk
+Modified to support a target aspect ratio by Jeff Heer</p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">treemap</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">hierarchy</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">hierarchy</span><span class="p">(),</span>
+      <span class="nx">round</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">,</span>
+      <span class="nx">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="c1">// width, height</span>
+      <span class="nx">padding</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nx">pad</span> <span class="o">=</span> <span class="nx">d3_layout_treemapPadNull</span><span class="p">,</span>
+      <span class="nx">sticky</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nx">stickies</span><span class="p">,</span>
+      <span class="nx">ratio</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span> <span class="c1">// golden ratio</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Compute the area for each child based on value &amp; scale.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">scale</span><span class="p">(</span><span class="nx">children</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">child</span><span class="p">,</span>
+        <span class="nx">area</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">area</span> <span class="o">=</span> <span class="p">(</span><span class="nx">child</span> <span class="o">=</span> <span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">]).</span><span class="nx">value</span> <span class="o">*</span> <span class="p">(</span><span class="nx">k</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nx">k</span><span class="p">);</span>
+      <span class="nx">child</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">area</span><span class="p">)</span> <span class="o">||</span> <span class="nx">area</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nx">area</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Recursively arranges the specified node's children into squarified rows.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">squarify</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">rect</span> <span class="o">=</span> <span class="nx">pad</span><span class="p">(</span><span class="nx">node</span><span class="p">),</span>
+          <span class="nx">row</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">remaining</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">slice</span><span class="p">(),</span> <span class="c1">// copy-on-write</span>
+          <span class="nx">child</span><span class="p">,</span>
+          <span class="nx">best</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">,</span> <span class="c1">// the best row score so far</span>
+          <span class="nx">score</span><span class="p">,</span> <span class="c1">// the current row score</span>
+          <span class="nx">u</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span><span class="p">,</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span><span class="p">),</span> <span class="c1">// initial orientation</span>
+          <span class="nx">n</span><span class="p">;</span>
+      <span class="nx">scale</span><span class="p">(</span><span class="nx">remaining</span><span class="p">,</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span> <span class="o">*</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span> <span class="o">/</span> <span class="nx">node</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">((</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">remaining</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">row</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">child</span> <span class="o">=</span> <span class="nx">remaining</span><span class="p">[</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+        <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">+=</span> <span class="nx">child</span><span class="p">.</span><span class="nx">area</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nx">score</span> <span class="o">=</span> <span class="nx">worst</span><span class="p">(</span><span class="nx">row</span><span class="p">,</span> <span class="nx">u</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="nx">best</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// continue with this orientation</span>
+          <span class="nx">remaining</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+          <span class="nx">best</span> <span class="o">=</span> <span class="nx">score</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// abort, and try a different orientation</span>
+          <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">-=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">pop</span><span class="p">().</span><span class="nx">area</span><span class="p">;</span>
+          <span class="nx">position</span><span class="p">(</span><span class="nx">row</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">rect</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+          <span class="nx">u</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span><span class="p">,</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span><span class="p">);</span>
+          <span class="nx">row</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="nx">best</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">row</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">position</span><span class="p">(</span><span class="nx">row</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">rect</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="nx">row</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">children</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">squarify</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Recursively resizes the specified node's children into existing rows.
+Preserves the existing layout!</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">stickify</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">rect</span> <span class="o">=</span> <span class="nx">pad</span><span class="p">(</span><span class="nx">node</span><span class="p">),</span>
+          <span class="nx">remaining</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">slice</span><span class="p">(),</span> <span class="c1">// copy-on-write</span>
+          <span class="nx">child</span><span class="p">,</span>
+          <span class="nx">row</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">scale</span><span class="p">(</span><span class="nx">remaining</span><span class="p">,</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span> <span class="o">*</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span> <span class="o">/</span> <span class="nx">node</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="nx">child</span> <span class="o">=</span> <span class="nx">remaining</span><span class="p">.</span><span class="nx">pop</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nx">row</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">child</span><span class="p">);</span>
+        <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">+=</span> <span class="nx">child</span><span class="p">.</span><span class="nx">area</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">child</span><span class="p">.</span><span class="nx">z</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">position</span><span class="p">(</span><span class="nx">row</span><span class="p">,</span> <span class="nx">child</span><span class="p">.</span><span class="nx">z</span> <span class="o">?</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span> <span class="o">:</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span><span class="p">,</span> <span class="nx">rect</span><span class="p">,</span> <span class="o">!</span><span class="nx">remaining</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+          <span class="nx">row</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">children</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">stickify</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Computes the score for the specified row, as the worst aspect ratio.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">worst</span><span class="p">(</span><span class="nx">row</span><span class="p">,</span> <span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">area</span><span class="p">,</span>
+        <span class="nx">r</span><span class="p">,</span>
+        <span class="nx">rmax</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">rmin</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">r</span> <span class="o">=</span> <span class="nx">row</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">area</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span> <span class="o">&lt;</span> <span class="nx">rmin</span><span class="p">)</span> <span class="nx">rmin</span> <span class="o">=</span> <span class="nx">r</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span> <span class="o">&gt;</span> <span class="nx">rmax</span><span class="p">)</span> <span class="nx">rmax</span> <span class="o">=</span> <span class="nx">r</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">s</span> <span class="o">*=</span> <span class="nx">s</span><span class="p">;</span>
+    <span class="nx">u</span> <span class="o">*=</span> <span class="nx">u</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">s</span>
+        <span class="o">?</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">((</span><span class="nx">u</span> <span class="o">*</span> <span class="nx">rmax</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">)</span> <span class="o">/</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">s</span> <span class="o">/</span> <span class="p">(</span><span class="nx">u</span> <span class="o">*</span> <span class="nx">rmin</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">))</span>
+        <span class="o">:</span> <span class="kc">Infinity</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Positions the specified row of nodes. Modifies <code>rect</code>.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">position</span><span class="p">(</span><span class="nx">row</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">rect</span><span class="p">,</span> <span class="nx">flush</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">row</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+        <span class="nx">y</span> <span class="o">=</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+        <span class="nx">v</span> <span class="o">=</span> <span class="nx">u</span> <span class="o">?</span> <span class="nx">round</span><span class="p">(</span><span class="nx">row</span><span class="p">.</span><span class="nx">area</span> <span class="o">/</span> <span class="nx">u</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">o</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">==</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// horizontal subdivision</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">flush</span> <span class="o">||</span> <span class="nx">v</span> <span class="o">&gt;</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span><span class="p">)</span> <span class="nx">v</span> <span class="o">=</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span><span class="p">;</span> <span class="c1">// over+underflow</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">o</span> <span class="o">=</span> <span class="nx">row</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">o</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+        <span class="nx">o</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+        <span class="nx">o</span><span class="p">.</span><span class="nx">dy</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
+        <span class="nx">x</span> <span class="o">+=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">dx</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">rect</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span> <span class="o">-</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">v</span> <span class="o">?</span> <span class="nx">round</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">area</span> <span class="o">/</span> <span class="nx">v</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">dx</span> <span class="o">+=</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span> <span class="o">-</span> <span class="nx">x</span><span class="p">;</span> <span class="c1">// rounding error</span>
+      <span class="nx">rect</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="nx">v</span><span class="p">;</span>
+      <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span> <span class="o">-=</span> <span class="nx">v</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// vertical subdivision</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">flush</span> <span class="o">||</span> <span class="nx">v</span> <span class="o">&gt;</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span><span class="p">)</span> <span class="nx">v</span> <span class="o">=</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span><span class="p">;</span> <span class="c1">// over+underflow</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">o</span> <span class="o">=</span> <span class="nx">row</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">o</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+        <span class="nx">o</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+        <span class="nx">o</span><span class="p">.</span><span class="nx">dx</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
+        <span class="nx">y</span> <span class="o">+=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">dy</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">rect</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span> <span class="o">-</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">v</span> <span class="o">?</span> <span class="nx">round</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">area</span> <span class="o">/</span> <span class="nx">v</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">dy</span> <span class="o">+=</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">rect</span><span class="p">.</span><span class="nx">dy</span> <span class="o">-</span> <span class="nx">y</span><span class="p">;</span> <span class="c1">// rounding error</span>
+      <span class="nx">rect</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="nx">v</span><span class="p">;</span>
+      <span class="nx">rect</span><span class="p">.</span><span class="nx">dx</span> <span class="o">-=</span> <span class="nx">v</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">treemap</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nx">stickies</span> <span class="o">||</span> <span class="nx">hierarchy</span><span class="p">(</span><span class="nx">d</span><span class="p">),</span>
+        <span class="nx">root</span> <span class="o">=</span> <span class="nx">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">dx</span> <span class="o">=</span> <span class="nx">size</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">dy</span> <span class="o">=</span> <span class="nx">size</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">stickies</span><span class="p">)</span> <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">revalue</span><span class="p">(</span><span class="nx">root</span><span class="p">);</span>
+    <span class="nx">scale</span><span class="p">([</span><span class="nx">root</span><span class="p">],</span> <span class="nx">root</span><span class="p">.</span><span class="nx">dx</span> <span class="o">*</span> <span class="nx">root</span><span class="p">.</span><span class="nx">dy</span> <span class="o">/</span> <span class="nx">root</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+    <span class="p">(</span><span class="nx">stickies</span> <span class="o">?</span> <span class="nx">stickify</span> <span class="o">:</span> <span class="nx">squarify</span><span class="p">)(</span><span class="nx">root</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">sticky</span><span class="p">)</span> <span class="nx">stickies</span> <span class="o">=</span> <span class="nx">nodes</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">nodes</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">treemap</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">size</span><span class="p">;</span>
+    <span class="nx">size</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">treemap</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">treemap</span><span class="p">.</span><span class="nx">padding</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">padding</span><span class="p">;</span>
+
+    <span class="kd">function</span> <span class="nx">padFunction</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">treemap</span><span class="p">,</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">node</span><span class="p">.</span><span class="nx">depth</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">p</span> <span class="o">==</span> <span class="kc">null</span>
+          <span class="o">?</span> <span class="nx">d3_layout_treemapPadNull</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span>
+          <span class="o">:</span> <span class="nx">d3_layout_treemapPad</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="k">typeof</span> <span class="nx">p</span> <span class="o">===</span> <span class="s2">&quot;number&quot;</span> <span class="o">?</span> <span class="p">[</span><span class="nx">p</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">p</span><span class="p">]</span> <span class="o">:</span> <span class="nx">p</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">padConstant</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3_layout_treemapPad</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">x</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">type</span><span class="p">;</span>
+    <span class="nx">pad</span> <span class="o">=</span> <span class="p">(</span><span class="nx">padding</span> <span class="o">=</span> <span class="nx">x</span><span class="p">)</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">d3_layout_treemapPadNull</span>
+        <span class="o">:</span> <span class="p">(</span><span class="nx">type</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">x</span><span class="p">)</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">?</span> <span class="nx">padFunction</span>
+        <span class="o">:</span> <span class="nx">type</span> <span class="o">===</span> <span class="s2">&quot;number&quot;</span> <span class="o">?</span> <span class="p">(</span><span class="nx">x</span> <span class="o">=</span> <span class="p">[</span><span class="nx">x</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">x</span><span class="p">],</span> <span class="nx">padConstant</span><span class="p">)</span>
+        <span class="o">:</span> <span class="nx">padConstant</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">treemap</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">treemap</span><span class="p">.</span><span class="nx">round</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">round</span> <span class="o">!=</span> <span class="nb">Number</span><span class="p">;</span>
+    <span class="nx">round</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">?</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span> <span class="o">:</span> <span class="nb">Number</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">treemap</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">treemap</span><span class="p">.</span><span class="nx">sticky</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sticky</span><span class="p">;</span>
+    <span class="nx">sticky</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">stickies</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">treemap</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">treemap</span><span class="p">.</span><span class="nx">ratio</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">ratio</span><span class="p">;</span>
+    <span class="nx">ratio</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">treemap</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">d3_layout_hierarchyRebind</span><span class="p">(</span><span class="nx">treemap</span><span class="p">,</span> <span class="nx">hierarchy</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treemapPadNull</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="nx">dx</span><span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">dx</span><span class="p">,</span> <span class="nx">dy</span><span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">dy</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treemapPad</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">padding</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">padding</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+      <span class="nx">y</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">dx</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">dx</span> <span class="o">-</span> <span class="nx">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">padding</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+      <span class="nx">dy</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">dy</span> <span class="o">-</span> <span class="nx">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">padding</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">dx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="nx">x</span> <span class="o">+=</span> <span class="nx">dx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">dx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">dy</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="nx">y</span> <span class="o">+=</span> <span class="nx">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">dy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">dx</span><span class="o">:</span> <span class="nx">dx</span><span class="p">,</span> <span class="nx">dy</span><span class="o">:</span> <span class="nx">dy</span><span class="p">};</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

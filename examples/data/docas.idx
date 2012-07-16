@@ -1,0 +1,17 @@
+f | us-state-centroids.json | g | 7.7K |  | Mike Bostock | mbostock@gmail.com | 1317150820 |  | Cleanup us-state-centroids.json.  There was trailing whitespace in the state names.
+f | sample.csv | g | 26B |  | Mike Bostock | mbostock@gmail.com | 1313558895 |  | Add tests for xhr and friends.
+f | stocks.csv | g | 17K |  | Mike Bostock | mbostock@gmail.com | 1313787767 |  | Add example data.
+f | unemployment.csv | g | 41K |  | Mike Bostock | mbostock@gmail.com | 1313787767 |  | Add example data.
+f | README.md | s | 825B | 9 | Mike Bostock | mbostock@gmail.com | 1317149982 |  | Better world-countries.json.  This was generated using the Natural Earth data set, which has nicer simplification than my previous approach using MapShaper. Also, this includes some updated boundaries, such as the split between Sudan and South Sudan. And, counties now have ISO 3166-1 alpha-3 codes.
+f | faithful.json | g | 1.1K |  | Jason Davies | jason@jasondavies.com | 1309980588 |  | Move data files and delete symlinks.
+f | us-borders.json | g | 1.4K |  | Jason Davies | jason@jasondavies.com | 1310158531 |  | Initial version of Dorling cartogram example.  This version uses variable-length links, but I think collision detection performed after initial positioning at state centroids would look better.
+f | morley.csv | g | 874B |  | Jason Davies | jason@jasondavies.com | 1309980588 |  | Move data files and delete symlinks.
+f | us-counties.json | g | 880K |  | Mike Bostock | mbostock@gmail.com | 1309649472 |  | Move data files into examples directory.  This way, we don't need symlinks (which don't work on Windows). This commit also simplifies the structure of the flare.json file, so that we don't need to tricky conversion of the JSON map—it can be read directly by the hierarchy layout.
+f | sample.txt | g | 14B |  | Mike Bostock | mbostock@gmail.com | 1313558895 |  | Add tests for xhr and friends.
+f | sample.html | g | 72B |  | Mike Bostock | mbostock@gmail.com | 1313558895 |  | Add tests for xhr and friends.
+f | flare.json | g | 11K |  | Mike Bostock | mbostock@gmail.com | 1309649472 |  | Move data files into examples directory.  This way, we don't need symlinks (which don't work on Windows). This commit also simplifies the structure of the flare.json file, so that we don't need to tricky conversion of the JSON map—it can be read directly by the hierarchy layout.
+f | us-states.json | g | 86K |  | Mike Bostock | mbostock@gmail.com | 1318872477 |  | Add state names.
+f | sample.xml | g | 81B |  | Mike Bostock | mbostock@gmail.com | 1313558895 |  | Add tests for xhr and friends.
+f | sample.json | g | 34B |  | Mike Bostock | mbostock@gmail.com | 1313558895 |  | Add tests for xhr and friends.
+f | flare-imports.json | g | 33K |  | Mike Bostock | mbostock@gmail.com | 1309797692 |  | Move flare-imports.json to the data folder.
+f | world-countries.json | g | 246K |  | Mike Bostock | mbostock@gmail.com | 1317150383 |  | Use administrative name rather than sovereignty.

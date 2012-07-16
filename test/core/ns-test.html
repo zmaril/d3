@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › core › ns-test.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>ns-test.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../env&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;vows&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">suite</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;ns&quot;</span><span class="p">);</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s2">&quot;prefix&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">prefix</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;svg is http://www.w3.org/2000/svg&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">prefix</span><span class="p">.</span><span class="nx">svg</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;xhtml is http://www.w3.org/1999/xhtml&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">prefix</span><span class="p">.</span><span class="nx">xhtml</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/1999/xhtml&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;xlink is http://www.w3.org/1999/xlink&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">prefix</span><span class="p">.</span><span class="nx">xlink</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/1999/xlink&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;xml is http://www.w3.org/XML/1998/namespace&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">prefix</span><span class="p">.</span><span class="nx">xml</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/XML/1998/namespace&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;xmlns is http://www.w3.org/2000/xmlns/&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">prefix</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">prefix</span><span class="p">.</span><span class="nx">xmlns</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/2000/xmlns/&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s2">&quot;qualify&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">qualify</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;local name returns name&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">qualify</span><span class="p">(</span><span class="s2">&quot;local&quot;</span><span class="p">),</span> <span class="s2">&quot;local&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;known qualified name returns space and local&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">qualify</span><span class="p">(</span><span class="s2">&quot;svg:path&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">space</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">local</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;unknown qualified name returns name&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">qualify</span><span class="p">(</span><span class="s2">&quot;foo:bar&quot;</span><span class="p">),</span> <span class="s2">&quot;bar&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;known local name returns space and local&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">qualify</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">space</span><span class="p">,</span> <span class="s2">&quot;http://www.w3.org/2000/svg&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">local</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;names that collide with built-ins are ignored&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">qualify</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">qualify</span><span class="p">(</span><span class="s2">&quot;hasOwnProperty:test&quot;</span><span class="p">),</span> <span class="s2">&quot;test&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="nx">module</span><span class="p">);</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

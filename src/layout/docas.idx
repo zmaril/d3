@@ -1,0 +1,13 @@
+f | force.js | s | 8.3K | 310 | Mike Bostock | mbostock@gmail.com | 1332196995 |  | Better implementation of defined.  The previous implementation had a bug where the original index (i) was not preserved if the input data array were split. The new implementation eschews the previous approach of branching based on whether the x- and y-properties are defined as functions or constants, opting for the simpler functor approach. The x- and y-values are also coerced to numbers, as appropriate.
+f | stack.js | s | 5.2K | 208 | Mike Bostock | mbostock@gmail.com | 1331943452 |  | Use d3_identity instead of Object.
+f | cluster.js | s | 2.2K | 67 | Jason Davies | jason@jasondavies.com | 1328746859 |  | Fix typo in comment: "dendogram" -> "dendrogram".
+f | layout.js | s | 16B | 1 | Michael Bostock | mbostock@gmail.com | 1294256139 |  | Turn off the compiler's "advanced" optimizations.  The renaming of attributes is totally not worth the hassle of maintaining an externs file (or using the awkward `foo["bar"]` syntax). The file size reduction from the advanced optimizations was negligible, besides!
+f | tree.js | s | 6.5K | 213 | Mike Bostock | mbostock@gmail.com | 1317358402 |  | Fix a bug with empty children arrays.
+f | bundle.js | s | 1.5K | 54 | Mike Bostock | mbostock@gmail.com | 1308850839 |  | Update comments for clarity.
+f | pie.js | s | 2.7K | 82 | Jason Davies | jason@jasondavies.com | 1336744188 |  | Fix dangling global in d3.layout.pie.
+f | chord.js | s | 3.4K | 135 | Mike Bostock | mbostock@gmail.com | 1332952998 |  | Fix #434: chord groups returned in wrong order.
+f | treemap.js | s | 6.0K | 200 | Jason Davies | jason@jasondavies.com | 1327513005 |  | Fix treemap overlap problem.  See #136.
+f | partition.js | s | 1.1K | 43 | Mike Bostock | mbostock@gmail.com | 1317358402 |  | Fix a bug with empty children arrays.
+f | histogram.js | s | 3.3K | 92 | Mike Bostock | mbostock@gmail.com | 1333084031 |  | More efficient degenerate bin check.
+f | pack.js | s | 4.5K | 168 | Mike Bostock | mbostock@gmail.com | 1326834139 |  | Fix a bug in circle-packing layout.  There's an edge condition which is not discussed in the original algorithm ("Visualization of Large Hierarchical Data by Circle Packing", Wang et. al): what happens if the first intersecting circle C_j is equidistant from C_m and C_n? In other words, it is both after C_n on the front-chain, and before C_m. The correct answer is that you should splice the smaller of the two circles. If C_m is smaller than C_n, then splice from C_j to C_n and set C_m to C_j; otherwise, splice from C_m to C_j, and set C_n to C_j.
+f | hierarchy.js | s | 3.0K | 104 | Jason Davies | jason@jasondavies.com | 1336726272 |  | Fix dangling global in d3.layout.hierarchy.

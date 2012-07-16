@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » examples › sort › sort.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>sort.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Based on http://vis.stanford.edu/protovis/ex/sort.html
+Based on work by Robert Sedgewick</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">960</span><span class="p">,</span>
+    <span class="nx">height</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">n</span> <span class="o">=</span> <span class="mi">240</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">n</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="nx">height</span><span class="p">,</span> <span class="nx">width</span> <span class="o">-</span> <span class="nx">height</span><span class="p">]);</span>
+
+<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="mi">90</span> <span class="o">+</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">270</span> <span class="o">-</span> <span class="mi">60</span><span class="p">]);</span>
+
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">shuffle</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">n</span><span class="p">)),</span>
+    <span class="nx">duration</span> <span class="o">=</span> <span class="mi">250</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#chart&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">line</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;line&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;line&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">transform</span><span class="p">);</span>
+
+<span class="nx">start</span><span class="p">();</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Start the animation!</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">start</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">passes</span> <span class="o">=</span> <span class="nx">mergesort</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">reverse</span><span class="p">();</span>
+
+  <span class="nx">update</span><span class="p">();</span>
+
+  <span class="kd">function</span> <span class="nx">update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">pass</span> <span class="o">=</span> <span class="nx">passes</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+
+    <span class="nx">line</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">pass</span><span class="p">,</span> <span class="nb">Number</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">transform</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">passes</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">update</span><span class="p">,</span> <span class="nx">duration</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">shuffle</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">duration</span> <span class="o">+</span> <span class="mi">4000</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">transform</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="nx">x</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">height</span> <span class="o">+</span> <span class="s2">&quot;)rotate(&quot;</span> <span class="o">+</span> <span class="nx">a</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Fisher-Yates shuffle</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">shuffle</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">j</span><span class="p">,</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">j</span> <span class="o">=</span> <span class="o">~~</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+    <span class="nx">array</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">array</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Sorts the specified array using bottom-up mergesort, returning an array of
+arrays representing the state of the specified array after each insertion for
+each parallel pass. The first pass is performed at size = 2.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">mergesort</span><span class="p">(</span><span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">passes</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">i</span><span class="p">,</span>
+      <span class="nx">j</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">m</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>double the size each pass</p></td><td class="code"><div class="highlight"><pre>  <span class="k">while</span> <span class="p">(</span><span class="nx">m</span> <span class="o">&lt;</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="nx">j</span> <span class="o">+=</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">i</span> <span class="o">+=</span> <span class="nx">m</span><span class="p">,</span> <span class="nx">i</span> <span class="o">+=</span> <span class="nx">m</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">j</span><span class="p">)</span> <span class="nx">passes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">array</span><span class="p">.</span><span class="nx">slice</span><span class="p">());</span>
+    <span class="k">else</span> <span class="nx">m</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Merges two adjacent sorted arrays in-place.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">middle</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">middle</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">middle</span><span class="p">);</span>
+    <span class="nx">end</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="nx">start</span> <span class="o">&lt;</span> <span class="nx">middle</span><span class="p">;</span> <span class="nx">start</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">array</span><span class="p">[</span><span class="nx">start</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">array</span><span class="p">[</span><span class="nx">middle</span><span class="p">])</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">v</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">start</span><span class="p">];</span>
+        <span class="nx">array</span><span class="p">[</span><span class="nx">start</span><span class="p">]</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">middle</span><span class="p">];</span>
+        <span class="nx">insert</span><span class="p">(</span><span class="nx">middle</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">v</span><span class="p">);</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>Inserts the value v into the subarray specified by start and end.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">insert</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">start</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">end</span> <span class="o">&amp;&amp;</span> <span class="nx">array</span><span class="p">[</span><span class="nx">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">start</span><span class="p">];</span>
+      <span class="nx">array</span><span class="p">[</span><span class="nx">start</span><span class="p">]</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+      <span class="nx">array</span><span class="p">[</span><span class="nx">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">tmp</span><span class="p">;</span>
+      <span class="nx">start</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">array</span><span class="p">[</span><span class="nx">start</span><span class="p">]</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">passes</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

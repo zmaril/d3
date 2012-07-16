@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › core › transition-test-each.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>transition-test-each.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../env&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;start&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">,</span>
+          <span class="nx">div</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">).</span><span class="nx">selectAll</span><span class="p">().</span><span class="nx">data</span><span class="p">([</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">]).</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="nb">String</span><span class="p">),</span>
+          <span class="nx">transition</span> <span class="o">=</span> <span class="nx">div</span><span class="p">.</span><span class="nx">transition</span><span class="p">().</span><span class="nx">delay</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span>
+          <span class="nx">then</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+          <span class="nx">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">calls</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">context</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">data</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">index</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">count</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">delay</span> <span class="o">=</span> <span class="p">[];</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>A callback to verify that multiple callbacks are allowed.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">transition</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="s2">&quot;start.other&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="o">++</span><span class="nx">n</span><span class="p">;</span>
+      <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>A callback which captures arguments and context.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">transition</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">context</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="nx">data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+        <span class="nx">index</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">count</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="o">++</span><span class="nx">n</span><span class="p">);</span>
+        <span class="nx">delay</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">then</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">selection</span><span class="o">:</span> <span class="nx">div</span><span class="p">,</span>
+          <span class="nx">delay</span><span class="o">:</span> <span class="nx">delay</span><span class="p">,</span>
+          <span class="nx">context</span><span class="o">:</span> <span class="nx">context</span><span class="p">,</span>
+          <span class="nx">data</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+          <span class="nx">index</span><span class="o">:</span> <span class="nx">index</span><span class="p">,</span>
+          <span class="nx">count</span><span class="o">:</span> <span class="nx">count</span><span class="p">,</span>
+          <span class="nx">id</span><span class="o">:</span> <span class="nx">transition</span><span class="p">.</span><span class="nx">id</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;invokes the listener after the specified delay&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">inDelta</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">delay</span><span class="p">,</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;invokes each listener exactly once, in order&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]);</span>
+    <span class="p">},</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>For the same node, listeners will be called back in order, according to
+the implementation of d3.dispatch. However, the order of callbacks across
+nodes is not guaranteed; currently, callbacks are in reverse order if
+they share the same delay, because of the timer queue. I suppose it'd be
+slightly better if the callbacks were invoked in node order (consistent
+with selections), but since these callbacks happen asynchronously I don't
+think the API needs to guarantee the order of callbacks.</p></td><td class="code"><div class="highlight"><pre>    <span class="s2">&quot;uses the node as the context&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">context</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">context</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;passes the data and index to the function&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">],</span> <span class="s2">&quot;expected data, got {actual}&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">index</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;expected index, got {actual}&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;sets an exclusive lock on transitioning nodes&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">__transition__</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">].</span><span class="nx">__transition__</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">__transition__</span><span class="p">.</span><span class="nx">active</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">].</span><span class="nx">__transition__</span><span class="p">.</span><span class="nx">active</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s2">&quot;end&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">,</span>
+          <span class="nx">div</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">).</span><span class="nx">selectAll</span><span class="p">().</span><span class="nx">data</span><span class="p">([</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">]).</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="nb">String</span><span class="p">),</span>
+          <span class="nx">transition</span> <span class="o">=</span> <span class="nx">div</span><span class="p">.</span><span class="nx">transition</span><span class="p">().</span><span class="nx">duration</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span>
+          <span class="nx">then</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+          <span class="nx">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">calls</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">context</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">data</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">index</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">count</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">delay</span> <span class="o">=</span> <span class="p">[];</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>A callback to verify that multiple callbacks are allowed.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">transition</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="s2">&quot;end.other&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="o">++</span><span class="nx">n</span><span class="p">;</span>
+      <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>A callback which captures arguments and context.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">transition</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">context</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="nx">data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+        <span class="nx">index</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+        <span class="nx">count</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="o">++</span><span class="nx">n</span><span class="p">);</span>
+        <span class="nx">delay</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">then</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">selection</span><span class="o">:</span> <span class="nx">div</span><span class="p">,</span>
+          <span class="nx">delay</span><span class="o">:</span> <span class="nx">delay</span><span class="p">,</span>
+          <span class="nx">context</span><span class="o">:</span> <span class="nx">context</span><span class="p">,</span>
+          <span class="nx">data</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+          <span class="nx">index</span><span class="o">:</span> <span class="nx">index</span><span class="p">,</span>
+          <span class="nx">count</span><span class="o">:</span> <span class="nx">count</span><span class="p">,</span>
+          <span class="nx">id</span><span class="o">:</span> <span class="nx">transition</span><span class="p">.</span><span class="nx">id</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;invokes the listener after the specified delay&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">inDelta</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">delay</span><span class="p">,</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="mi">20</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;invokes each listener exactly once, in order&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]);</span>
+    <span class="p">},</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>For the same node, listeners will be called back in order, according to
+the implementation of d3.dispatch. However, the order of callbacks across
+nodes is not guaranteed; currently, callbacks are in reverse order if
+they share the same delay, because of the timer queue. I suppose it'd be
+slightly better if the callbacks were invoked in node order (consistent
+with selections), but since these callbacks happen asynchronously I don't
+think the API needs to guarantee the order of callbacks.</p></td><td class="code"><div class="highlight"><pre>    <span class="s2">&quot;uses the node as the context&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">context</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">context</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;passes the data and index to the function&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">],</span> <span class="s2">&quot;expected data, got {actual}&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">index</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;expected index, got {actual}&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s2">&quot;deletes the transition lock after end&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="s2">&quot;__transition__&quot;</span> <span class="k">in</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="s2">&quot;__transition__&quot;</span> <span class="k">in</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="p">},</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>I'd like to test d3.timer.flush here, but unfortunately there's a bug in
+Vows where it really doesn't like to receive multiple callbacks from
+different tests at the same time!</p></td><td class="code"><div class="highlight"><pre>    <span class="s2">&quot;sequenced&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">,</span>
+            <span class="nx">node</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">selection</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nx">id</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+        <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">node</span><span class="p">).</span><span class="nx">transition</span><span class="p">().</span><span class="nx">delay</span><span class="p">(</span><span class="mi">150</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">node</span><span class="o">:</span> <span class="k">this</span><span class="p">});</span>
+        <span class="p">});</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;inherits the same transition id&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">__transition__</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">__transition__</span><span class="p">.</span><span class="nx">active</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

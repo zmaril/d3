@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › time › time.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>time.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="kd">var</span> <span class="nx">d3_time</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">d3_time_utc</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span>
+      <span class="o">?</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">UTC</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+      <span class="o">:</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="nx">d3_time_utc</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">getDate</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCDate</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getDay</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCDay</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getFullYear</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCFullYear</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getHours</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCHours</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getMilliseconds</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCMilliseconds</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getMinutes</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCMinutes</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getMonth</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCMonth</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getSeconds</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getUTCSeconds</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getTime</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">getTime</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">getTimezoneOffset</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">},</span>
+  <span class="nx">valueOf</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">();</span> <span class="p">},</span>
+  <span class="nx">setDate</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCDate</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setDay</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCDay</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setFullYear</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCFullYear</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setHours</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCHours</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setMilliseconds</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCMilliseconds</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setMinutes</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCMinutes</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setMonth</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCMonth</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setSeconds</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setUTCSeconds</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">},</span>
+  <span class="nx">setTime</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d3_time_prototype</span><span class="p">.</span><span class="nx">setTime</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">d3_time_prototype</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

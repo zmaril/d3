@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › geo › circle.js
+| TODO breakAtDateLine?
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>circle.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>TODO breakAtDateLine?</p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">geo</span><span class="p">.</span><span class="nx">circle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">origin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+      <span class="nx">degrees</span> <span class="o">=</span> <span class="mi">90</span> <span class="o">-</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span>
+      <span class="nx">radians</span> <span class="o">=</span> <span class="nx">degrees</span> <span class="o">*</span> <span class="nx">d3_geo_radians</span><span class="p">,</span>
+      <span class="nx">arc</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">geo</span><span class="p">.</span><span class="nx">greatArc</span><span class="p">().</span><span class="nx">target</span><span class="p">(</span><span class="nx">d3_identity</span><span class="p">);</span>
+
+  <span class="kd">function</span> <span class="nx">circle</span><span class="p">()</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>TODO render a circle as a Polygon</p></td><td class="code"><div class="highlight"><pre>  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">visible</span><span class="p">(</span><span class="nx">point</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">arc</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">point</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">radians</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">circle</span><span class="p">.</span><span class="nx">clip</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">arc</span><span class="p">.</span><span class="nx">source</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">origin</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">?</span> <span class="nx">origin</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span> <span class="o">:</span> <span class="nx">origin</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">clipType</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">clipType</span> <span class="o">=</span> <span class="nx">d3_geo_type</span><span class="p">({</span>
+
+    <span class="nx">FeatureCollection</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">features</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">features</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">clipType</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="nx">d3_identity</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">features</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">features</span> <span class="o">=</span> <span class="nx">features</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">Feature</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">geometry</span> <span class="o">=</span> <span class="nx">clipType</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">geometry</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">geometry</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">geometry</span> <span class="o">=</span> <span class="nx">geometry</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">Point</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">visible</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">o</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">MultiPoint</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">visible</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">coordinates</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="p">{</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="nx">o</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+        <span class="nx">coordinates</span><span class="o">:</span> <span class="nx">coordinates</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+
+    <span class="nx">LineString</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">clip</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">coordinates</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">MultiLineString</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">clip</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">coordinates</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">Polygon</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">clip</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">MultiPolygon</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">clip</span><span class="p">);</span> <span class="p">}).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span> <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">coordinates</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">coordinates</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">GeometryCollection</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">geometries</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">geometries</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">clipType</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="nx">d3_identity</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">geometries</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">o</span><span class="p">),</span> <span class="nx">o</span><span class="p">.</span><span class="nx">geometries</span> <span class="o">=</span> <span class="nx">geometries</span><span class="p">,</span> <span class="nx">o</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">clip</span><span class="p">(</span><span class="nx">coordinates</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">clipped</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">p0</span><span class="p">,</span>
+        <span class="nx">p1</span><span class="p">,</span>
+        <span class="nx">p2</span><span class="p">,</span>
+        <span class="nx">d0</span><span class="p">,</span>
+        <span class="nx">d1</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">d1</span> <span class="o">=</span> <span class="nx">arc</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">p2</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">d1</span> <span class="o">&lt;</span> <span class="nx">radians</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">p1</span><span class="p">)</span> <span class="nx">clipped</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d3_geo_greatArcInterpolate</span><span class="p">(</span><span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">)((</span><span class="nx">d0</span> <span class="o">-</span> <span class="nx">radians</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">d0</span> <span class="o">-</span> <span class="nx">d1</span><span class="p">)));</span>
+        <span class="nx">clipped</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">p2</span><span class="p">);</span>
+        <span class="nx">p0</span> <span class="o">=</span> <span class="nx">p1</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">p1</span> <span class="o">=</span> <span class="nx">p2</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">p0</span> <span class="o">&amp;&amp;</span> <span class="nx">clipped</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">clipped</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d3_geo_greatArcInterpolate</span><span class="p">(</span><span class="nx">clipped</span><span class="p">[</span><span class="nx">clipped</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">p1</span><span class="p">)((</span><span class="nx">radians</span> <span class="o">-</span> <span class="nx">d0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">d1</span> <span class="o">-</span> <span class="nx">d0</span><span class="p">)));</span>
+          <span class="nx">p0</span> <span class="o">=</span> <span class="nx">p1</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">d0</span> <span class="o">=</span> <span class="nx">d1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">p1</span> <span class="o">&amp;&amp;</span> <span class="nx">clipped</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">d1</span> <span class="o">=</span> <span class="nx">arc</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">p2</span> <span class="o">=</span> <span class="nx">clipped</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="nx">clipped</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d3_geo_greatArcInterpolate</span><span class="p">(</span><span class="nx">p1</span><span class="p">,</span> <span class="nx">p2</span><span class="p">)((</span><span class="nx">d0</span> <span class="o">-</span> <span class="nx">radians</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">d0</span> <span class="o">-</span> <span class="nx">d1</span><span class="p">)));</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">resample</span><span class="p">(</span><span class="nx">clipped</span><span class="p">);</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Resample coordinates, creating great arcs between each.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">resample</span><span class="p">(</span><span class="nx">coordinates</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">coordinates</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">j</span><span class="p">,</span>
+        <span class="nx">m</span><span class="p">,</span>
+        <span class="nx">resampled</span> <span class="o">=</span> <span class="nx">n</span> <span class="o">?</span> <span class="p">[</span><span class="nx">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">:</span> <span class="nx">coordinates</span><span class="p">,</span>
+        <span class="nx">resamples</span><span class="p">,</span>
+        <span class="nx">origin</span> <span class="o">=</span> <span class="nx">arc</span><span class="p">.</span><span class="nx">source</span><span class="p">();</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">resamples</span> <span class="o">=</span> <span class="nx">arc</span><span class="p">.</span><span class="nx">source</span><span class="p">(</span><span class="nx">coordinates</span><span class="p">[</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])(</span><span class="nx">coordinates</span><span class="p">[</span><span class="nx">i</span><span class="p">]).</span><span class="nx">coordinates</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">resamples</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">m</span><span class="p">;)</span> <span class="nx">resampled</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">resamples</span><span class="p">[</span><span class="nx">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="nx">arc</span><span class="p">.</span><span class="nx">source</span><span class="p">(</span><span class="nx">origin</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">resampled</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">circle</span><span class="p">.</span><span class="nx">origin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">origin</span><span class="p">;</span>
+    <span class="nx">origin</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">circle</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">circle</span><span class="p">.</span><span class="nx">angle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">degrees</span><span class="p">;</span>
+    <span class="nx">radians</span> <span class="o">=</span> <span class="p">(</span><span class="nx">degrees</span> <span class="o">=</span> <span class="o">+</span><span class="nx">x</span><span class="p">)</span> <span class="o">*</span> <span class="nx">d3_geo_radians</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">circle</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Precision is specified in degrees.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">circle</span><span class="p">.</span><span class="nx">precision</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">arc</span><span class="p">.</span><span class="nx">precision</span><span class="p">();</span>
+    <span class="nx">arc</span><span class="p">.</span><span class="nx">precision</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">circle</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">circle</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

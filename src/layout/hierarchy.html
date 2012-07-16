@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › layout › hierarchy.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>hierarchy.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">hierarchy</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">sort</span> <span class="o">=</span> <span class="nx">d3_layout_hierarchySort</span><span class="p">,</span>
+      <span class="nx">children</span> <span class="o">=</span> <span class="nx">d3_layout_hierarchyChildren</span><span class="p">,</span>
+      <span class="nx">value</span> <span class="o">=</span> <span class="nx">d3_layout_hierarchyValue</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Recursively compute the node depth and value.
+Also converts the data representation into a standard hierarchy structure.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">recurse</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">depth</span><span class="p">,</span> <span class="nx">nodes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">childs</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">hierarchy</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">depth</span><span class="p">),</span>
+        <span class="nx">node</span> <span class="o">=</span> <span class="nx">d3_layout_hierarchyInline</span> <span class="o">?</span> <span class="nx">data</span> <span class="o">:</span> <span class="p">{</span><span class="nx">data</span><span class="o">:</span> <span class="nx">data</span><span class="p">};</span>
+    <span class="nx">node</span><span class="p">.</span><span class="nx">depth</span> <span class="o">=</span> <span class="nx">depth</span><span class="p">;</span>
+    <span class="nx">nodes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">node</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">childs</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">childs</span><span class="p">.</span><span class="nx">length</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+          <span class="nx">n</span><span class="p">,</span>
+          <span class="nx">c</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span> <span class="o">=</span> <span class="p">[],</span>
+          <span class="nx">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">j</span> <span class="o">=</span> <span class="nx">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="nx">d</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">recurse</span><span class="p">(</span><span class="nx">childs</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">j</span><span class="p">,</span> <span class="nx">nodes</span><span class="p">);</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">parent</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+        <span class="nx">c</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+        <span class="nx">v</span> <span class="o">+=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">sort</span><span class="p">)</span> <span class="nx">c</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="nx">sort</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="nx">node</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="o">+</span><span class="nx">value</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">hierarchy</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Recursively re-evaluates the node value.</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">revalue</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">,</span>
+        <span class="nx">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+          <span class="nx">n</span><span class="p">,</span>
+          <span class="nx">j</span> <span class="o">=</span> <span class="nx">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">v</span> <span class="o">+=</span> <span class="nx">revalue</span><span class="p">(</span><span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">j</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">v</span> <span class="o">=</span> <span class="o">+</span><span class="nx">value</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">hierarchy</span><span class="p">,</span> <span class="nx">d3_layout_hierarchyInline</span> <span class="o">?</span> <span class="nx">node</span> <span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="nx">node</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">v</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">hierarchy</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="nx">recurse</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">nodes</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">nodes</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">sort</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sort</span><span class="p">;</span>
+    <span class="nx">sort</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">hierarchy</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">children</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">children</span><span class="p">;</span>
+    <span class="nx">children</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">hierarchy</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="nx">value</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">hierarchy</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Re-evaluates the <code>value</code> property for the specified hierarchy.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">revalue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">revalue</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">root</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">hierarchy</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>A method assignment helper for hierarchy subclasses.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_layout_hierarchyRebind</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">hierarchy</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">d3</span><span class="p">.</span><span class="nx">rebind</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">hierarchy</span><span class="p">,</span> <span class="s2">&quot;sort&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Add an alias for links, for convenience.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">object</span><span class="p">.</span><span class="nx">links</span> <span class="o">=</span> <span class="nx">d3_layout_hierarchyLinks</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>If the new API is used, enabling inlining.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">object</span><span class="p">.</span><span class="nx">nodes</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d3_layout_hierarchyInline</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">object</span><span class="p">.</span><span class="nx">nodes</span> <span class="o">=</span> <span class="nx">object</span><span class="p">)(</span><span class="nx">d</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_hierarchyChildren</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_hierarchyValue</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_hierarchySort</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">value</span> <span class="o">-</span> <span class="nx">a</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>Returns an array source+target objects for the specified nodes.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_layout_hierarchyLinks</span><span class="p">(</span><span class="nx">nodes</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">nodes</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">parent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">parent</span><span class="p">.</span><span class="nx">children</span> <span class="o">||</span> <span class="p">[]).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">child</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{</span><span class="nx">source</span><span class="o">:</span> <span class="nx">parent</span><span class="p">,</span> <span class="nx">target</span><span class="o">:</span> <span class="nx">child</span><span class="p">};</span>
+    <span class="p">});</span>
+  <span class="p">}));</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>For backwards-compatibility, don't enable inlining by default.</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">d3_layout_hierarchyInline</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

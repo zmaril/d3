@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » lib › science › science.stats.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>science.stats.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(){</span><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span> <span class="o">=</span> <span class="p">{};</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Bandwidth selectors for Gaussian kernels.
+Based on R's implementations in <code>stats.bw</code>.</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">bandwidth</span> <span class="o">=</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Silverman, B. W. (1986) Density Estimation. London: Chapman and Hall.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nrd0</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">hi</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">variance</span><span class="p">(</span><span class="nx">x</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">lo</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">hi</span><span class="p">,</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">iqr</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1.34</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nx">lo</span> <span class="o">=</span> <span class="nx">hi</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">lo</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">||</span> <span class="p">(</span><span class="nx">lo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">.</span><span class="mi">9</span> <span class="o">*</span> <span class="nx">lo</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="o">-</span><span class="p">.</span><span class="mi">2</span><span class="p">);</span>
+  <span class="p">},</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Scott, D. W. (1992) Multivariate Density Estimation: Theory, Practice, and
+Visualization. Wiley.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">nrd</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">iqr</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1.34</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mf">1.06</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">variance</span><span class="p">(</span><span class="nx">x</span><span class="p">)),</span> <span class="nx">h</span><span class="p">)</span>
+      <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">distance</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">euclidean</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">x</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">x</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="nx">s</span> <span class="o">+=</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nx">manhattan</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">s</span> <span class="o">+=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="nx">s</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">minkowski</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+          <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+          <span class="nx">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">s</span> <span class="o">+=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">]),</span> <span class="nx">p</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="nx">p</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="p">},</span>
+  <span class="nx">chebyshev</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">x</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">x</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">max</span><span class="p">)</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">max</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">hamming</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="nx">d</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">jaccard</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">===</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="nx">s</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">s</span> <span class="o">/</span> <span class="nx">n</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">braycurtis</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">s0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">s1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">ai</span><span class="p">,</span>
+        <span class="nx">bi</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">ai</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="nx">bi</span> <span class="o">=</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="nx">s0</span> <span class="o">+=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">ai</span> <span class="o">-</span> <span class="nx">bi</span><span class="p">);</span>
+      <span class="nx">s1</span> <span class="o">+=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">ai</span> <span class="o">+</span> <span class="nx">bi</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">s0</span> <span class="o">/</span> <span class="nx">s1</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Based on implementation in http://picomath.org/.</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">erf</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">a1</span> <span class="o">=</span>  <span class="mf">0.254829592</span><span class="p">,</span>
+      <span class="nx">a2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.284496736</span><span class="p">,</span>
+      <span class="nx">a3</span> <span class="o">=</span>  <span class="mf">1.421413741</span><span class="p">,</span>
+      <span class="nx">a4</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.453152027</span><span class="p">,</span>
+      <span class="nx">a5</span> <span class="o">=</span>  <span class="mf">1.061405429</span><span class="p">,</span>
+      <span class="nx">p</span>  <span class="o">=</span>  <span class="mf">0.3275911</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Save the sign of x</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">sign</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="o">-</span><span class="nx">x</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>A&amp;S formula 7.1.26</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nx">p</span> <span class="o">*</span> <span class="nx">x</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">sign</span> <span class="o">*</span> <span class="p">(</span>
+    <span class="mi">1</span> <span class="o">-</span> <span class="p">(((((</span><span class="nx">a5</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">+</span> <span class="nx">a4</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span><span class="p">)</span> <span class="o">+</span> <span class="nx">a3</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">+</span> <span class="nx">a2</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">+</span> <span class="nx">a1</span><span class="p">)</span>
+    <span class="o">*</span> <span class="nx">t</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">exp</span><span class="p">(</span><span class="o">-</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span><span class="p">));</span>
+<span class="p">};</span>
+<span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">phi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">erf</span><span class="p">(</span><span class="nx">x</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">SQRT2</span><span class="p">));</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>See <a href="http://en.wikipedia.org/wiki/Kernel_(statistics)">http://en.wikipedia.org/wiki/Kernel_(statistics)</a>.</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">kernel</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">uniform</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">triangular</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">u</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">epanechnikov</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="p">.</span><span class="mi">75</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">u</span> <span class="o">*</span> <span class="nx">u</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">quartic</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nx">u</span> <span class="o">*</span> <span class="nx">u</span><span class="p">;</span>
+      <span class="k">return</span> <span class="p">(</span><span class="mi">15</span> <span class="o">/</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="nx">tmp</span> <span class="o">*</span> <span class="nx">tmp</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">triweight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nx">u</span> <span class="o">*</span> <span class="nx">u</span><span class="p">;</span>
+      <span class="k">return</span> <span class="p">(</span><span class="mi">35</span> <span class="o">/</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="nx">tmp</span> <span class="o">*</span> <span class="nx">tmp</span> <span class="o">*</span> <span class="nx">tmp</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">gaussian</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">exp</span><span class="p">(</span><span class="o">-</span><span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="nx">u</span> <span class="o">*</span> <span class="nx">u</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nx">cosine</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">u</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">u</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>http://exploringdata.net/den_trac.htm</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">kde</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">kernel</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">gaussian</span><span class="p">,</span>
+      <span class="nx">sample</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">bandwidth</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">bandwidth</span><span class="p">.</span><span class="nx">nrd</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">kde</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">bw</span> <span class="o">=</span> <span class="nx">bandwidth</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">sample</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+          <span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">n</span> <span class="o">=</span> <span class="nx">sample</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">y</span> <span class="o">+=</span> <span class="nx">kernel</span><span class="p">((</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">sample</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">/</span> <span class="nx">bw</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">[</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">/</span> <span class="nx">bw</span> <span class="o">/</span> <span class="nx">n</span><span class="p">];</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">kde</span><span class="p">.</span><span class="nx">kernel</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">kernel</span><span class="p">;</span>
+    <span class="nx">kernel</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">kde</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">kde</span><span class="p">.</span><span class="nx">sample</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sample</span><span class="p">;</span>
+    <span class="nx">sample</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">kde</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">kde</span><span class="p">.</span><span class="nx">bandwidth</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">bandwidth</span><span class="p">;</span>
+    <span class="nx">bandwidth</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">functor</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">kde</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">kde</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-10"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-10">&#182;</a></div><p>Based on figue implementation by Jean-Yves Delort.
+http://code.google.com/p/figue/</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">kmeans</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">distance</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">distance</span><span class="p">.</span><span class="nx">euclidean</span><span class="p">,</span>
+      <span class="nx">maxIterations</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">kmeans</span><span class="p">(</span><span class="nx">vectors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">vectors</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">assignments</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">clusterSizes</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">repeat</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">iterations</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">centroids</span> <span class="o">=</span> <span class="nx">science_stats_kmeansRandom</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">vectors</span><span class="p">),</span>
+        <span class="nx">newCentroids</span><span class="p">,</span>
+        <span class="nx">i</span><span class="p">,</span>
+        <span class="nx">j</span><span class="p">,</span>
+        <span class="nx">x</span><span class="p">,</span>
+        <span class="nx">d</span><span class="p">,</span>
+        <span class="nx">min</span><span class="p">,</span>
+        <span class="nx">best</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nx">repeat</span> <span class="o">&amp;&amp;</span> <span class="nx">iterations</span> <span class="o">&lt;</span> <span class="nx">maxIterations</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-11"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-11">&#182;</a></div><p>Assignment step.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">clusterSizes</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="nx">vectors</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">min</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">;</span>
+        <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">d</span> <span class="o">=</span> <span class="nx">distance</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">centroids</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">x</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">min</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">min</span> <span class="o">=</span> <span class="nx">d</span><span class="p">;</span>
+            <span class="nx">best</span> <span class="o">=</span> <span class="nx">j</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">clusterSizes</span><span class="p">[</span><span class="nx">assignments</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">best</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p>Update centroids step.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">newCentroids</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="nx">assignments</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="nx">newCentroids</span><span class="p">[</span><span class="nx">x</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="nx">newCentroids</span><span class="p">[</span><span class="nx">x</span><span class="p">]</span> <span class="o">=</span> <span class="nx">vectors</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">slice</span><span class="p">();</span>
+        <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">d</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">vectors</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">];</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="nx">newCentroids</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+        <span class="nx">d</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nx">clusterSizes</span><span class="p">[</span><span class="nx">j</span><span class="p">];</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">*=</span> <span class="nx">d</span><span class="p">;</span>
+      <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-13"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-13">&#182;</a></div><p>Check convergence.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">repeat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">science_stats_kmeansCompare</span><span class="p">(</span><span class="nx">newCentroids</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">centroids</span><span class="p">[</span><span class="nx">j</span><span class="p">]))</span> <span class="p">{</span>
+          <span class="nx">repeat</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">centroids</span> <span class="o">=</span> <span class="nx">newCentroids</span><span class="p">;</span>
+      <span class="nx">iterations</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nx">assignments</span><span class="o">:</span> <span class="nx">assignments</span><span class="p">,</span> <span class="nx">centroids</span><span class="o">:</span> <span class="nx">centroids</span><span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nx">kmeans</span><span class="p">.</span><span class="nx">k</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">k</span><span class="p">;</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">kmeans</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">kmeans</span><span class="p">.</span><span class="nx">distance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">distance</span><span class="p">;</span>
+    <span class="nx">distance</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">kmeans</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">kmeans</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">science_stats_kmeansCompare</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">a</span> <span class="o">||</span> <span class="o">!</span><span class="nx">b</span> <span class="o">||</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="nx">b</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-14"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-14">&#182;</a></div><p>Returns an array of k distinct vectors randomly selected from the input
+array of vectors. Returns null if k > n or if there are less than k distinct
+objects in vectors.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">science_stats_kmeansRandom</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">vectors</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">vectors</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">k</span> <span class="o">&gt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  
+  <span class="kd">var</span> <span class="nx">selected_vectors</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="kd">var</span> <span class="nx">selected_indices</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="kd">var</span> <span class="nx">tested_indices</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="kd">var</span> <span class="nx">tested</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">selected</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span>
+      <span class="nx">vector</span><span class="p">,</span>
+      <span class="nx">select</span><span class="p">;</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="nx">selected</span> <span class="o">&lt;</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">tested</span> <span class="o">===</span> <span class="nx">n</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    
+    <span class="kd">var</span> <span class="nx">random_index</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nx">n</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">random_index</span> <span class="k">in</span> <span class="nx">tested_indices</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+    
+    <span class="nx">tested_indices</span><span class="p">[</span><span class="nx">random_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nx">tested</span><span class="o">++</span><span class="p">;</span>
+    <span class="nx">vector</span> <span class="o">=</span> <span class="nx">vectors</span><span class="p">[</span><span class="nx">random_index</span><span class="p">];</span>
+    <span class="nx">select</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">selected</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">science_stats_kmeansCompare</span><span class="p">(</span><span class="nx">vector</span><span class="p">,</span> <span class="nx">selected_vectors</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nx">select</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">select</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">selected_vectors</span><span class="p">[</span><span class="nx">selected</span><span class="p">]</span> <span class="o">=</span> <span class="nx">vector</span><span class="p">;</span>
+      <span class="nx">selected_indices</span><span class="p">[</span><span class="nx">selected</span><span class="p">]</span> <span class="o">=</span> <span class="nx">random_index</span><span class="p">;</span>
+      <span class="nx">selected</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">selected_vectors</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">hcluster</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">distance</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">distance</span><span class="p">.</span><span class="nx">euclidean</span><span class="p">,</span>
+      <span class="nx">linkage</span> <span class="o">=</span> <span class="s2">&quot;simple&quot;</span><span class="p">;</span> <span class="c1">// simple, complete or average</span>
+
+  <span class="kd">function</span> <span class="nx">hcluster</span><span class="p">(</span><span class="nx">vectors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">vectors</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">dMin</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">cSize</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">distMatrix</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">clusters</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">c1</span><span class="p">,</span>
+        <span class="nx">c2</span><span class="p">,</span>
+        <span class="nx">c1Cluster</span><span class="p">,</span>
+        <span class="nx">c2Cluster</span><span class="p">,</span>
+        <span class="nx">p</span><span class="p">,</span>
+        <span class="nx">root</span><span class="p">,</span>
+        <span class="nx">i</span><span class="p">,</span>
+        <span class="nx">j</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-15"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-15">&#182;</a></div><p>Initialise distance matrix and vector of closest clusters.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">dMin</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">===</span> <span class="nx">j</span> <span class="o">?</span> <span class="kc">Infinity</span> <span class="o">:</span> <span class="nx">distance</span><span class="p">(</span><span class="nx">vectors</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">,</span> <span class="nx">vectors</span><span class="p">[</span><span class="nx">j</span><span class="p">]);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">distMatrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">dMin</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">])</span> <span class="nx">dMin</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">j</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-16"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-16">&#182;</a></div><p>create leaves of the tree</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">clusters</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">clusters</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">left</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nx">right</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nx">dist</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">centroid</span><span class="o">:</span> <span class="nx">vectors</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+        <span class="nx">size</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">depth</span><span class="o">:</span> <span class="mi">0</span>
+      <span class="p">};</span>
+      <span class="nx">cSize</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-17"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-17">&#182;</a></div><p>Main loop</p></td><td class="code"><div class="highlight"><pre>    <span class="k">for</span> <span class="p">(</span><span class="nx">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">p</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">p</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-18"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-18">&#182;</a></div><p>find the closest pair of clusters</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">c1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">distMatrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">dMin</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">dMin</span><span class="p">[</span><span class="nx">c1</span><span class="p">]])</span> <span class="nx">c1</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">c2</span> <span class="o">=</span> <span class="nx">dMin</span><span class="p">[</span><span class="nx">c1</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-19"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-19">&#182;</a></div><p>create node to store cluster info </p></td><td class="code"><div class="highlight"><pre>      <span class="nx">c1Cluster</span> <span class="o">=</span> <span class="nx">clusters</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">c2Cluster</span> <span class="o">=</span> <span class="nx">clusters</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+
+      <span class="nx">newCluster</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">left</span><span class="o">:</span> <span class="nx">c1Cluster</span><span class="p">,</span>
+        <span class="nx">right</span><span class="o">:</span> <span class="nx">c2Cluster</span><span class="p">,</span>
+        <span class="nx">dist</span><span class="o">:</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">c2</span><span class="p">],</span>
+        <span class="nx">centroid</span><span class="o">:</span> <span class="nx">calculateCentroid</span><span class="p">(</span><span class="nx">c1Cluster</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="nx">c1Cluster</span><span class="p">.</span><span class="nx">centroid</span><span class="p">,</span>
+          <span class="nx">c2Cluster</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span> <span class="nx">c2Cluster</span><span class="p">.</span><span class="nx">centroid</span><span class="p">),</span>
+        <span class="nx">size</span><span class="o">:</span> <span class="nx">c1Cluster</span><span class="p">.</span><span class="nx">size</span> <span class="o">+</span> <span class="nx">c2Cluster</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span>
+        <span class="nx">depth</span><span class="o">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">c1Cluster</span><span class="p">.</span><span class="nx">depth</span><span class="p">,</span> <span class="nx">c2Cluster</span><span class="p">.</span><span class="nx">depth</span><span class="p">)</span>
+      <span class="p">};</span>
+      <span class="nx">clusters</span><span class="p">[</span><span class="nx">c1</span><span class="p">].</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">newCluster</span><span class="p">);</span>
+      <span class="nx">cSize</span><span class="p">[</span><span class="nx">c1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">cSize</span><span class="p">[</span><span class="nx">c2</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-20"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-20">&#182;</a></div><p>overwrite row c1 with respect to the linkage type</p></td><td class="code"><div class="highlight"><pre>      <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nx">linkage</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="s2">&quot;single&quot;</span><span class="o">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="nx">j</span><span class="p">])</span>
+              <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="nx">c1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="nx">j</span><span class="p">];</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;complete&quot;</span><span class="o">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="nx">j</span><span class="p">])</span>
+              <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="nx">c1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="nx">j</span><span class="p">];</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;average&quot;</span><span class="o">:</span>
+            <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="nx">c1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nx">cSize</span><span class="p">[</span><span class="nx">c1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cSize</span><span class="p">[</span><span class="nx">c2</span><span class="p">]</span> <span class="o">*</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="nx">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="nx">cSize</span><span class="p">[</span><span class="nx">c1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cSize</span><span class="p">[</span><span class="nx">j</span><span class="p">]);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">c1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-21"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-21">&#182;</a></div><p>infinity ­out old row c2 and column c2</p></td><td class="code"><div class="highlight"><pre>      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">c2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c2</span><span class="p">][</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">Infinity</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-22"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-22">&#182;</a></div><p>update dmin and replace ones that previous pointed to c2 to point to c1</p></td><td class="code"><div class="highlight"><pre>      <span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">dMin</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">==</span> <span class="nx">c2</span><span class="p">)</span> <span class="nx">dMin</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">c1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">distMatrix</span><span class="p">[</span><span class="nx">c1</span><span class="p">][</span><span class="nx">dMin</span><span class="p">[</span><span class="nx">c1</span><span class="p">]])</span> <span class="nx">dMin</span><span class="p">[</span><span class="nx">c1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">j</span><span class="p">;</span>
+      <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-23"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-23">&#182;</a></div><p>keep track of the last added cluster</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">root</span> <span class="o">=</span> <span class="nx">newCluster</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">root</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">hcluster</span><span class="p">.</span><span class="nx">distance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">distance</span><span class="p">;</span>
+    <span class="nx">distance</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">hcluster</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">hcluster</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">calculateCentroid</span><span class="p">(</span><span class="nx">c1Size</span><span class="p">,</span> <span class="nx">c1Centroid</span><span class="p">,</span> <span class="nx">c2Size</span><span class="p">,</span> <span class="nx">c2Centroid</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">newCentroid</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">newSize</span> <span class="o">=</span> <span class="nx">c1Size</span> <span class="o">+</span> <span class="nx">c2Size</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">c1Centroid</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">newCentroid</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nx">c1Size</span> <span class="o">*</span> <span class="nx">c1Centroid</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">c2Size</span> <span class="o">*</span> <span class="nx">c2Centroid</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">/</span> <span class="nx">newSize</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">newCentroid</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">iqr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">quartiles</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">quantiles</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="p">[.</span><span class="mi">25</span><span class="p">,</span> <span class="p">.</span><span class="mi">75</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="nx">quartiles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">quartiles</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-24"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-24">&#182;</a></div><p>Based on org.apache.commons.math.analysis.interpolation.LoessInterpolator
+from http://commons.apache.org/math/</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">loess</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>    
+  <span class="kd">var</span> <span class="nx">bandwidth</span> <span class="o">=</span> <span class="p">.</span><span class="mi">3</span><span class="p">,</span>
+      <span class="nx">robustnessIters</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">accuracy</span> <span class="o">=</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">12</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">smooth</span><span class="p">(</span><span class="nx">xval</span><span class="p">,</span> <span class="nx">yval</span><span class="p">,</span> <span class="nx">weights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">xval</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">i</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">!==</span> <span class="nx">yval</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">throw</span> <span class="p">{</span><span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;Mismatched array lengths&quot;</span><span class="p">};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">throw</span> <span class="p">{</span><span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;At least one point required.&quot;</span><span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">weights</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">weights</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">science_stats_loessFiniteReal</span><span class="p">(</span><span class="nx">xval</span><span class="p">);</span>
+    <span class="nx">science_stats_loessFiniteReal</span><span class="p">(</span><span class="nx">yval</span><span class="p">);</span>
+    <span class="nx">science_stats_loessFiniteReal</span><span class="p">(</span><span class="nx">weights</span><span class="p">);</span>
+    <span class="nx">science_stats_loessStrictlyIncreasing</span><span class="p">(</span><span class="nx">xval</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="nx">yval</span><span class="p">[</span><span class="mi">0</span><span class="p">]];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="nx">yval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">yval</span><span class="p">[</span><span class="mi">1</span><span class="p">]];</span>
+
+    <span class="kd">var</span> <span class="nx">bandwidthInPoints</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">bandwidth</span> <span class="o">*</span> <span class="nx">n</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">bandwidthInPoints</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">throw</span> <span class="p">{</span><span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;Bandwidth too small.&quot;</span><span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">residuals</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">robustnessWeights</span> <span class="o">=</span> <span class="p">[];</span></pre></div></td></tr>
+
+
+<tr id="section-25"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-25">&#182;</a></div><p>Do an initial fit and 'robustnessIters' robustness iterations.
+This is equivalent to doing 'robustnessIters+1' robustness iterations
+starting with all robustness weights set to 1.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">residuals</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">robustnessWeights</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">iter</span> <span class="o">&lt;=</span> <span class="nx">robustnessIters</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">bandwidthInterval</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nx">bandwidthInPoints</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-26"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-26">&#182;</a></div><p>At each x, compute a local weighted linear regression</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-27"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-27">&#182;</a></div><p>Find out the interval of source points on which
+a regression is to be made.</p></td><td class="code"><div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">science_stats_loessUpdateBandwidthInterval</span><span class="p">(</span><span class="nx">xval</span><span class="p">,</span> <span class="nx">weights</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">bandwidthInterval</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">ileft</span> <span class="o">=</span> <span class="nx">bandwidthInterval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nx">iright</span> <span class="o">=</span> <span class="nx">bandwidthInterval</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-28"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-28">&#182;</a></div><p>Compute the point of the bandwidth interval that is
+farthest from x</p></td><td class="code"><div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">edge</span> <span class="o">=</span> <span class="p">(</span><span class="nx">xval</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">ileft</span><span class="p">])</span> <span class="o">&gt;</span> <span class="p">(</span><span class="nx">xval</span><span class="p">[</span><span class="nx">iright</span><span class="p">]</span> <span class="o">-</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">?</span> <span class="nx">ileft</span> <span class="o">:</span> <span class="nx">iright</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-29"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-29">&#182;</a></div><p>Compute a least-squares linear fit weighted by
+the product of robustness weights and the tricube
+weight function.
+See http://en.wikipedia.org/wiki/Linear<em>regression
+(section "Univariate linear case")
+and http://en.wikipedia.org/wiki/Weighted</em>least_squares
+(section "Weighted least squares")</p></td><td class="code"><div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">sumWeights</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">sumX</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">sumXSquared</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">sumY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">sumXY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">denom</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="nx">xval</span><span class="p">[</span><span class="nx">edge</span><span class="p">]</span> <span class="o">-</span> <span class="nx">x</span><span class="p">));</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="nx">ileft</span><span class="p">;</span> <span class="nx">k</span> <span class="o">&lt;=</span> <span class="nx">iright</span><span class="p">;</span> <span class="o">++</span><span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">xk</span>   <span class="o">=</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">k</span><span class="p">],</span>
+              <span class="nx">yk</span>   <span class="o">=</span> <span class="nx">yval</span><span class="p">[</span><span class="nx">k</span><span class="p">],</span>
+              <span class="nx">dist</span> <span class="o">=</span> <span class="nx">k</span> <span class="o">&lt;</span> <span class="nx">i</span> <span class="o">?</span> <span class="nx">x</span> <span class="o">-</span> <span class="nx">xk</span> <span class="o">:</span> <span class="nx">xk</span> <span class="o">-</span> <span class="nx">x</span><span class="p">,</span>
+              <span class="nx">w</span>    <span class="o">=</span> <span class="nx">science_stats_loessTricube</span><span class="p">(</span><span class="nx">dist</span> <span class="o">*</span> <span class="nx">denom</span><span class="p">)</span> <span class="o">*</span> <span class="nx">robustnessWeights</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">*</span> <span class="nx">weights</span><span class="p">[</span><span class="nx">k</span><span class="p">],</span>
+              <span class="nx">xkw</span>  <span class="o">=</span> <span class="nx">xk</span> <span class="o">*</span> <span class="nx">w</span><span class="p">;</span>
+          <span class="nx">sumWeights</span> <span class="o">+=</span> <span class="nx">w</span><span class="p">;</span>
+          <span class="nx">sumX</span> <span class="o">+=</span> <span class="nx">xkw</span><span class="p">;</span>
+          <span class="nx">sumXSquared</span> <span class="o">+=</span> <span class="nx">xk</span> <span class="o">*</span> <span class="nx">xkw</span><span class="p">;</span>
+          <span class="nx">sumY</span> <span class="o">+=</span> <span class="nx">yk</span> <span class="o">*</span> <span class="nx">w</span><span class="p">;</span>
+          <span class="nx">sumXY</span> <span class="o">+=</span> <span class="nx">yk</span> <span class="o">*</span> <span class="nx">xkw</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">meanX</span> <span class="o">=</span> <span class="nx">sumX</span> <span class="o">/</span> <span class="nx">sumWeights</span><span class="p">,</span>
+            <span class="nx">meanY</span> <span class="o">=</span> <span class="nx">sumY</span> <span class="o">/</span> <span class="nx">sumWeights</span><span class="p">,</span>
+            <span class="nx">meanXY</span> <span class="o">=</span> <span class="nx">sumXY</span> <span class="o">/</span> <span class="nx">sumWeights</span><span class="p">,</span>
+            <span class="nx">meanXSquared</span> <span class="o">=</span> <span class="nx">sumXSquared</span> <span class="o">/</span> <span class="nx">sumWeights</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">beta</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">meanXSquared</span> <span class="o">-</span> <span class="nx">meanX</span> <span class="o">*</span> <span class="nx">meanX</span><span class="p">))</span> <span class="o">&lt;</span> <span class="nx">accuracy</span><span class="p">)</span>
+            <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="p">((</span><span class="nx">meanXY</span> <span class="o">-</span> <span class="nx">meanX</span> <span class="o">*</span> <span class="nx">meanY</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">meanXSquared</span> <span class="o">-</span> <span class="nx">meanX</span> <span class="o">*</span> <span class="nx">meanX</span><span class="p">));</span>
+
+        <span class="kd">var</span> <span class="nx">alpha</span> <span class="o">=</span> <span class="nx">meanY</span> <span class="o">-</span> <span class="nx">beta</span> <span class="o">*</span> <span class="nx">meanX</span><span class="p">;</span>
+
+        <span class="nx">res</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">beta</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">alpha</span><span class="p">;</span>
+        <span class="nx">residuals</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">yval</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">res</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-30"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-30">&#182;</a></div><p>No need to recompute the robustness weights at the last
+iteration, they won't be needed anymore</p></td><td class="code"><div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">iter</span> <span class="o">===</span> <span class="nx">robustnessIters</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-31"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-31">&#182;</a></div><p>Recompute the robustness weights.</p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-32"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-32">&#182;</a></div><p>Find the median residual.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">sortedResiduals</span> <span class="o">=</span> <span class="nx">residuals</span><span class="p">.</span><span class="nx">slice</span><span class="p">();</span>
+      <span class="nx">sortedResiduals</span><span class="p">.</span><span class="nx">sort</span><span class="p">();</span>
+      <span class="kd">var</span> <span class="nx">medianResidual</span> <span class="o">=</span> <span class="nx">sortedResiduals</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)];</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">medianResidual</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">accuracy</span><span class="p">)</span>
+        <span class="k">break</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">arg</span><span class="p">,</span>
+          <span class="nx">w</span><span class="p">;</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">arg</span> <span class="o">=</span> <span class="nx">residuals</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="nx">medianResidual</span><span class="p">);</span>
+        <span class="nx">robustnessWeights</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nx">arg</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="p">((</span><span class="nx">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nx">arg</span> <span class="o">*</span> <span class="nx">arg</span><span class="p">)</span> <span class="o">*</span> <span class="nx">w</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">smooth</span><span class="p">.</span><span class="nx">bandwidth</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">bandwidth</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">smooth</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">smooth</span><span class="p">.</span><span class="nx">robustnessIterations</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">robustnessIters</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">smooth</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">smooth</span><span class="p">.</span><span class="nx">accuracy</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">accuracy</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">smooth</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">smooth</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">science_stats_loessFiniteReal</span><span class="p">(</span><span class="nx">values</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isFinite</span><span class="p">(</span><span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">science_stats_loessStrictlyIncreasing</span><span class="p">(</span><span class="nx">xval</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">xval</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nx">xval</span><span class="p">[</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-33"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-33">&#182;</a></div><p>Compute the tricube weight function.
+http://en.wikipedia.org/wiki/Local<em>regression#Weight</em>function</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">science_stats_loessTricube</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span><span class="p">)</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-34"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-34">&#182;</a></div><p>Given an index interval into xval that embraces a certain number of
+points closest to xval[i-1], update the interval so that it embraces
+the same number of points closest to xval[i], ignoring zero weights.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">science_stats_loessUpdateBandwidthInterval</span><span class="p">(</span>
+  <span class="nx">xval</span><span class="p">,</span> <span class="nx">weights</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">bandwidthInterval</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="nx">bandwidthInterval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">right</span> <span class="o">=</span> <span class="nx">bandwidthInterval</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-35"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-35">&#182;</a></div><p>The right edge should be adjusted if the next point to the right
+is closer to xval[i] than the leftmost point of the current interval</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">nextRight</span> <span class="o">=</span> <span class="nx">science_stats_loessNextNonzero</span><span class="p">(</span><span class="nx">weights</span><span class="p">,</span> <span class="nx">right</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">((</span><span class="nx">nextRight</span> <span class="o">&lt;</span> <span class="nx">xval</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">xval</span><span class="p">[</span><span class="nx">nextRight</span><span class="p">]</span> <span class="o">-</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nx">xval</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">xval</span><span class="p">[</span><span class="nx">left</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">nextLeft</span> <span class="o">=</span> <span class="nx">science_stats_loessNextNonzero</span><span class="p">(</span><span class="nx">weights</span><span class="p">,</span> <span class="nx">left</span><span class="p">);</span>
+    <span class="nx">bandwidthInterval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">nextLeft</span><span class="p">;</span>
+    <span class="nx">bandwidthInterval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">nextRight</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">science_stats_loessNextNonzero</span><span class="p">(</span><span class="nx">weights</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">weights</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="nx">weights</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">j</span><span class="o">++</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">j</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-36"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-36">&#182;</a></div><p>Welford's algorithm.</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">mean</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="kc">NaN</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">m</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">m</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">m</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">median</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">quantiles</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="p">[.</span><span class="mi">5</span><span class="p">])[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">};</span>
+<span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">mode</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">slice</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="nx">science</span><span class="p">.</span><span class="nx">ascending</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">mode</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">l</span> <span class="o">=</span> <span class="nx">i</span><span class="p">,</span>
+      <span class="nx">last</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nx">max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">tmp</span><span class="p">,</span>
+      <span class="nx">v</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">!==</span> <span class="nx">last</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">((</span><span class="nx">tmp</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">-</span> <span class="nx">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">max</span> <span class="o">=</span> <span class="nx">tmp</span><span class="p">;</span>
+        <span class="nx">mode</span> <span class="o">=</span> <span class="nx">last</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">last</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span>
+      <span class="nx">l</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">mode</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-37"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-37">&#182;</a></div><p>Uses R's quantile algorithm type=7.</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">quantiles</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">quantiles</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">d</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">slice</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="nx">science</span><span class="p">.</span><span class="nx">ascending</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">n_1</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">quantiles</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">q</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">q</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="nx">d</span><span class="p">[</span><span class="nx">n_1</span><span class="p">];</span>
+
+    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nx">q</span> <span class="o">*</span> <span class="nx">n_1</span><span class="p">,</span>
+        <span class="nx">lo</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">index</span><span class="p">),</span>
+        <span class="nx">h</span> <span class="o">=</span> <span class="nx">index</span> <span class="o">-</span> <span class="nx">lo</span><span class="p">,</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">d</span><span class="p">[</span><span class="nx">lo</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+
+    <span class="k">return</span> <span class="nx">h</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">a</span> <span class="o">:</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">h</span> <span class="o">*</span> <span class="p">(</span><span class="nx">d</span><span class="p">[</span><span class="nx">lo</span><span class="p">]</span> <span class="o">-</span> <span class="nx">a</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-38"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-38">&#182;</a></div><p>Unbiased estimate of a sample's variance.
+Also known as the sample variance, where the denominator is n - 1.</p></td><td class="code"><div class="highlight"><pre><span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">variance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="kc">NaN</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">mean</span> <span class="o">=</span> <span class="nx">science</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">mean</span><span class="p">(</span><span class="nx">x</span><span class="p">),</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">v</span> <span class="o">=</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">-</span> <span class="nx">mean</span><span class="p">;</span>
+    <span class="nx">s</span> <span class="o">+=</span> <span class="nx">v</span> <span class="o">*</span> <span class="nx">v</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">s</span> <span class="o">/</span> <span class="p">(</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="p">})()</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

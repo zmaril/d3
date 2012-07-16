@@ -1,0 +1,7 @@
+f | polygon.js | s | 2.2K | 82 | Mike Bostock | mbostock@gmail.com | 1327876154 |  | Fix polygon.centroid for open polygons.  The implementation assumed closed polygons, but it should work on either. This is a partial fix for #443.
+f | contour.js | s | 2.0K | 70 | Jason Davies | jason@jasondavies.com | 1302770479 |  | Replace "==" with strict equality checks "===".
+f | delaunay.js | s | 866B | 28 | Michael Bostock | mbostock@gmail.com | 1294256139 |  | Turn off the compiler's "advanced" optimizations.  The renaming of attributes is totally not worth the hassle of maintaining an externs file (or using the awkward `foo["bar"]` syntax). The file size reduction from the advanced optimizations was negligible, besides!
+f | geom.js | s | 14B | 1 | Michael Bostock | mbostock@gmail.com | 1289166599 |  | Add d3.geom module.  For now, just Sutherland-Hodgman clipping and area of a convex polygon.
+f | hull.js | s | 2.6K | 90 | Jason Davies | jason@jasondavies.com | 1302819833 |  | Add some more strict equality checks.
+f | quadtree.js | s | 3.8K | 114 | Mike Bostock | mbostock@gmail.com | 1309292823 |  | Allow quadtree to be built dynamically.  You can now specify the domain of the quadtree upon construction, such that you can add points to the quadtree dynamically later. The quadtree example now also shows how to do a quick rectangular search using the quadtree.
+f | voronoi.js | s | 10K | 367 | Mike Bostock | mbostock@gmail.com | 1319906392 |  | Comment re. clipping and invalid inputs.  Fixes #235.

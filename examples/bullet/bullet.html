@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » examples › bullet › bullet.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>bullet.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">960</span><span class="p">,</span>
+    <span class="nx">height</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">margin</span> <span class="o">=</span> <span class="p">{</span><span class="nx">top</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">right</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span> <span class="nx">bottom</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="nx">left</span><span class="o">:</span> <span class="mi">120</span><span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="nx">bulletChart</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">right</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">top</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">bottom</span><span class="p">);</span>
+
+<span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;bullets.json&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#chart&quot;</span><span class="p">).</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">left</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">top</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">chart</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;text-anchor&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="s2">&quot;translate(-6,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">top</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">.</span><span class="nx">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">);</span>
+
+  <span class="nx">title</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">title</span><span class="p">;</span> <span class="p">});</span>
+
+  <span class="nx">title</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;subtitle&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;dy&quot;</span><span class="p">,</span> <span class="s2">&quot;1em&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">subtitle</span><span class="p">;</span> <span class="p">});</span>
+
+  <span class="nx">chart</span><span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">transition</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">vis</span><span class="p">.</span><span class="nx">datum</span><span class="p">(</span><span class="nx">randomize</span><span class="p">).</span><span class="nx">call</span><span class="p">(</span><span class="nx">chart</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">randomize</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">d</span><span class="p">.</span><span class="nx">randomizer</span><span class="p">)</span> <span class="nx">d</span><span class="p">.</span><span class="nx">randomizer</span> <span class="o">=</span> <span class="nx">randomizer</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">ranges</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">ranges</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">randomizer</span><span class="p">);</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">markers</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">markers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">randomizer</span><span class="p">);</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">measures</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">measures</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">randomizer</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">randomizer</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">ranges</span><span class="p">)</span> <span class="o">*</span> <span class="p">.</span><span class="mi">2</span><span class="p">;</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">d</span> <span class="o">+</span> <span class="nx">k</span> <span class="o">*</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">-</span> <span class="p">.</span><span class="mi">5</span><span class="p">));</span>
+  <span class="p">};</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Chart design based on the recommendations of Stephen Few. Implementation
+based on the work of Clint Ivy, Jamie Love, and Jason Davies.
+http://projects.instantcognition.com/protovis/bulletchart/</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">bulletChart</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">orient</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="c1">// TODO top &amp; bottom</span>
+      <span class="nx">reverse</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nx">duration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">ranges</span> <span class="o">=</span> <span class="nx">bulletRanges</span><span class="p">,</span>
+      <span class="nx">markers</span> <span class="o">=</span> <span class="nx">bulletMarkers</span><span class="p">,</span>
+      <span class="nx">measures</span> <span class="o">=</span> <span class="nx">bulletMeasures</span><span class="p">,</span>
+      <span class="nx">width</span> <span class="o">=</span> <span class="mi">380</span><span class="p">,</span>
+      <span class="nx">height</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+      <span class="nx">tickFormat</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>For each small multiple…</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">bullet</span><span class="p">(</span><span class="nx">g</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">g</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">rangez</span> <span class="o">=</span> <span class="nx">ranges</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">).</span><span class="nx">slice</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">descending</span><span class="p">),</span>
+          <span class="nx">markerz</span> <span class="o">=</span> <span class="nx">markers</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">).</span><span class="nx">slice</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">descending</span><span class="p">),</span>
+          <span class="nx">measurez</span> <span class="o">=</span> <span class="nx">measures</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">).</span><span class="nx">slice</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">descending</span><span class="p">),</span>
+          <span class="nx">g</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="k">this</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Compute the new x-scale.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">x1</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">rangez</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">markerz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">measurez</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+          <span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">reverse</span> <span class="o">?</span> <span class="p">[</span><span class="nx">width</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nx">width</span><span class="p">]);</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Retrieve the old x-scale, if this is an update.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">x0</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">__chart__</span> <span class="o">||</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="kc">Infinity</span><span class="p">])</span>
+          <span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">x1</span><span class="p">.</span><span class="nx">range</span><span class="p">());</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Stash the new scale.</p></td><td class="code"><div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">__chart__</span> <span class="o">=</span> <span class="nx">x1</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>Derive width-scales from the x-scales.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">w0</span> <span class="o">=</span> <span class="nx">bulletWidth</span><span class="p">(</span><span class="nx">x0</span><span class="p">),</span>
+          <span class="nx">w1</span> <span class="o">=</span> <span class="nx">bulletWidth</span><span class="p">(</span><span class="nx">x1</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>Update the range rects.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">g</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;rect.range&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">rangez</span><span class="p">);</span>
+
+      <span class="nx">range</span><span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg:rect&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&quot;range s&quot;</span> <span class="o">+</span> <span class="nx">i</span><span class="p">;</span> <span class="p">})</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">w0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="nx">x0</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">w1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="nx">x1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+
+      <span class="nx">range</span><span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="nx">x1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">w1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>Update the measure rects.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">measure</span> <span class="o">=</span> <span class="nx">g</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;rect.measure&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">measurez</span><span class="p">);</span>
+
+      <span class="nx">measure</span><span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg:rect&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&quot;measure s&quot;</span> <span class="o">+</span> <span class="nx">i</span><span class="p">;</span> <span class="p">})</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">w0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="nx">x0</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">w1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="nx">x1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+
+      <span class="nx">measure</span><span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">w1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="nx">reverse</span> <span class="o">?</span> <span class="nx">x1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">3</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-10"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-10">&#182;</a></div><p>Update the marker lines.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">marker</span> <span class="o">=</span> <span class="nx">g</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;line.marker&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">markerz</span><span class="p">);</span>
+
+      <span class="nx">marker</span><span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg:line&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;marker&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="nx">x0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="nx">x0</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="nx">x1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="nx">x1</span><span class="p">);</span>
+
+      <span class="nx">marker</span><span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="nx">x1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="nx">x1</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">6</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-11"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-11">&#182;</a></div><p>Compute the tick format.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">format</span> <span class="o">=</span> <span class="nx">tickFormat</span> <span class="o">||</span> <span class="nx">x1</span><span class="p">.</span><span class="nx">tickFormat</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p>Update the tick groups.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">tick</span> <span class="o">=</span> <span class="nx">g</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;g.tick&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">x1</span><span class="p">.</span><span class="nx">ticks</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">||</span> <span class="nx">format</span><span class="p">(</span><span class="nx">d</span><span class="p">);</span>
+          <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-13"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-13">&#182;</a></div><p>Initialize the ticks with the old scale, x0.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">tickEnter</span> <span class="o">=</span> <span class="nx">tick</span><span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg:g&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;tick&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">bulletTranslate</span><span class="p">(</span><span class="nx">x0</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span><span class="p">);</span>
+
+      <span class="nx">tickEnter</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg:line&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">/</span> <span class="mi">6</span><span class="p">);</span>
+
+      <span class="nx">tickEnter</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg:text&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;text-anchor&quot;</span><span class="p">,</span> <span class="s2">&quot;middle&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;dy&quot;</span><span class="p">,</span> <span class="s2">&quot;1em&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">format</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-14"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-14">&#182;</a></div><p>Transition the entering ticks to the new scale, x1.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">tickEnter</span><span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">bulletTranslate</span><span class="p">(</span><span class="nx">x1</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-15"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-15">&#182;</a></div><p>Transition the updating ticks to the new scale, x1.</p></td><td class="code"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">tickUpdate</span> <span class="o">=</span> <span class="nx">tick</span><span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">bulletTranslate</span><span class="p">(</span><span class="nx">x1</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+      <span class="nx">tickUpdate</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;line&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">/</span> <span class="mi">6</span><span class="p">);</span>
+
+      <span class="nx">tickUpdate</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="nx">height</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">/</span> <span class="mi">6</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-16"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-16">&#182;</a></div><p>Transition the exiting ticks to the new scale, x1.</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">tick</span><span class="p">.</span><span class="nx">exit</span><span class="p">().</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="nx">duration</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">bulletTranslate</span><span class="p">(</span><span class="nx">x1</span><span class="p">))</span>
+          <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+    <span class="p">});</span>
+    <span class="nx">d3</span><span class="p">.</span><span class="nx">timer</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-17"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-17">&#182;</a></div><p>left, right, top, bottom</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">bullet</span><span class="p">.</span><span class="nx">orient</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">orient</span><span class="p">;</span>
+    <span class="nx">orient</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">reverse</span> <span class="o">=</span> <span class="nx">orient</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span> <span class="o">||</span> <span class="nx">orient</span> <span class="o">==</span> <span class="s2">&quot;bottom&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-18"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-18">&#182;</a></div><p>ranges (bad, satisfactory, good)</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">bullet</span><span class="p">.</span><span class="nx">ranges</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">ranges</span><span class="p">;</span>
+    <span class="nx">ranges</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-19"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-19">&#182;</a></div><p>markers (previous, goal)</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">bullet</span><span class="p">.</span><span class="nx">markers</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">markers</span><span class="p">;</span>
+    <span class="nx">markers</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-20"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-20">&#182;</a></div><p>measures (actual, forecast)</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">bullet</span><span class="p">.</span><span class="nx">measures</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">measures</span><span class="p">;</span>
+    <span class="nx">measures</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">bullet</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">width</span><span class="p">;</span>
+    <span class="nx">width</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">bullet</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="nx">height</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">bullet</span><span class="p">.</span><span class="nx">tickFormat</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">tickFormat</span><span class="p">;</span>
+    <span class="nx">tickFormat</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">bullet</span><span class="p">.</span><span class="nx">duration</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">duration</span><span class="p">;</span>
+    <span class="nx">duration</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">bullet</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">bulletRanges</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">ranges</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">bulletMarkers</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">markers</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">bulletMeasures</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">measures</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">bulletTranslate</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,0)&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">bulletWidth</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">x0</span> <span class="o">=</span> <span class="nx">x</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">x</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

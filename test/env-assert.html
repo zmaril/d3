@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › env-assert.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../index.html"></a><h1>env-assert.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">inDelta</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">delta</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">inDelta</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">delta</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">message</span> <span class="o">||</span> <span class="s2">&quot;expected {actual} to be in within *&quot;</span> <span class="o">+</span> <span class="nx">delta</span> <span class="o">+</span> <span class="s2">&quot;* of {expected}&quot;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">inDelta</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">domNull</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">actual</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">actual</span><span class="o">+</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">message</span> <span class="o">||</span> <span class="s2">&quot;expected null, got {actual}&quot;</span><span class="p">,</span> <span class="s2">&quot;===&quot;</span><span class="p">,</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">domNull</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">actual</span> <span class="o">!==</span> <span class="nx">expected</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">actual</span><span class="o">+</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nx">expected</span><span class="o">+</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nx">message</span> <span class="o">||</span> <span class="s2">&quot;expected {expected}, got {actual}&quot;</span><span class="p">,</span> <span class="s2">&quot;===&quot;</span><span class="p">,</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">rgbEqual</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">r</span> <span class="o">!==</span> <span class="nx">r</span> <span class="o">||</span> <span class="nx">actual</span><span class="p">.</span><span class="nx">g</span> <span class="o">!==</span> <span class="nx">g</span> <span class="o">||</span> <span class="nx">actual</span><span class="p">.</span><span class="nx">b</span> <span class="o">!==</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="s2">&quot;rgb(&quot;</span> <span class="o">+</span> <span class="nx">actual</span><span class="p">.</span><span class="nx">r</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">actual</span><span class="p">.</span><span class="nx">g</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">actual</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;rgb(&quot;</span> <span class="o">+</span> <span class="nx">r</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">g</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="nx">message</span> <span class="o">||</span> <span class="s2">&quot;expected {expected}, got {actual}&quot;</span><span class="p">,</span> <span class="s2">&quot;===&quot;</span><span class="p">,</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">rgbEqual</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">hslEqual</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">h</span> <span class="o">-</span> <span class="nx">h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span> <span class="o">||</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">s</span> <span class="o">-</span> <span class="nx">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span> <span class="o">||</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">l</span> <span class="o">-</span> <span class="nx">l</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="s2">&quot;hsl(&quot;</span> <span class="o">+</span> <span class="nx">actual</span><span class="p">.</span><span class="nx">h</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">s</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;%,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">l</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">,</span> <span class="s2">&quot;hsl(&quot;</span> <span class="o">+</span> <span class="nx">h</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;%,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;%)&quot;</span><span class="p">,</span> <span class="nx">message</span> <span class="o">||</span> <span class="s2">&quot;expected {expected}, got {actual}&quot;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">hslEqual</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">formatPath</span><span class="p">(</span><span class="nx">actual</span><span class="p">),</span> <span class="nx">formatPath</span><span class="p">(</span><span class="nx">expected</span><span class="p">),</span> <span class="nx">message</span> <span class="o">||</span> <span class="s2">&quot;expected {expected}, got {actual}&quot;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">inDelta</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">delta</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">expected</span><span class="p">)</span> <span class="o">?</span> <span class="nx">inDeltaArray</span> <span class="o">:</span> <span class="nx">inDeltaNumber</span><span class="p">)(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">delta</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">inDeltaArray</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">delta</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">expected</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">actual</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="nx">n</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">inDelta</span><span class="p">(</span><span class="nx">actual</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">expected</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">delta</span><span class="p">))</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">inDeltaNumber</span><span class="p">(</span><span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">,</span> <span class="nx">delta</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">actual</span> <span class="o">&gt;=</span> <span class="nx">expected</span> <span class="o">-</span> <span class="nx">delta</span> <span class="o">&amp;&amp;</span> <span class="nx">actual</span> <span class="o">&lt;=</span> <span class="nx">expected</span> <span class="o">+</span> <span class="nx">delta</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">a</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+  <span class="nx">b</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">!==</span> <span class="nx">b</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">b</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">x</span> <span class="o">===</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">!==</span> <span class="nx">y</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">y</span> <span class="o">!==</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">y</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">reNumber</span> <span class="o">=</span> <span class="sr">/[-+]?(?:\d+\.\d+|\d+\.|\.\d+|\d+)(?:[eE][-]?\d+)?/g</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">parts</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="nx">reNumber</span><span class="p">.</span><span class="nx">lastIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">s0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">s1</span><span class="p">,</span> <span class="nx">m</span><span class="p">;</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">reNumber</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">part</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">s0</span><span class="p">,</span> <span class="nx">s1</span> <span class="o">=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">index</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="sr">/^[, ]$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">part</span><span class="p">))</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">part</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">parts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseFloat</span><span class="p">(</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+    <span class="nx">s0</span> <span class="o">=</span> <span class="nx">reNumber</span><span class="p">.</span><span class="nx">lastIndex</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">s0</span> <span class="o">&lt;</span> <span class="nx">path</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">s0</span><span class="p">));</span>
+  <span class="k">return</span> <span class="nx">parts</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">formatPath</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">reNumber</span><span class="p">,</span> <span class="nx">formatNumber</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">formatNumber</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">((</span><span class="nx">s</span> <span class="o">=</span> <span class="o">+</span><span class="nx">s</span><span class="p">)</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span> <span class="o">?</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="o">:</span> <span class="nx">s</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:1}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../javascript/docco.min.js"></script>
+</html>

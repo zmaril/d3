@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › layout › chord.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>chord.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">chord</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">chord</span> <span class="o">=</span> <span class="p">{},</span>
+      <span class="nx">chords</span><span class="p">,</span>
+      <span class="nx">groups</span><span class="p">,</span>
+      <span class="nx">matrix</span><span class="p">,</span>
+      <span class="nx">n</span><span class="p">,</span>
+      <span class="nx">padding</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">sortGroups</span><span class="p">,</span>
+      <span class="nx">sortSubgroups</span><span class="p">,</span>
+      <span class="nx">sortChords</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">relayout</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">subgroups</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="nx">groupSums</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">groupIndex</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">n</span><span class="p">),</span>
+        <span class="nx">subgroupIndex</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">k</span><span class="p">,</span>
+        <span class="nx">x</span><span class="p">,</span>
+        <span class="nx">x0</span><span class="p">,</span>
+        <span class="nx">i</span><span class="p">,</span>
+        <span class="nx">j</span><span class="p">;</span>
+
+    <span class="nx">chords</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="nx">groups</span> <span class="o">=</span> <span class="p">[];</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Compute the sum.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span> <span class="o">+=</span> <span class="nx">matrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="nx">groupSums</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+      <span class="nx">subgroupIndex</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">n</span><span class="p">));</span>
+      <span class="nx">k</span> <span class="o">+=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Sort groups…</p></td><td class="code"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">sortGroups</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">groupIndex</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">sortGroups</span><span class="p">(</span><span class="nx">groupSums</span><span class="p">[</span><span class="nx">a</span><span class="p">],</span> <span class="nx">groupSums</span><span class="p">[</span><span class="nx">b</span><span class="p">]);</span>
+      <span class="p">});</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Sort subgroups…</p></td><td class="code"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">sortSubgroups</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">subgroupIndex</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">sortSubgroups</span><span class="p">(</span><span class="nx">matrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">a</span><span class="p">],</span> <span class="nx">matrix</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">b</span><span class="p">]);</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Convert the sum to scaling factor for [0, 2pi].
+TODO Allow start and end angle to be specified.
+TODO Allow padding to be specified as percentage?</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">k</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">-</span> <span class="nx">padding</span> <span class="o">*</span> <span class="nx">n</span><span class="p">)</span> <span class="o">/</span> <span class="nx">k</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Compute the start and end angle for each group and subgroup.
+Note: Opera has a bug reordering object literal properties!</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">x0</span> <span class="o">=</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">di</span> <span class="o">=</span> <span class="nx">groupIndex</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+            <span class="nx">dj</span> <span class="o">=</span> <span class="nx">subgroupIndex</span><span class="p">[</span><span class="nx">di</span><span class="p">][</span><span class="nx">j</span><span class="p">],</span>
+            <span class="nx">v</span> <span class="o">=</span> <span class="nx">matrix</span><span class="p">[</span><span class="nx">di</span><span class="p">][</span><span class="nx">dj</span><span class="p">],</span>
+            <span class="nx">a0</span> <span class="o">=</span> <span class="nx">x</span><span class="p">,</span>
+            <span class="nx">a1</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+=</span> <span class="nx">v</span> <span class="o">*</span> <span class="nx">k</span><span class="p">;</span>
+        <span class="nx">subgroups</span><span class="p">[</span><span class="nx">di</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">dj</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">index</span><span class="o">:</span> <span class="nx">di</span><span class="p">,</span>
+          <span class="nx">subindex</span><span class="o">:</span> <span class="nx">dj</span><span class="p">,</span>
+          <span class="nx">startAngle</span><span class="o">:</span> <span class="nx">a0</span><span class="p">,</span>
+          <span class="nx">endAngle</span><span class="o">:</span> <span class="nx">a1</span><span class="p">,</span>
+          <span class="nx">value</span><span class="o">:</span> <span class="nx">v</span>
+        <span class="p">};</span>
+      <span class="p">}</span>
+      <span class="nx">groups</span><span class="p">[</span><span class="nx">di</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">index</span><span class="o">:</span> <span class="nx">di</span><span class="p">,</span>
+        <span class="nx">startAngle</span><span class="o">:</span> <span class="nx">x0</span><span class="p">,</span>
+        <span class="nx">endAngle</span><span class="o">:</span> <span class="nx">x</span><span class="p">,</span>
+        <span class="nx">value</span><span class="o">:</span> <span class="p">(</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">/</span> <span class="nx">k</span>
+      <span class="p">};</span>
+      <span class="nx">x</span> <span class="o">+=</span> <span class="nx">padding</span><span class="p">;</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>Generate chords for each (non-empty) subgroup-subgroup link.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">subgroups</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">j</span><span class="p">],</span>
+            <span class="nx">target</span> <span class="o">=</span> <span class="nx">subgroups</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nx">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">source</span><span class="p">.</span><span class="nx">value</span> <span class="o">||</span> <span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">chords</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">source</span><span class="p">.</span><span class="nx">value</span> <span class="o">&lt;</span> <span class="nx">target</span><span class="p">.</span><span class="nx">value</span>
+              <span class="o">?</span> <span class="p">{</span><span class="nx">source</span><span class="o">:</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">target</span><span class="o">:</span> <span class="nx">source</span><span class="p">}</span>
+              <span class="o">:</span> <span class="p">{</span><span class="nx">source</span><span class="o">:</span> <span class="nx">source</span><span class="p">,</span> <span class="nx">target</span><span class="o">:</span> <span class="nx">target</span><span class="p">});</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">sortChords</span><span class="p">)</span> <span class="nx">resort</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">resort</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">chords</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">sortChords</span><span class="p">(</span>
+          <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">value</span> <span class="o">+</span> <span class="nx">a</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+          <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">value</span> <span class="o">+</span> <span class="nx">b</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">matrix</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">matrix</span><span class="p">;</span>
+    <span class="nx">n</span> <span class="o">=</span> <span class="p">(</span><span class="nx">matrix</span> <span class="o">=</span> <span class="nx">x</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">matrix</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="nx">chords</span> <span class="o">=</span> <span class="nx">groups</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">chord</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">padding</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">padding</span><span class="p">;</span>
+    <span class="nx">padding</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">chords</span> <span class="o">=</span> <span class="nx">groups</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">chord</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">sortGroups</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sortGroups</span><span class="p">;</span>
+    <span class="nx">sortGroups</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">chords</span> <span class="o">=</span> <span class="nx">groups</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">chord</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">sortSubgroups</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sortSubgroups</span><span class="p">;</span>
+    <span class="nx">sortSubgroups</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">chords</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">chord</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">sortChords</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">sortChords</span><span class="p">;</span>
+    <span class="nx">sortChords</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">chords</span><span class="p">)</span> <span class="nx">resort</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">chord</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">chords</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">chords</span><span class="p">)</span> <span class="nx">relayout</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">chords</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">chord</span><span class="p">.</span><span class="nx">groups</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">groups</span><span class="p">)</span> <span class="nx">relayout</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nx">groups</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">chord</span><span class="p">;</span>
+<span class="p">};</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › layout › cluster.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>cluster.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Implements a hierarchical layout using the cluster (or dendrogram)
+algorithm.</p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">cluster</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">hierarchy</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">hierarchy</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="kc">null</span><span class="p">).</span><span class="nx">value</span><span class="p">(</span><span class="kc">null</span><span class="p">),</span>
+      <span class="nx">separation</span> <span class="o">=</span> <span class="nx">d3_layout_treeSeparation</span><span class="p">,</span>
+      <span class="nx">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">];</span> <span class="c1">// width, height</span>
+
+  <span class="kd">function</span> <span class="nx">cluster</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">),</span>
+        <span class="nx">root</span> <span class="o">=</span> <span class="nx">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="nx">previousNode</span><span class="p">,</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">kx</span><span class="p">,</span>
+        <span class="nx">ky</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>First walk, computing the initial x &amp; y values.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">d3_layout_treeVisitAfter</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">d3_layout_clusterX</span><span class="p">(</span><span class="nx">children</span><span class="p">);</span>
+        <span class="nx">node</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">d3_layout_clusterY</span><span class="p">(</span><span class="nx">children</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">previousNode</span> <span class="o">?</span> <span class="nx">x</span> <span class="o">+=</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousNode</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nx">node</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nx">previousNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Compute the left-most, right-most, and depth-most nodes for extents.</p></td><td class="code"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="nx">d3_layout_clusterLeft</span><span class="p">(</span><span class="nx">root</span><span class="p">),</span>
+        <span class="nx">right</span> <span class="o">=</span> <span class="nx">d3_layout_clusterRight</span><span class="p">(</span><span class="nx">root</span><span class="p">),</span>
+        <span class="nx">x0</span> <span class="o">=</span> <span class="nx">left</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">x1</span> <span class="o">=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">right</span><span class="p">,</span> <span class="nx">left</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Second walk, normalizing x &amp; y to the desired size.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">d3_layout_treeVisitAfter</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">x1</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">*</span> <span class="nx">size</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">y</span> <span class="o">?</span> <span class="nx">node</span><span class="p">.</span><span class="nx">y</span> <span class="o">/</span> <span class="nx">root</span><span class="p">.</span><span class="nx">y</span> <span class="o">:</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="nx">size</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">nodes</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">cluster</span><span class="p">.</span><span class="nx">separation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">separation</span><span class="p">;</span>
+    <span class="nx">separation</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">cluster</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">cluster</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">size</span><span class="p">;</span>
+    <span class="nx">size</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">cluster</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">d3_layout_hierarchyRebind</span><span class="p">(</span><span class="nx">cluster</span><span class="p">,</span> <span class="nx">hierarchy</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_clusterY</span><span class="p">(</span><span class="nx">children</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">children</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">child</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">child</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_clusterX</span><span class="p">(</span><span class="nx">children</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">children</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">child</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">child</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+  <span class="p">},</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_clusterLeft</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">d3_layout_clusterLeft</span><span class="p">(</span><span class="nx">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">:</span> <span class="nx">node</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_clusterRight</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">,</span> <span class="nx">n</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">?</span> <span class="nx">d3_layout_clusterRight</span><span class="p">(</span><span class="nx">children</span><span class="p">[</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="nx">node</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › transform.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>transform.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">transform</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">g</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">ns</span><span class="p">.</span><span class="nx">prefix</span><span class="p">.</span><span class="nx">svg</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">),</span>
+      <span class="nx">identity</span> <span class="o">=</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">c</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">d</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">f</span><span class="o">:</span> <span class="mi">0</span><span class="p">};</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">transform</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">g</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="nx">string</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">g</span><span class="p">.</span><span class="nx">transform</span><span class="p">.</span><span class="nx">baseVal</span><span class="p">.</span><span class="nx">consolidate</span><span class="p">();</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">d3_transform</span><span class="p">(</span><span class="nx">t</span> <span class="o">?</span> <span class="nx">t</span><span class="p">.</span><span class="nx">matrix</span> <span class="o">:</span> <span class="nx">identity</span><span class="p">);</span>
+  <span class="p">})(</span><span class="nx">string</span><span class="p">);</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Compute x-scale and normalize the first row.
+Compute shear and make second row orthogonal to first.
+Compute y-scale and normalize the second row.
+Finally, compute the rotation.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_transform</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">r0</span> <span class="o">=</span> <span class="p">[</span><span class="nx">m</span><span class="p">.</span><span class="nx">a</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">b</span><span class="p">],</span>
+      <span class="nx">r1</span> <span class="o">=</span> <span class="p">[</span><span class="nx">m</span><span class="p">.</span><span class="nx">c</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">d</span><span class="p">],</span>
+      <span class="nx">kx</span> <span class="o">=</span> <span class="nx">d3_transformNormalize</span><span class="p">(</span><span class="nx">r0</span><span class="p">),</span>
+      <span class="nx">kz</span> <span class="o">=</span> <span class="nx">d3_transformDot</span><span class="p">(</span><span class="nx">r0</span><span class="p">,</span> <span class="nx">r1</span><span class="p">),</span>
+      <span class="nx">ky</span> <span class="o">=</span> <span class="nx">d3_transformNormalize</span><span class="p">(</span><span class="nx">d3_transformCombine</span><span class="p">(</span><span class="nx">r1</span><span class="p">,</span> <span class="nx">r0</span><span class="p">,</span> <span class="o">-</span><span class="nx">kz</span><span class="p">))</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">r1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">r1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">r0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+    <span class="nx">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="nx">r0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="nx">kx</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="nx">kz</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">rotate</span> <span class="o">=</span> <span class="p">(</span><span class="nx">kx</span> <span class="o">?</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">atan2</span><span class="p">(</span><span class="nx">r0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">r0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">atan2</span><span class="p">(</span><span class="o">-</span><span class="nx">r1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">r1</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="nx">d3_transformDegrees</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">translate</span> <span class="o">=</span> <span class="p">[</span><span class="nx">m</span><span class="p">.</span><span class="nx">e</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">f</span><span class="p">];</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">scale</span> <span class="o">=</span> <span class="p">[</span><span class="nx">kx</span><span class="p">,</span> <span class="nx">ky</span><span class="p">];</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">skew</span> <span class="o">=</span> <span class="nx">ky</span> <span class="o">?</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">atan2</span><span class="p">(</span><span class="nx">kz</span><span class="p">,</span> <span class="nx">ky</span><span class="p">)</span> <span class="o">*</span> <span class="nx">d3_transformDegrees</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">d3_transform</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">translate</span>
+      <span class="o">+</span> <span class="s2">&quot;)rotate(&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">rotate</span>
+      <span class="o">+</span> <span class="s2">&quot;)skewX(&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">skew</span>
+      <span class="o">+</span> <span class="s2">&quot;)scale(&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">scale</span>
+      <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_transformDot</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_transformNormalize</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">d3_transformDot</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">a</span><span class="p">));</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">k</span><span class="p">;</span>
+    <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">k</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">k</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_transformCombine</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">k</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">k</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="k">return</span> <span class="nx">a</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">d3_transformDegrees</span> <span class="o">=</span> <span class="mi">180</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Next: <a href="/d3/src/core/mouse.html">core/mouse.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

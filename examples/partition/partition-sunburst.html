@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » examples › partition › partition-sunburst.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>partition-sunburst.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">960</span><span class="p">,</span>
+    <span class="nx">height</span> <span class="o">=</span> <span class="mi">700</span><span class="p">,</span>
+    <span class="nx">radius</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">color</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">category20c</span><span class="p">();</span>
+
+<span class="kd">var</span> <span class="nx">vis</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#chart&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="nx">width</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">partition</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">partition</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">size</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">,</span> <span class="nx">radius</span> <span class="o">*</span> <span class="nx">radius</span><span class="p">])</span>
+    <span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">arc</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">arc</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">startAngle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span> <span class="p">})</span>
+    <span class="p">.</span><span class="nx">endAngle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">dx</span><span class="p">;</span> <span class="p">})</span>
+    <span class="p">.</span><span class="nx">innerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span> <span class="p">})</span>
+    <span class="p">.</span><span class="nx">outerRadius</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">dy</span><span class="p">);</span> <span class="p">});</span>
+
+<span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;../data/flare.json&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">vis</span><span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="nx">json</span><span class="p">]).</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">partition</span><span class="p">.</span><span class="nx">nodes</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">depth</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="s2">&quot;none&quot;</span><span class="p">;</span> <span class="p">})</span> <span class="c1">// hide inner ring</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="nx">arc</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;fill-rule&quot;</span><span class="p">,</span> <span class="s2">&quot;evenodd&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;stroke&quot;</span><span class="p">,</span> <span class="s2">&quot;#fff&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">color</span><span class="p">((</span><span class="nx">d</span><span class="p">.</span><span class="nx">children</span> <span class="o">?</span> <span class="nx">d</span> <span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">parent</span><span class="p">).</span><span class="nx">name</span><span class="p">);</span> <span class="p">})</span>
+      <span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">stash</span><span class="p">);</span>
+
+  <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#size&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">path</span>
+        <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">partition</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">size</span><span class="p">;</span> <span class="p">}))</span>
+      <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">attrTween</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="nx">arcTween</span><span class="p">);</span>
+
+    <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#size&quot;</span><span class="p">).</span><span class="nx">classed</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#count&quot;</span><span class="p">).</span><span class="nx">classed</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#count&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">path</span>
+        <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">partition</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}))</span>
+      <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">attrTween</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="nx">arcTween</span><span class="p">);</span>
+
+    <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#size&quot;</span><span class="p">).</span><span class="nx">classed</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+    <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#count&quot;</span><span class="p">).</span><span class="nx">classed</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Stash the old values for transition.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">stash</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">x0</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">dx0</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">dx</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Interpolate the arcs in data space.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">arcTween</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolate</span><span class="p">({</span><span class="nx">x</span><span class="o">:</span> <span class="nx">a</span><span class="p">.</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">dx</span><span class="o">:</span> <span class="nx">a</span><span class="p">.</span><span class="nx">dx0</span><span class="p">},</span> <span class="nx">a</span><span class="p">);</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">i</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+    <span class="nx">a</span><span class="p">.</span><span class="nx">x0</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+    <span class="nx">a</span><span class="p">.</span><span class="nx">dx0</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">dx</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">arc</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

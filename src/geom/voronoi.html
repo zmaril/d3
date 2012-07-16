@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › geom › voronoi.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>voronoi.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Adapted from Nicolas Garcia Belmonte's JIT implementation:
+http://blog.thejit.org/2010/02/12/voronoi-tessellation/
+http://blog.thejit.org/assets/voronoijs/voronoi.js
+See lib/jit/LICENSE for details.</p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Notes:</p>
+
+<p>This implementation does not clip the returned polygons, so if you want to
+clip them to a particular shape you will need to do that either in SVG or by
+post-processing with d3.geom.polygon's clip method.</p>
+
+<p>If any vertices are coincident or have NaN positions, the behavior of this
+method is undefined. Most likely invalid polygons will be returned. You
+should filter invalid points, and consolidate coincident points, before
+computing the tessellation.</p></td><td class="code"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param vertices [[x1, y1], [x2, y2], …]</span>
+<span class="cm"> * @returns polygons [[[x1, y1], [x2, y2], …], …]</span>
+<span class="cm"> */</span>
+<span class="nx">d3</span><span class="p">.</span><span class="nx">geom</span><span class="p">.</span><span class="nx">voronoi</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">vertices</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">polygons</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">[];</span> <span class="p">});</span>
+
+  <span class="nx">d3_voronoi_tessellate</span><span class="p">(</span><span class="nx">vertices</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">s1</span><span class="p">,</span>
+        <span class="nx">s2</span><span class="p">,</span>
+        <span class="nx">x1</span><span class="p">,</span>
+        <span class="nx">x2</span><span class="p">,</span>
+        <span class="nx">y1</span><span class="p">,</span>
+        <span class="nx">y2</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">a</span> <span class="o">===</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">s1</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">ep</span><span class="p">.</span><span class="nx">r</span><span class="p">;</span>
+      <span class="nx">s2</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">ep</span><span class="p">.</span><span class="nx">l</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">s1</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">ep</span><span class="p">.</span><span class="nx">l</span><span class="p">;</span>
+      <span class="nx">s2</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">ep</span><span class="p">.</span><span class="nx">r</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">a</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">y1</span> <span class="o">=</span> <span class="nx">s1</span> <span class="o">?</span> <span class="nx">s1</span><span class="p">.</span><span class="nx">y</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="nx">e6</span><span class="p">;</span>
+      <span class="nx">x1</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">c</span> <span class="o">-</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">*</span> <span class="nx">y1</span><span class="p">;</span>
+      <span class="nx">y2</span> <span class="o">=</span> <span class="nx">s2</span> <span class="o">?</span> <span class="nx">s2</span><span class="p">.</span><span class="nx">y</span> <span class="o">:</span> <span class="mi">1</span><span class="nx">e6</span><span class="p">;</span>
+      <span class="nx">x2</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">c</span> <span class="o">-</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">*</span> <span class="nx">y2</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">x1</span> <span class="o">=</span> <span class="nx">s1</span> <span class="o">?</span> <span class="nx">s1</span><span class="p">.</span><span class="nx">x</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="nx">e6</span><span class="p">;</span>
+      <span class="nx">y1</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">c</span> <span class="o">-</span> <span class="nx">e</span><span class="p">.</span><span class="nx">a</span> <span class="o">*</span> <span class="nx">x1</span><span class="p">;</span>
+      <span class="nx">x2</span> <span class="o">=</span> <span class="nx">s2</span> <span class="o">?</span> <span class="nx">s2</span><span class="p">.</span><span class="nx">x</span> <span class="o">:</span> <span class="mi">1</span><span class="nx">e6</span><span class="p">;</span>
+      <span class="nx">y2</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">c</span> <span class="o">-</span> <span class="nx">e</span><span class="p">.</span><span class="nx">a</span> <span class="o">*</span> <span class="nx">x2</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">v1</span> <span class="o">=</span> <span class="p">[</span><span class="nx">x1</span><span class="p">,</span> <span class="nx">y1</span><span class="p">],</span>
+        <span class="nx">v2</span> <span class="o">=</span> <span class="p">[</span><span class="nx">x2</span><span class="p">,</span> <span class="nx">y2</span><span class="p">];</span>
+    <span class="nx">polygons</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">l</span><span class="p">.</span><span class="nx">index</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">v1</span><span class="p">,</span> <span class="nx">v2</span><span class="p">);</span>
+    <span class="nx">polygons</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span><span class="p">.</span><span class="nx">index</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">v1</span><span class="p">,</span> <span class="nx">v2</span><span class="p">);</span>
+  <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Reconnect the polygon segments into counterclockwise loops.</p></td><td class="code"><div class="highlight"><pre>  <span class="k">return</span> <span class="nx">polygons</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">polygon</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">cx</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+        <span class="nx">cy</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nx">polygon</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">v</span><span class="p">.</span><span class="nx">angle</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">atan2</span><span class="p">(</span><span class="nx">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">cx</span><span class="p">,</span> <span class="nx">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">cy</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">polygon</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">angle</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">angle</span><span class="p">;</span>
+    <span class="p">}).</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="o">!</span><span class="nx">i</span> <span class="o">||</span> <span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">angle</span> <span class="o">-</span> <span class="nx">polygon</span><span class="p">[</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">angle</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">d3_voronoi_opposite</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;l&quot;</span><span class="o">:</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="o">:</span> <span class="s2">&quot;l&quot;</span><span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_voronoi_tessellate</span><span class="p">(</span><span class="nx">vertices</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">Sites</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">list</span><span class="o">:</span> <span class="nx">vertices</span>
+      <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+          <span class="nx">index</span><span class="o">:</span> <span class="nx">i</span><span class="p">,</span>
+          <span class="nx">x</span><span class="o">:</span> <span class="nx">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+          <span class="nx">y</span><span class="o">:</span> <span class="nx">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">};</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">y</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span>
+          <span class="o">:</span> <span class="nx">a</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">y</span> <span class="o">?</span> <span class="mi">1</span>
+          <span class="o">:</span> <span class="nx">a</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">x</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span>
+          <span class="o">:</span> <span class="nx">a</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">x</span> <span class="o">?</span> <span class="mi">1</span>
+          <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}),</span>
+    <span class="nx">bottomSite</span><span class="o">:</span> <span class="kc">null</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">EdgeList</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">list</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">leftEnd</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nx">rightEnd</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+
+    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftEnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">createHalfEdge</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightEnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">createHalfEdge</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftEnd</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightEnd</span><span class="p">;</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightEnd</span><span class="p">.</span><span class="nx">l</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftEnd</span><span class="p">;</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftEnd</span><span class="p">,</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightEnd</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">createHalfEdge</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">edge</span><span class="p">,</span> <span class="nx">side</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">edge</span><span class="o">:</span> <span class="nx">edge</span><span class="p">,</span>
+        <span class="nx">side</span><span class="o">:</span> <span class="nx">side</span><span class="p">,</span>
+        <span class="nx">vertex</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;l&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;r&quot;</span><span class="o">:</span> <span class="kc">null</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+
+    <span class="nx">insert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lb</span><span class="p">,</span> <span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">l</span> <span class="o">=</span> <span class="nx">lb</span><span class="p">;</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="nx">lb</span><span class="p">.</span><span class="nx">r</span><span class="p">;</span>
+      <span class="nx">lb</span><span class="p">.</span><span class="nx">r</span><span class="p">.</span><span class="nx">l</span> <span class="o">=</span> <span class="nx">he</span><span class="p">;</span>
+      <span class="nx">lb</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="nx">he</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">leftBound</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">he</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftEnd</span><span class="p">;</span>
+      <span class="k">do</span> <span class="p">{</span>
+        <span class="nx">he</span> <span class="o">=</span> <span class="nx">he</span><span class="p">.</span><span class="nx">r</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nx">he</span> <span class="o">!=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightEnd</span> <span class="o">&amp;&amp;</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">rightOf</span><span class="p">(</span><span class="nx">he</span><span class="p">,</span> <span class="nx">p</span><span class="p">));</span>
+      <span class="nx">he</span> <span class="o">=</span> <span class="nx">he</span><span class="p">.</span><span class="nx">l</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">he</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">del</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">l</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="nx">he</span><span class="p">.</span><span class="nx">r</span><span class="p">;</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">r</span><span class="p">.</span><span class="nx">l</span> <span class="o">=</span> <span class="nx">he</span><span class="p">.</span><span class="nx">l</span><span class="p">;</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">edge</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">right</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">he</span><span class="p">.</span><span class="nx">r</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">left</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">he</span><span class="p">.</span><span class="nx">l</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">leftRegion</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">he</span><span class="p">.</span><span class="nx">edge</span> <span class="o">==</span> <span class="kc">null</span>
+          <span class="o">?</span> <span class="nx">Sites</span><span class="p">.</span><span class="nx">bottomSite</span>
+          <span class="o">:</span> <span class="nx">he</span><span class="p">.</span><span class="nx">edge</span><span class="p">.</span><span class="nx">region</span><span class="p">[</span><span class="nx">he</span><span class="p">.</span><span class="nx">side</span><span class="p">];</span>
+    <span class="p">},</span>
+
+    <span class="nx">rightRegion</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">he</span><span class="p">.</span><span class="nx">edge</span> <span class="o">==</span> <span class="kc">null</span>
+          <span class="o">?</span> <span class="nx">Sites</span><span class="p">.</span><span class="nx">bottomSite</span>
+          <span class="o">:</span> <span class="nx">he</span><span class="p">.</span><span class="nx">edge</span><span class="p">.</span><span class="nx">region</span><span class="p">[</span><span class="nx">d3_voronoi_opposite</span><span class="p">[</span><span class="nx">he</span><span class="p">.</span><span class="nx">side</span><span class="p">]];</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">Geom</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="nx">bisect</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">s1</span><span class="p">,</span> <span class="nx">s2</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">newEdge</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">region</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;l&quot;</span><span class="o">:</span> <span class="nx">s1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="o">:</span> <span class="nx">s2</span><span class="p">},</span>
+        <span class="nx">ep</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;l&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">}</span>
+      <span class="p">};</span>
+
+      <span class="kd">var</span> <span class="nx">dx</span> <span class="o">=</span> <span class="nx">s2</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">s1</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+          <span class="nx">dy</span> <span class="o">=</span> <span class="nx">s2</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">s1</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+          <span class="nx">adx</span> <span class="o">=</span> <span class="nx">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">dx</span> <span class="o">:</span> <span class="o">-</span><span class="nx">dx</span><span class="p">,</span>
+          <span class="nx">ady</span> <span class="o">=</span> <span class="nx">dy</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">dy</span> <span class="o">:</span> <span class="o">-</span><span class="nx">dy</span><span class="p">;</span>
+
+      <span class="nx">newEdge</span><span class="p">.</span><span class="nx">c</span> <span class="o">=</span> <span class="nx">s1</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">dx</span> <span class="o">+</span> <span class="nx">s1</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">dy</span>
+          <span class="o">+</span> <span class="p">(</span><span class="nx">dx</span> <span class="o">*</span> <span class="nx">dx</span> <span class="o">+</span> <span class="nx">dy</span> <span class="o">*</span> <span class="nx">dy</span><span class="p">)</span> <span class="o">*</span> <span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">adx</span> <span class="o">&gt;</span> <span class="nx">ady</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">newEdge</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nx">newEdge</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="nx">dy</span> <span class="o">/</span> <span class="nx">dx</span><span class="p">;</span>
+        <span class="nx">newEdge</span><span class="p">.</span><span class="nx">c</span> <span class="o">/=</span> <span class="nx">dx</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">newEdge</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nx">newEdge</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">dx</span> <span class="o">/</span> <span class="nx">dy</span><span class="p">;</span>
+        <span class="nx">newEdge</span><span class="p">.</span><span class="nx">c</span> <span class="o">/=</span> <span class="nx">dy</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">newEdge</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">intersect</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">el1</span><span class="p">,</span> <span class="nx">el2</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">e1</span> <span class="o">=</span> <span class="nx">el1</span><span class="p">.</span><span class="nx">edge</span><span class="p">,</span>
+          <span class="nx">e2</span> <span class="o">=</span> <span class="nx">el2</span><span class="p">.</span><span class="nx">edge</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">e1</span> <span class="o">||</span> <span class="o">!</span><span class="nx">e2</span> <span class="o">||</span> <span class="p">(</span><span class="nx">e1</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span> <span class="o">==</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e1</span><span class="p">.</span><span class="nx">a</span> <span class="o">*</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nx">e1</span><span class="p">.</span><span class="nx">b</span> <span class="o">*</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="kd">var</span> <span class="nx">xint</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e1</span><span class="p">.</span><span class="nx">c</span> <span class="o">*</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">b</span> <span class="o">-</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">c</span> <span class="o">*</span> <span class="nx">e1</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="o">/</span> <span class="nx">d</span><span class="p">,</span>
+          <span class="nx">yint</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e2</span><span class="p">.</span><span class="nx">c</span> <span class="o">*</span> <span class="nx">e1</span><span class="p">.</span><span class="nx">a</span> <span class="o">-</span> <span class="nx">e1</span><span class="p">.</span><span class="nx">c</span> <span class="o">*</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="o">/</span> <span class="nx">d</span><span class="p">,</span>
+          <span class="nx">e1r</span> <span class="o">=</span> <span class="nx">e1</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span>
+          <span class="nx">e2r</span> <span class="o">=</span> <span class="nx">e2</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span>
+          <span class="nx">el</span><span class="p">,</span>
+          <span class="nx">e</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">((</span><span class="nx">e1r</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">e2r</span><span class="p">.</span><span class="nx">y</span><span class="p">)</span> <span class="o">||</span>
+         <span class="p">(</span><span class="nx">e1r</span><span class="p">.</span><span class="nx">y</span> <span class="o">==</span> <span class="nx">e2r</span><span class="p">.</span><span class="nx">y</span> <span class="o">&amp;&amp;</span> <span class="nx">e1r</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">e2r</span><span class="p">.</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">el</span> <span class="o">=</span> <span class="nx">el1</span><span class="p">;</span>
+        <span class="nx">e</span> <span class="o">=</span> <span class="nx">e1</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">el</span> <span class="o">=</span> <span class="nx">el2</span><span class="p">;</span>
+        <span class="nx">e</span> <span class="o">=</span> <span class="nx">e2</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="kd">var</span> <span class="nx">rightOfSite</span> <span class="o">=</span> <span class="p">(</span><span class="nx">xint</span> <span class="o">&gt;=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span><span class="p">.</span><span class="nx">x</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">((</span><span class="nx">rightOfSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">el</span><span class="p">.</span><span class="nx">side</span> <span class="o">===</span> <span class="s2">&quot;l&quot;</span><span class="p">))</span> <span class="o">||</span>
+        <span class="p">(</span><span class="o">!</span><span class="nx">rightOfSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">el</span><span class="p">.</span><span class="nx">side</span> <span class="o">===</span> <span class="s2">&quot;r&quot;</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">x</span><span class="o">:</span> <span class="nx">xint</span><span class="p">,</span>
+        <span class="nx">y</span><span class="o">:</span> <span class="nx">yint</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+
+    <span class="nx">rightOf</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">he</span><span class="p">.</span><span class="nx">edge</span><span class="p">,</span>
+          <span class="nx">topsite</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span>
+          <span class="nx">rightOfSite</span> <span class="o">=</span> <span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">topsite</span><span class="p">.</span><span class="nx">x</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">rightOfSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">he</span><span class="p">.</span><span class="nx">side</span> <span class="o">===</span> <span class="s2">&quot;l&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">rightOfSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">he</span><span class="p">.</span><span class="nx">side</span> <span class="o">===</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">a</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">dyp</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">topsite</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span>
+            <span class="nx">dxp</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">topsite</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+            <span class="nx">fast</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">above</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="o">!</span><span class="nx">rightOfSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">))</span> <span class="o">||</span>
+          <span class="p">(</span><span class="nx">rightOfSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+          <span class="nx">above</span> <span class="o">=</span> <span class="nx">fast</span> <span class="o">=</span> <span class="p">(</span><span class="nx">dyp</span> <span class="o">&gt;=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">*</span> <span class="nx">dxp</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">above</span> <span class="o">=</span> <span class="p">((</span><span class="nx">p</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">p</span><span class="p">.</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">c</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">above</span> <span class="o">=</span> <span class="o">!</span><span class="nx">above</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">above</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">fast</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fast</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">dxs</span> <span class="o">=</span> <span class="nx">topsite</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">e</span><span class="p">.</span><span class="nx">region</span><span class="p">.</span><span class="nx">l</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+          <span class="nx">above</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">*</span> <span class="p">(</span><span class="nx">dxp</span> <span class="o">*</span> <span class="nx">dxp</span> <span class="o">-</span> <span class="nx">dyp</span> <span class="o">*</span> <span class="nx">dyp</span><span class="p">))</span> <span class="o">&lt;</span>
+            <span class="p">(</span><span class="nx">dxs</span> <span class="o">*</span> <span class="nx">dyp</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">dxp</span> <span class="o">/</span> <span class="nx">dxs</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">*</span> <span class="nx">e</span><span class="p">.</span><span class="nx">b</span><span class="p">));</span>
+
+          <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">above</span> <span class="o">=</span> <span class="o">!</span><span class="nx">above</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="cm">/* e.b == 1 */</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">yl</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">c</span> <span class="o">-</span> <span class="nx">e</span><span class="p">.</span><span class="nx">a</span> <span class="o">*</span> <span class="nx">p</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+            <span class="nx">t1</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">yl</span><span class="p">,</span>
+            <span class="nx">t2</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">topsite</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+            <span class="nx">t3</span> <span class="o">=</span> <span class="nx">yl</span> <span class="o">-</span> <span class="nx">topsite</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+
+        <span class="nx">above</span> <span class="o">=</span> <span class="p">(</span><span class="nx">t1</span> <span class="o">*</span> <span class="nx">t1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="nx">t2</span> <span class="o">*</span> <span class="nx">t2</span> <span class="o">+</span> <span class="nx">t3</span> <span class="o">*</span> <span class="nx">t3</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">he</span><span class="p">.</span><span class="nx">side</span> <span class="o">===</span> <span class="s2">&quot;l&quot;</span> <span class="o">?</span> <span class="nx">above</span> <span class="o">:</span> <span class="o">!</span><span class="nx">above</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">endPoint</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">edge</span><span class="p">,</span> <span class="nx">side</span><span class="p">,</span> <span class="nx">site</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">edge</span><span class="p">.</span><span class="nx">ep</span><span class="p">[</span><span class="nx">side</span><span class="p">]</span> <span class="o">=</span> <span class="nx">site</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">edge</span><span class="p">.</span><span class="nx">ep</span><span class="p">[</span><span class="nx">d3_voronoi_opposite</span><span class="p">[</span><span class="nx">side</span><span class="p">]])</span> <span class="k">return</span><span class="p">;</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="nx">edge</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">distance</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">dx</span> <span class="o">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">t</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+          <span class="nx">dy</span> <span class="o">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">t</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">dx</span> <span class="o">*</span> <span class="nx">dx</span> <span class="o">+</span> <span class="nx">dy</span> <span class="o">*</span> <span class="nx">dy</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">EventQueue</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">list</span><span class="o">:</span> <span class="p">[],</span>
+
+    <span class="nx">insert</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">,</span> <span class="nx">site</span><span class="p">,</span> <span class="nx">offset</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">vertex</span> <span class="o">=</span> <span class="nx">site</span><span class="p">;</span>
+      <span class="nx">he</span><span class="p">.</span><span class="nx">ystar</span> <span class="o">=</span> <span class="nx">site</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="nx">offset</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">list</span><span class="o">=</span><span class="nx">EventQueue</span><span class="p">.</span><span class="nx">list</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">list</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">next</span> <span class="o">=</span> <span class="nx">list</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">he</span><span class="p">.</span><span class="nx">ystar</span> <span class="o">&gt;</span> <span class="nx">next</span><span class="p">.</span><span class="nx">ystar</span> <span class="o">||</span>
+          <span class="p">(</span><span class="nx">he</span><span class="p">.</span><span class="nx">ystar</span> <span class="o">==</span> <span class="nx">next</span><span class="p">.</span><span class="nx">ystar</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">site</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;</span> <span class="nx">next</span><span class="p">.</span><span class="nx">vertex</span><span class="p">.</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
+          <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">list</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">he</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">del</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">ls</span><span class="o">=</span><span class="nx">EventQueue</span><span class="p">.</span><span class="nx">list</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">ls</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!=</span> <span class="nx">he</span><span class="p">);</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{}</span>
+      <span class="nx">ls</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">empty</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">;</span> <span class="p">},</span>
+
+    <span class="nx">nextEvent</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">he</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">ls</span><span class="o">=</span><span class="nx">EventQueue</span><span class="p">.</span><span class="nx">list</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">ls</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">==</span> <span class="nx">he</span><span class="p">)</span> <span class="k">return</span> <span class="nx">ls</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">min</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">elem</span> <span class="o">=</span> <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">list</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">x</span><span class="o">:</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">vertex</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span>
+        <span class="nx">y</span><span class="o">:</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">ystar</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+
+    <span class="nx">extractMin</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+  <span class="nx">Sites</span><span class="p">.</span><span class="nx">bottomSite</span> <span class="o">=</span> <span class="nx">Sites</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+
+  <span class="kd">var</span> <span class="nx">newSite</span> <span class="o">=</span> <span class="nx">Sites</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">shift</span><span class="p">(),</span> <span class="nx">newIntStar</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">lbnd</span><span class="p">,</span> <span class="nx">rbnd</span><span class="p">,</span> <span class="nx">llbnd</span><span class="p">,</span> <span class="nx">rrbnd</span><span class="p">,</span> <span class="nx">bisector</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">bot</span><span class="p">,</span> <span class="nx">top</span><span class="p">,</span> <span class="nx">temp</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">v</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">pm</span><span class="p">;</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">EventQueue</span><span class="p">.</span><span class="nx">empty</span><span class="p">())</span> <span class="p">{</span>
+      <span class="nx">newIntStar</span> <span class="o">=</span> <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">min</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">newSite</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">EventQueue</span><span class="p">.</span><span class="nx">empty</span><span class="p">()</span>
+      <span class="o">||</span> <span class="nx">newSite</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">newIntStar</span><span class="p">.</span><span class="nx">y</span>
+      <span class="o">||</span> <span class="p">(</span><span class="nx">newSite</span><span class="p">.</span><span class="nx">y</span> <span class="o">==</span> <span class="nx">newIntStar</span><span class="p">.</span><span class="nx">y</span>
+      <span class="o">&amp;&amp;</span> <span class="nx">newSite</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">newIntStar</span><span class="p">.</span><span class="nx">x</span><span class="p">)))</span> <span class="p">{</span> <span class="c1">//new site is smallest</span>
+      <span class="nx">lbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftBound</span><span class="p">(</span><span class="nx">newSite</span><span class="p">);</span>
+      <span class="nx">rbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+      <span class="nx">bot</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightRegion</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+      <span class="nx">e</span> <span class="o">=</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">bisect</span><span class="p">(</span><span class="nx">bot</span><span class="p">,</span> <span class="nx">newSite</span><span class="p">);</span>
+      <span class="nx">bisector</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">createHalfEdge</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">,</span> <span class="nx">bisector</span><span class="p">);</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">intersect</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">,</span> <span class="nx">bisector</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+        <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span> <span class="nx">newSite</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="nx">lbnd</span> <span class="o">=</span> <span class="nx">bisector</span><span class="p">;</span>
+      <span class="nx">bisector</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">createHalfEdge</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">,</span> <span class="nx">bisector</span><span class="p">);</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">intersect</span><span class="p">(</span><span class="nx">bisector</span><span class="p">,</span> <span class="nx">rbnd</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">bisector</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span> <span class="nx">newSite</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="nx">newSite</span> <span class="o">=</span> <span class="nx">Sites</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">EventQueue</span><span class="p">.</span><span class="nx">empty</span><span class="p">())</span> <span class="p">{</span> <span class="c1">//intersection is smallest</span>
+      <span class="nx">lbnd</span> <span class="o">=</span> <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">extractMin</span><span class="p">();</span>
+      <span class="nx">llbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">left</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+      <span class="nx">rbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+      <span class="nx">rrbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">rbnd</span><span class="p">);</span>
+      <span class="nx">bot</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftRegion</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+      <span class="nx">top</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightRegion</span><span class="p">(</span><span class="nx">rbnd</span><span class="p">);</span>
+      <span class="nx">v</span> <span class="o">=</span> <span class="nx">lbnd</span><span class="p">.</span><span class="nx">vertex</span><span class="p">;</span>
+      <span class="nx">Geom</span><span class="p">.</span><span class="nx">endPoint</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">.</span><span class="nx">edge</span><span class="p">,</span> <span class="nx">lbnd</span><span class="p">.</span><span class="nx">side</span><span class="p">,</span> <span class="nx">v</span><span class="p">);</span>
+      <span class="nx">Geom</span><span class="p">.</span><span class="nx">endPoint</span><span class="p">(</span><span class="nx">rbnd</span><span class="p">.</span><span class="nx">edge</span><span class="p">,</span> <span class="nx">rbnd</span><span class="p">.</span><span class="nx">side</span><span class="p">,</span> <span class="nx">v</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">);</span>
+      <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">rbnd</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">rbnd</span><span class="p">);</span>
+      <span class="nx">pm</span> <span class="o">=</span> <span class="s2">&quot;l&quot;</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">bot</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;</span> <span class="nx">top</span><span class="p">.</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">temp</span> <span class="o">=</span> <span class="nx">bot</span><span class="p">;</span>
+        <span class="nx">bot</span> <span class="o">=</span> <span class="nx">top</span><span class="p">;</span>
+        <span class="nx">top</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
+        <span class="nx">pm</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">e</span> <span class="o">=</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">bisect</span><span class="p">(</span><span class="nx">bot</span><span class="p">,</span> <span class="nx">top</span><span class="p">);</span>
+      <span class="nx">bisector</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">createHalfEdge</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">pm</span><span class="p">);</span>
+      <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">llbnd</span><span class="p">,</span> <span class="nx">bisector</span><span class="p">);</span>
+      <span class="nx">Geom</span><span class="p">.</span><span class="nx">endPoint</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">d3_voronoi_opposite</span><span class="p">[</span><span class="nx">pm</span><span class="p">],</span> <span class="nx">v</span><span class="p">);</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">intersect</span><span class="p">(</span><span class="nx">llbnd</span><span class="p">,</span> <span class="nx">bisector</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">llbnd</span><span class="p">);</span>
+        <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">llbnd</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span> <span class="nx">bot</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">intersect</span><span class="p">(</span><span class="nx">bisector</span><span class="p">,</span> <span class="nx">rrbnd</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">EventQueue</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">bisector</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="nx">Geom</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">p</span><span class="p">,</span> <span class="nx">bot</span><span class="p">));</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span><span class="c1">//end while</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="nx">lbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">EdgeList</span><span class="p">.</span><span class="nx">leftEnd</span><span class="p">);</span>
+      <span class="nx">lbnd</span> <span class="o">!=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">rightEnd</span><span class="p">;</span>
+      <span class="nx">lbnd</span> <span class="o">=</span> <span class="nx">EdgeList</span><span class="p">.</span><span class="nx">right</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="nx">lbnd</span><span class="p">.</span><span class="nx">edge</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

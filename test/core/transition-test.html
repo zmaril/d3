@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › core › transition-test.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>transition-test.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../env&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;vows&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">suite</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;d3.transition&quot;</span><span class="p">);</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s2">&quot;transition&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">transition</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;selects the document&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transition</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">domEqual</span><span class="p">(</span><span class="nx">transition</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">node</span><span class="p">,</span> <span class="nb">document</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;is an instanceof d3.transition&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transition</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">transition</span> <span class="k">instanceof</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">transition</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;subselections are also instanceof d3.transition&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transition</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">transition</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="k">instanceof</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">transition</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">transition</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="k">instanceof</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">transition</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;transition prototype can be extended&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transition</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">vv</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">d3</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">foo</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span> <span class="nx">vv</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">v</span><span class="p">);</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span> <span class="p">};</span>
+      <span class="nx">transition</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">foo</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">vv</span><span class="p">,</span> <span class="p">[</span><span class="mi">42</span><span class="p">]);</span>
+      <span class="k">delete</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">transition</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">foo</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="nx">module</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">suite</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;transition&quot;</span><span class="p">);</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Subtransitions</p></td><td class="code"><div class="highlight"><pre>  <span class="s2">&quot;select&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-select&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;selectAll&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-selectAll&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;transition&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-transition&quot;</span><span class="p">),</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Content</p></td><td class="code"><div class="highlight"><pre>  <span class="s2">&quot;attr&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-attr&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;attrTween&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-attrTween&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;style&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-style&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;styleTween&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-styleTween&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-text&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;remove&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-remove&quot;</span><span class="p">),</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Animation</p></td><td class="code"><div class="highlight"><pre>  <span class="s2">&quot;delay&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-delay&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;duration&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-duration&quot;</span><span class="p">),</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Control</p></td><td class="code"><div class="highlight"><pre>  <span class="s2">&quot;each&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-each&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;call&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-call&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;tween&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-tween&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-id&quot;</span><span class="p">),</span>
+  <span class="s2">&quot;time&quot;</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./transition-test-time&quot;</span><span class="p">)</span>
+
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="nx">module</span><span class="p">);</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

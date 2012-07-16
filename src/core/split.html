@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › split.js
+| Splits an array based on a given function. It just goes through collecting values, waiting until f returns true, and then it pushs the collected values and starts a new collection. Note that it disgards the element that triggers the predicate function.
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>split.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Splits an array based on a given function. It just goes through collecting values, waiting until f returns true, and then it pushs the collected values and starts a new collection. Note that it disgards the element that triggers the predicate function. </p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Simple example: </p>
+
+<pre><code>         var arr = [1,2,3,null,10]
+         d3.split(arr) //[[1,2,3],[10]]
+         d3.split(arr,function(n){return n==3;}) //[[1,2],[null,10]]
+</code></pre></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">split</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">arrays</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">values</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">value</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">d3_splitter</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">values</span><span class="p">,</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">values</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="nx">arrays</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">values</span><span class="p">);</span>
+      <span class="nx">values</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">arrays</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Used as a default for d3.split. You will probably want to replace
+this to be more useful for your given problem.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_splitter</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span> <span class="o">==</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Next: <a href="/d3/src/core/collapse.html">core/collapse.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

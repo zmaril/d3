@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › geom › contour.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>contour.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Computes a contour for a given input grid function using the &lt;a</span>
+<span class="cm"> * href=&quot;http://en.wikipedia.org/wiki/Marching_squares&quot;&gt;marching</span>
+<span class="cm"> * squares&lt;/a&gt; algorithm. Returns the contour polygon as an array of points.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param grid a two-input function(x, y) that returns true for values</span>
+<span class="cm"> * inside the contour and false for values outside the contour.</span>
+<span class="cm"> * @param start an optional starting point [x, y] on the grid.</span>
+<span class="cm"> * @returns polygon [[x1, y1], [x2, y2], …]</span>
+<span class="cm"> */</span>
+<span class="nx">d3</span><span class="p">.</span><span class="nx">geom</span><span class="p">.</span><span class="nx">contour</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grid</span><span class="p">,</span> <span class="nx">start</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">start</span> <span class="o">||</span> <span class="nx">d3_geom_contourStart</span><span class="p">(</span><span class="nx">grid</span><span class="p">),</span> <span class="c1">// starting point</span>
+      <span class="nx">c</span> <span class="o">=</span> <span class="p">[],</span>    <span class="c1">// contour polygon</span>
+      <span class="nx">x</span> <span class="o">=</span> <span class="nx">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1">// current x position</span>
+      <span class="nx">y</span> <span class="o">=</span> <span class="nx">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c1">// current y position</span>
+      <span class="nx">dx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>    <span class="c1">// next x direction</span>
+      <span class="nx">dy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>    <span class="c1">// next y direction</span>
+      <span class="nx">pdx</span> <span class="o">=</span> <span class="kc">NaN</span><span class="p">,</span> <span class="c1">// previous x direction</span>
+      <span class="nx">pdy</span> <span class="o">=</span> <span class="kc">NaN</span><span class="p">,</span> <span class="c1">// previous y direction</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">do</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>determine marching squares index</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">grid</span><span class="p">(</span><span class="nx">x</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">y</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">grid</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span>   <span class="nx">y</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">grid</span><span class="p">(</span><span class="nx">x</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">y</span>  <span class="p">))</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">grid</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span>   <span class="nx">y</span>  <span class="p">))</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">8</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>determine next direction</p></td><td class="code"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="mi">6</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">dx</span> <span class="o">=</span> <span class="nx">pdy</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">dy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">dx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">dy</span> <span class="o">=</span> <span class="nx">pdx</span> <span class="o">===</span> <span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">dx</span> <span class="o">=</span> <span class="nx">d3_geom_contourDx</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="nx">dy</span> <span class="o">=</span> <span class="nx">d3_geom_contourDy</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>update contour polygon</p></td><td class="code"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">dx</span> <span class="o">!=</span> <span class="nx">pdx</span> <span class="o">&amp;&amp;</span> <span class="nx">dy</span> <span class="o">!=</span> <span class="nx">pdy</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">c</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">]);</span>
+      <span class="nx">pdx</span> <span class="o">=</span> <span class="nx">dx</span><span class="p">;</span>
+      <span class="nx">pdy</span> <span class="o">=</span> <span class="nx">dy</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">x</span> <span class="o">+=</span> <span class="nx">dx</span><span class="p">;</span>
+    <span class="nx">y</span> <span class="o">+=</span> <span class="nx">dy</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nx">x</span> <span class="o">||</span> <span class="nx">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nx">y</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="nx">c</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>lookup tables for marching directions</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">d3_geom_contourDx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="kc">NaN</span><span class="p">],</span>
+    <span class="nx">d3_geom_contourDy</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="kc">NaN</span><span class="p">];</span>
+
+<span class="kd">function</span> <span class="nx">d3_geom_contourStart</span><span class="p">(</span><span class="nx">grid</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>search for a starting point; begin at origin
+and proceed along outward-expanding diagonals</p></td><td class="code"><div class="highlight"><pre>  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">grid</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">[</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">x</span> <span class="o">=</span> <span class="nx">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

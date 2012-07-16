@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » examples › voroboids › boid.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>boid.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Boid flocking based on http://harry.me/2011/02/17/neat-algorithms---flocking</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">boid</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">boid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="nx">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="nx">gravityCenter</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nx">neighborRadius</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="nx">maxForce</span> <span class="o">=</span> <span class="p">.</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">maxSpeed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">separationWeight</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">alignmentWeight</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">cohesionWeight</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">desiredSeparation</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+    <span class="kd">function</span> <span class="nx">boid</span><span class="p">(</span><span class="nx">neighbors</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">accel</span> <span class="o">=</span> <span class="nx">flock</span><span class="p">(</span><span class="nx">neighbors</span><span class="p">);</span>
+      <span class="nx">d3_ai_boidWrap</span><span class="p">(</span><span class="nx">position</span><span class="p">);</span>
+      <span class="nx">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">accel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">accel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">gravityCenter</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">d3_ai_boidGravity</span><span class="p">(</span><span class="nx">gravityCenter</span><span class="p">,</span> <span class="nx">position</span><span class="p">,</span> <span class="nx">neighborRadius</span><span class="p">);</span>
+        <span class="nx">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">g</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="nx">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">g</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="nx">d3_ai_boidLimit</span><span class="p">(</span><span class="nx">velocity</span><span class="p">,</span> <span class="nx">maxSpeed</span><span class="p">);</span>
+      <span class="nx">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="k">return</span> <span class="nx">position</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">flock</span><span class="p">(</span><span class="nx">neighbors</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">separation</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="nx">alignment</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="nx">cohesion</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+          <span class="nx">separationCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">alignmentCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">cohesionCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+          <span class="nx">l</span> <span class="o">=</span> <span class="nx">neighbors</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">neighbors</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">===</span> <span class="k">this</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">npos</span> <span class="o">=</span> <span class="nx">n</span><span class="p">.</span><span class="nx">position</span><span class="p">(),</span>
+            <span class="nx">d</span> <span class="o">=</span> <span class="nx">d3_ai_boidDistance</span><span class="p">(</span><span class="nx">position</span><span class="p">,</span> <span class="nx">npos</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">desiredSeparation</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">tmp</span> <span class="o">=</span> <span class="nx">d3_ai_boidNormalize</span><span class="p">(</span><span class="nx">d3_ai_boidSubtract</span><span class="p">(</span><span class="nx">position</span><span class="p">.</span><span class="nx">slice</span><span class="p">(),</span> <span class="nx">npos</span><span class="p">));</span>
+            <span class="nx">separation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nx">d</span><span class="p">;</span>
+            <span class="nx">separation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nx">d</span><span class="p">;</span>
+            <span class="nx">separationCount</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">neighborRadius</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">nvel</span> <span class="o">=</span> <span class="nx">n</span><span class="p">.</span><span class="nx">velocity</span><span class="p">();</span>
+            <span class="nx">alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">nvel</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+            <span class="nx">alignment</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">nvel</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+            <span class="nx">alignmentCount</span><span class="o">++</span><span class="p">;</span>
+            <span class="nx">cohesion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">npos</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+            <span class="nx">cohesion</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">npos</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+            <span class="nx">cohesionCount</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">separationCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">separation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">separationCount</span><span class="p">;</span>
+        <span class="nx">separation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">separationCount</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">alignmentCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">alignmentCount</span><span class="p">;</span>
+        <span class="nx">alignment</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">alignmentCount</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">d3_ai_boidLimit</span><span class="p">(</span><span class="nx">alignment</span><span class="p">,</span> <span class="nx">maxForce</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">cohesionCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">cohesion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">cohesionCount</span><span class="p">;</span>
+        <span class="nx">cohesion</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">cohesionCount</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">cohesion</span> <span class="o">=</span> <span class="nx">position</span><span class="p">.</span><span class="nx">slice</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">cohesion</span> <span class="o">=</span> <span class="nx">steerTo</span><span class="p">(</span><span class="nx">cohesion</span><span class="p">);</span>
+
+      <span class="k">return</span> <span class="p">[</span>
+        <span class="nx">separation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">separationWeight</span> <span class="o">+</span>
+         <span class="nx">alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">alignmentWeight</span> <span class="o">+</span>
+          <span class="nx">cohesion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">cohesionWeight</span><span class="p">,</span>
+        <span class="nx">separation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">separationWeight</span> <span class="o">+</span>
+         <span class="nx">alignment</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">alignmentWeight</span> <span class="o">+</span>
+          <span class="nx">cohesion</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">cohesionWeight</span>
+      <span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">steerTo</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">desired</span> <span class="o">=</span> <span class="nx">d3_ai_boidSubtract</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">position</span><span class="p">),</span>
+          <span class="nx">d</span> <span class="o">=</span> <span class="nx">d3_ai_boidMagnitude</span><span class="p">(</span><span class="nx">desired</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d3_ai_boidNormalize</span><span class="p">(</span><span class="nx">desired</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Two options for desired vector magnitude (1 -- based on distance, 2 -- maxspeed)</p></td><td class="code"><div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">mul</span> <span class="o">=</span> <span class="nx">maxSpeed</span> <span class="o">*</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="o">?</span> <span class="nx">d</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">:</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">desired</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="nx">mul</span><span class="p">;</span>
+        <span class="nx">desired</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="nx">mul</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Steering = Desired minus Velocity</p></td><td class="code"><div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">steer</span> <span class="o">=</span> <span class="nx">d3_ai_boidSubtract</span><span class="p">(</span><span class="nx">desired</span><span class="p">,</span> <span class="nx">velocity</span><span class="p">);</span>
+        <span class="nx">d3_ai_boidLimit</span><span class="p">(</span><span class="nx">steer</span><span class="p">,</span> <span class="nx">maxForce</span><span class="p">)</span>  <span class="c1">// Limit to maximum steering force</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">steer</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">steer</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">position</span><span class="p">;</span>
+      <span class="nx">position</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">velocity</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">velocity</span><span class="p">;</span>
+      <span class="nx">velocity</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">gravityCenter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">gravityCenter</span><span class="p">;</span>
+      <span class="nx">gravityCenter</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">neighborRadius</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">neighborRadius</span><span class="p">;</span>
+      <span class="nx">neighborRadius</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">maxForce</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">maxForce</span><span class="p">;</span>
+      <span class="nx">maxForce</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">maxSpeed</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">maxSpeed</span><span class="p">;</span>
+      <span class="nx">maxSpeed</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">separationWeight</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">separationWeight</span><span class="p">;</span>
+      <span class="nx">separationWeight</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">alignmentWeight</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">alignmentWeight</span><span class="p">;</span>
+      <span class="nx">alignmentWeight</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">cohesionWeight</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cohesionWeight</span><span class="p">;</span>
+      <span class="nx">cohesionWeight</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">boid</span><span class="p">.</span><span class="nx">desiredSeparation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">desiredSeparation</span><span class="p">;</span>
+      <span class="nx">desiredSeparation</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidNormalize</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">d3_ai_boidMagnitude</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">m</span><span class="p">;</span>
+      <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">m</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidWrap</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">width</span><span class="p">)</span> <span class="nx">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">width</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">height</span><span class="p">)</span> <span class="nx">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">height</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidGravity</span><span class="p">(</span><span class="nx">center</span><span class="p">,</span> <span class="nx">position</span><span class="p">,</span> <span class="nx">neighborRadius</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">d3_ai_boidSubtract</span><span class="p">(</span><span class="nx">center</span><span class="p">.</span><span class="nx">slice</span><span class="p">(),</span> <span class="nx">position</span><span class="p">),</span>
+          <span class="nx">d</span> <span class="o">=</span> <span class="nx">d3_ai_boidMagnitude</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="o">-</span> <span class="mi">10</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">neighborRadius</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d3_ai_boidNormalize</span><span class="p">(</span><span class="nx">m</span><span class="p">);</span>
+        <span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">d</span><span class="p">;</span>
+        <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="nx">d</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">m</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidDistance</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">dx</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="nx">dy</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">dx</span> <span class="o">&gt;</span> <span class="nx">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="nx">dx</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">-</span> <span class="nx">dx</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">dy</span> <span class="o">&gt;</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="nx">dy</span> <span class="o">=</span> <span class="nx">height</span> <span class="o">-</span> <span class="nx">dy</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">dx</span> <span class="o">*</span> <span class="nx">dx</span> <span class="o">+</span> <span class="nx">dy</span> <span class="o">*</span> <span class="nx">dy</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidSubtract</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="nx">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidMagnitude</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">d3_ai_boidLimit</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">d3_ai_boidMagnitude</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">d3_ai_boidNormalize</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+      <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="nx">max</span><span class="p">;</span>
+      <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="nx">max</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">boid</span><span class="p">;</span>
+<span class="p">})();</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

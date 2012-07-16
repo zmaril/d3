@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › geom › hull.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>hull.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Computes the 2D convex hull of a set of points using Graham&#39;s scanning</span>
+<span class="cm"> * algorithm. The algorithm has been implemented as described in Cormen,</span>
+<span class="cm"> * Leiserson, and Rivest&#39;s Introduction to Algorithms. The running time of</span>
+<span class="cm"> * this algorithm is O(n log n), where n is the number of input points.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param vertices [[x1, y1], [x2, y2], …]</span>
+<span class="cm"> * @returns polygon [[x1, y1], [x2, y2], …]</span>
+<span class="cm"> */</span>
+<span class="nx">d3</span><span class="p">.</span><span class="nx">geom</span><span class="p">.</span><span class="nx">hull</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">vertices</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">vertices</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="k">return</span> <span class="p">[];</span>
+
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">plen</span> <span class="o">=</span> <span class="nx">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">points</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">stack</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">,</span> <span class="nx">h</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">x1</span><span class="p">,</span> <span class="nx">y1</span><span class="p">,</span> <span class="nx">x2</span><span class="p">,</span> <span class="nx">y2</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">sp</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>find the starting ref point: leftmost point with the minimum y coord</p></td><td class="code"><div class="highlight"><pre>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">len</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+      <span class="nx">h</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+      <span class="nx">h</span> <span class="o">=</span> <span class="p">(</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">?</span> <span class="nx">i</span> <span class="o">:</span> <span class="nx">h</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>calculate polar angles from ref point and sort</p></td><td class="code"><div class="highlight"><pre>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">len</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="nx">h</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+    <span class="nx">y1</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nx">x1</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nx">points</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">angle</span><span class="o">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">atan2</span><span class="p">(</span><span class="nx">y1</span><span class="p">,</span> <span class="nx">x1</span><span class="p">),</span> <span class="nx">index</span><span class="o">:</span> <span class="nx">i</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="nx">points</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">angle</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">angle</span><span class="p">;</span> <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>toss out duplicate angles</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">a</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">angle</span><span class="p">;</span>
+  <span class="nx">v</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">index</span><span class="p">;</span>
+  <span class="nx">u</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">plen</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">j</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">index</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">a</span> <span class="o">==</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">angle</span><span class="p">)</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>keep angle for point most distant from the reference</p></td><td class="code"><div class="highlight"><pre>      <span class="nx">x1</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">v</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">y1</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">v</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+      <span class="nx">x2</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">y2</span> <span class="o">=</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">vertices</span><span class="p">[</span><span class="nx">h</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">((</span><span class="nx">x1</span><span class="o">*</span><span class="nx">x1</span> <span class="o">+</span> <span class="nx">y1</span><span class="o">*</span><span class="nx">y1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="nx">x2</span><span class="o">*</span><span class="nx">x2</span> <span class="o">+</span> <span class="nx">y2</span><span class="o">*</span><span class="nx">y2</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">points</span><span class="p">[</span><span class="nx">u</span><span class="p">].</span><span class="nx">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="nx">a</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">angle</span><span class="p">;</span>
+        <span class="nx">u</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+        <span class="nx">v</span> <span class="o">=</span> <span class="nx">j</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">a</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">angle</span><span class="p">;</span>
+      <span class="nx">u</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+      <span class="nx">v</span> <span class="o">=</span> <span class="nx">j</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>initialize the stack</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">h</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">points</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">index</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">points</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">index</span><span class="p">);</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="nx">sp</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>do graham's scan</p></td><td class="code"><div class="highlight"><pre>  <span class="k">for</span> <span class="p">(;</span> <span class="nx">j</span><span class="o">&lt;</span><span class="nx">plen</span><span class="p">;</span> <span class="o">++</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">points</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">index</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span> <span class="c1">// skip tossed out points</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nx">d3_geom_hullCCW</span><span class="p">(</span><span class="nx">stack</span><span class="p">[</span><span class="nx">sp</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="nx">stack</span><span class="p">[</span><span class="nx">sp</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="nx">points</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">index</span><span class="p">,</span> <span class="nx">vertices</span><span class="p">))</span> <span class="p">{</span>
+      <span class="o">--</span><span class="nx">sp</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">stack</span><span class="p">[</span><span class="nx">sp</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">j</span><span class="p">].</span><span class="nx">index</span><span class="p">;</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>construct the hull</p></td><td class="code"><div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">poly</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">sp</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">poly</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">stack</span><span class="p">[</span><span class="nx">i</span><span class="p">]]);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">poly</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>are three points in counter-clockwise order?</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_geom_hullCCW</span><span class="p">(</span><span class="nx">i1</span><span class="p">,</span> <span class="nx">i2</span><span class="p">,</span> <span class="nx">i3</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">f</span><span class="p">;</span>
+  <span class="nx">t</span> <span class="o">=</span> <span class="nx">v</span><span class="p">[</span><span class="nx">i1</span><span class="p">];</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="nx">t</span> <span class="o">=</span> <span class="nx">v</span><span class="p">[</span><span class="nx">i2</span><span class="p">];</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="nx">t</span> <span class="o">=</span> <span class="nx">v</span><span class="p">[</span><span class="nx">i3</span><span class="p">];</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="k">return</span> <span class="p">((</span><span class="nx">f</span><span class="o">-</span><span class="nx">b</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nx">c</span><span class="o">-</span><span class="nx">a</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nx">d</span><span class="o">-</span><span class="nx">b</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nx">e</span><span class="o">-</span><span class="nx">a</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

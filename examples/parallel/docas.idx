@@ -1,0 +1,2 @@
+f | parallel.html | g | 3.3K |  | Kristofer Monisit | kmonisit@gmail.com | 1333729829 |  | Bring parallel example up-to-date
+f | cars.csv | g | 17K |  | Mike Bostock | mbostock@gmail.com | 1320275977 |  | Add parallel coordinates example.  This includes a d3.extent convenience method for [d3.min, d3.max], and fixes the brush component such that the resizers are hidden when the extent is empty.

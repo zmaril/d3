@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › time › scale-utc.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>scale-utc.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">d3_time_scaleUTCMethods</span> <span class="o">=</span> <span class="nx">d3_time_scaleLocalMethods</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">utc</span><span class="p">,</span> <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]];</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">d3_time_scaleUTCFormats</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;%Y&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMonth</span><span class="p">();</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;%b %d&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;%a %d&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDay</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDate</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;%I %p&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCHours</span><span class="p">();</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;%I:%M&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMinutes</span><span class="p">();</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;:%S&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCSeconds</span><span class="p">();</span> <span class="p">}],</span>
+  <span class="p">[</span><span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">utc</span><span class="p">(</span><span class="s2">&quot;.%L&quot;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMilliseconds</span><span class="p">();</span> <span class="p">}]</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">d3_time_scaleUTCFormat</span> <span class="o">=</span> <span class="nx">d3_time_scaleFormat</span><span class="p">(</span><span class="nx">d3_time_scaleUTCFormats</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">d3_time_scaleUTCSetYear</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">UTC</span><span class="p">(</span><span class="nx">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">setUTCFullYear</span><span class="p">(</span><span class="nx">y</span><span class="p">);</span> <span class="c1">// Y2K fail</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_time_scaleUTCGetYear</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCFullYear</span><span class="p">(),</span>
+      <span class="nx">d0</span> <span class="o">=</span> <span class="nx">d3_time_scaleUTCSetYear</span><span class="p">(</span><span class="nx">y</span><span class="p">),</span>
+      <span class="nx">d1</span> <span class="o">=</span> <span class="nx">d3_time_scaleUTCSetYear</span><span class="p">(</span><span class="nx">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">y</span> <span class="o">+</span> <span class="p">(</span><span class="nx">d</span> <span class="o">-</span> <span class="nx">d0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">d1</span> <span class="o">-</span> <span class="nx">d0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">d3_time_scaleUTCMethods</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">extent</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3_time_scaleLinear</span><span class="p">.</span><span class="nx">domain</span><span class="p">(</span><span class="nx">extent</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">d3_time_scaleUTCGetYear</span><span class="p">)).</span><span class="nx">ticks</span><span class="p">(</span><span class="nx">m</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">d3_time_scaleUTCSetYear</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">d3</span><span class="p">.</span><span class="nx">time</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">utc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3_time_scale</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">(),</span> <span class="nx">d3_time_scaleUTCMethods</span><span class="p">,</span> <span class="nx">d3_time_scaleUTCFormat</span><span class="p">);</span>
+<span class="p">};</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

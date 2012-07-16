@@ -1,0 +1,93 @@
+f | split.js | s | 1.0K | 29 | Zack Maril | zack@zacharymaril.com | 1342401649 |  | Better split default comments (sort of)
+f | last.js | s | 464B | 15 | Zack Maril | zack@zacharymaril.com | 1342369309 |  | Started commenting nest function. Did d3.last as well.
+f | interpolate.js | s | 6.3K | 209 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-call.js | s | 553B | 14 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-on.js | s | 1.3K | 36 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-sort.js | s | 474B | 12 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | event.js | s | 1.7K | 44 | Zack Maril | zack@zacharymaril.com | 1337474225 |  | Forget to save some files
+f | html.js | s | 354B | 11 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | random.js | s | 1.5K | 19 | Zack Maril | zack@zacharymaril.com | 1339413099 |  | Commented some of the math functions
+f | transition-select.js | s | 825B | 20 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | quantile.js | s | 504B | 9 | Zack Maril | zack@zacharymaril.com | 1339421230 |  | Getting through more of the math functions. Trying to get the chunk of the basic math library stuff out of the way.
+f | selection-filter.js | s | 721B | 23 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | functor.js | s | 1.0K | 18 | Zack Maril | zack@zacharymaril.com | 1337973235 |  | Fixed some identity links
+f | nest.js | s | 4.2K | 110 | Zack Maril | zack@zacharymaril.com | 1342397013 |  | Trying to escape a ) in markdown url's
+f | selection-select.js | s | 870B | 27 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-property.js | s | 629B | 19 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | number.js | s | 264B | 5 | Zack Maril | zack@zacharymaril.com | 1339413099 |  | Commented some of the math functions
+f | touches.js | s | 336B | 9 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | formatPrefix.js | s | 737B | 19 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | transition.js | s | 3.4K | 105 | Zack Maril | zack@zacharymaril.com | 1337474225 |  | Forget to save some files
+f | this.js | s | 222B | 6 | Zack Maril | zack@zacharymaril.com | 1337471068 |  | Adding in more file paths
+f | selection-text.js | s | 432B | 8 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-data.js | s | 3.1K | 109 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | transition-each.js | s | 799B | 24 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | uninterpolate.js | s | 323B | 9 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-empty.js | s | 136B | 4 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | timer.js | s | 2.4K | 92 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | sum.js | s | 484B | 14 | Zack Maril | zack@zacharymaril.com | 1339421230 |  | Getting through more of the math functions. Trying to get the chunk of the basic math library stuff out of the way.
+f | first.js | s | 464B | 15 | Zack Maril | zack@zacharymaril.com | 1342368459 |  | Commented the first fucntion
+f | transition-selectAll.js | s | 783B | 20 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | ascending.js | s | 1.1K | 23 | Zack Maril | zack@zacharymaril.com | 1337683605 |  | Added in ascending, descending, mean comments
+f | collapse.js | s | 407B | 5 | Zack Maril | zack@zacharymaril.com | 1342402041 |  | Commenting collapse. Gets rid of spaces I guess?
+f | entries.js | s | 445B | 12 | Zack Maril | zack@zacharymaril.com | 1342397366 |  | The entries function returns objects that have the keys and values as explicit properties.
+f | descending.js | s | 378B | 10 | Zack Maril | zack@zacharymaril.com | 1342401056 |  | Spacing issuse
+f | array.js | s | 1.5K | 30 | Zack Maril | zack@zacharymaril.com | 1337471068 |  | Adding in more file paths
+f | selection-node.js | s | 331B | 10 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | permute.js | s | 573B | 17 | Zack Maril | zack@zacharymaril.com | 1342397699 |  | Commented the permute function. Gotta check if that example works as I think it does.
+f | selection-style.js | s | 813B | 22 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-transition.js | s | 542B | 13 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | dispatch.js | s | 1.5K | 49 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | zip.js | s | 1.0K | 24 | Zack Maril | zack@zacharymaril.com | 1342400621 |  | Spacing issues with example functions.
+f | selection-html.js | s | 428B | 8 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-enter.js | s | 610B | 12 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | rgb.js | s | 6.8K | 269 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | range.js | s | 1.5K | 37 | Zack Maril | zack@zacharymaril.com | 1342403359 |  | Cleaned up and added more to d3_range_Stuff function
+f | mouse.js | s | 1.1K | 33 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | keys.js | s | 337B | 12 | Zack Maril | zack@zacharymaril.com | 1342397237 |  | These aren't strictly equal actually. Arrays don't compare directly. Putting the results in //
+f | true.js | s | 297B | 6 | Zack Maril | zack@zacharymaril.com | 1337973235 |  | Fixed some identity links
+f | mean.js | s | 726B | 19 | Zack Maril | zack@zacharymaril.com | 1342400621 |  | Spacing issues with example functions.
+f | transition-duration.js | s | 392B | 7 | Zack Maril | zack@zacharymaril.com | 1337474452 |  | Finding all these files I missed. Damn.
+f | json.js | s | 190B | 6 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-append.js | s | 470B | 13 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | round.js | s | 451B | 12 | Zack Maril | zack@zacharymaril.com | 1342403841 |  | Did not know the round function did what it did.
+f | values.js | s | 350B | 12 | Zack Maril | zack@zacharymaril.com | 1342397237 |  | These aren't strictly equal actually. Arrays don't compare directly. Putting the results in //
+f | transform.js | s | 1.6K | 55 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | map.js | s | 3.8K | 90 | Zack Maril | zack@zacharymaril.com | 1337471068 |  | Adding in more file paths
+f | selection-enter-select.js | s | 697B | 23 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | xhr.js | s | 520B | 15 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-root.js | s | 613B | 16 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-each.js | s | 346B | 10 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | selection-attr.js | s | 1.2K | 37 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | bisect.js | s | 1.7K | 43 | Zack Maril | zack@zacharymaril.com | 1342400621 |  | Spacing issues with example functions.
+f | extent.js | s | 837B | 23 | Zack Maril | zack@zacharymaril.com | 1339413099 |  | Commented some of the math functions
+f | selection-datum.js | s | 256B | 7 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | median.js | s | 775B | 12 | Zack Maril | zack@zacharymaril.com | 1342401056 |  | Spacing issuse
+f | merge.js | s | 364B | 9 | Zack Maril | zack@zacharymaril.com | 1342401716 |  | console.log just looks stupid
+f | selection.js | s | 1021B | 21 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | hsl.js | s | 1.4K | 52 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | transition-style.js | s | 693B | 14 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | ns.js | s | 619B | 22 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | transition-transition.js | s | 132B | 4 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | noop.js | s | 22B | 1 | Mike Bostock | mbostock@gmail.com | 1312222598 |  | Fix #66 - setting domain recomputes range.
+f | requote.js | s | 586B | 7 | Zack Maril | zack@zacharymaril.com | 1342403579 |  | Added in short note about requote.
+f | selection-selectAll.js | s | 697B | 21 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-insert.js | s | 618B | 18 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | xml.js | s | 253B | 11 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | format.js | s | 3.2K | 83 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | min.js | s | 655B | 16 | Zack Maril | zack@zacharymaril.com | 1339413099 |  | Commented some of the math functions
+f | ease.js | s | 3.9K | 117 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | transition-text.js | s | 276B | 8 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | core.js | s | 1.4K | 17 | Zack Maril | zack@zacharymaril.com | 1337471068 |  | Adding in more file paths
+f | max.js | s | 661B | 16 | Zack Maril | zack@zacharymaril.com | 1339413099 |  | Commented some of the math functions
+f | class.js | s | 945B | 18 | Zack Maril | zack@zacharymaril.com | 1342401056 |  | Spacing issuse
+f | selection-remove.js | s | 302B | 10 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | identity.js | s | 259B | 6 | Zack Maril | zack@zacharymaril.com | 1337471068 |  | Adding in more file paths
+f | transition-remove.js | s | 262B | 7 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | transition-delay.js | s | 365B | 7 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done
+f | text.js | s | 259B | 11 | Zack Maril | zack@zacharymaril.com | 1337472120 |  | Nothing but file paths.
+f | selection-order.js | s | 421B | 12 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | rebind.js | s | 1.3K | 34 | Zack Maril | zack@zacharymaril.com | 1337471068 |  | Adding in more file paths
+f | transpose.js | s | 1.8K | 47 | Zack Maril | zack@zacharymaril.com | 1342400621 |  | Spacing issues with example functions.
+f | selection-classed.js | s | 1.7K | 55 | Zack Maril | zack@zacharymaril.com | 1337472690 |  | More file paths
+f | transition-attr.js | s | 913B | 20 | Zack Maril | zack@zacharymaril.com | 1337473034 |  | First section of file paths all done

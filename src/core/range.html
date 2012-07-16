@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › range.js
+| `d3.range` returns an array of numbers that represent an interval.
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>range.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p><code>d3.range</code> returns an array of numbers that represent an interval. </p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Examples:</p>
+
+<pre><code>    d3.range(5) // [0,1,2,3,4]
+    d3.range(3,5) // [3,4]
+    d3.range(300,500,50) // [300,350,400,450] 
+</code></pre></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Be careful with decimal step sizes. Never trust the precision of a
+floating number to be exactly what you expect it to be. d3 does the
+right thing and multiples and divides by magnitudes to calculate the
+values from integers. Still, floating point bugs can be subtle.</p>
+
+<pre><code>    d3.range(3,4,0.1) // [3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9]
+</code></pre></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">range</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">stop</span><span class="p">,</span> <span class="nx">step</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">step</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">stop</span> <span class="o">=</span> <span class="nx">start</span><span class="p">;</span>
+      <span class="nx">start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">((</span><span class="nx">stop</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span> <span class="o">/</span> <span class="nx">step</span> <span class="o">===</span> <span class="kc">Infinity</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;infinite range&quot;</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="p">[],</span>
+       <span class="nx">k</span> <span class="o">=</span> <span class="nx">d3_range_integerScale</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">step</span><span class="p">)),</span>
+       <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+       <span class="nx">j</span><span class="p">;</span>
+  <span class="nx">start</span> <span class="o">*=</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">stop</span> <span class="o">*=</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">step</span> <span class="o">*=</span> <span class="nx">k</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">step</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">while</span> <span class="p">((</span><span class="nx">j</span> <span class="o">=</span> <span class="nx">start</span> <span class="o">+</span> <span class="nx">step</span> <span class="o">*</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">stop</span><span class="p">)</span> <span class="nx">range</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">j</span> <span class="o">/</span> <span class="nx">k</span><span class="p">);</span>
+  <span class="k">else</span> <span class="k">while</span> <span class="p">((</span><span class="nx">j</span> <span class="o">=</span> <span class="nx">start</span> <span class="o">+</span> <span class="nx">step</span> <span class="o">*</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nx">stop</span><span class="p">)</span> <span class="nx">range</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">j</span> <span class="o">/</span> <span class="nx">k</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">range</span><span class="p">;</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>This calculates the order of magnitude needed to be able to manipulate the floating point values safely. So <code>f(1)-&gt;1, f(0.1)-&gt; 10, f(0.2)-&gt;10,f(Math.PI-3)-&gt;100000000000000000</code>. That last one with Pi? Hitting the limit of floating point precison in javascript. </p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_range_integerScale</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">k</span> <span class="o">%</span> <span class="mi">1</span><span class="p">)</span> <span class="nx">k</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">k</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Next: <a href="/d3/src/core/requote.html">core/requote.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

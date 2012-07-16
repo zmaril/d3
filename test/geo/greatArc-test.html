@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › geo › greatArc-test.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>greatArc-test.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../env&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;vows&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">suite</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;d3.geo.greatArc&quot;</span><span class="p">);</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s2">&quot;greatArc&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">geo</span><span class="p">.</span><span class="nx">greatArc</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;distance&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arc</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">arc</span><span class="p">.</span><span class="nx">distance</span><span class="p">({</span><span class="nx">source</span><span class="o">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="nx">target</span><span class="o">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]}),</span> <span class="mi">0</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">inDelta</span><span class="p">(</span><span class="nx">arc</span><span class="p">.</span><span class="nx">distance</span><span class="p">({</span>
+        <span class="nx">source</span><span class="o">:</span> <span class="p">[</span><span class="mi">118</span> <span class="o">+</span> <span class="mi">24</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">33</span> <span class="o">+</span> <span class="mi">57</span> <span class="o">/</span> <span class="mi">60</span><span class="p">],</span>
+        <span class="nx">target</span><span class="o">:</span> <span class="p">[</span> <span class="mi">73</span> <span class="o">+</span> <span class="mi">47</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">40</span> <span class="o">+</span> <span class="mi">38</span> <span class="o">/</span> <span class="mi">60</span><span class="p">]</span>
+      <span class="p">}),</span> <span class="mi">3973</span> <span class="o">/</span> <span class="mi">6371</span><span class="p">,</span> <span class="p">.</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;geodesic&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arc</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">inDelta</span><span class="p">(</span><span class="nx">arc</span><span class="p">.</span><span class="nx">precision</span><span class="p">(</span><span class="mf">7.2</span><span class="p">)({</span><span class="nx">source</span><span class="o">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">52</span><span class="p">],</span> <span class="nx">target</span><span class="o">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">120</span><span class="p">,</span> <span class="mi">37</span><span class="p">]}).</span><span class="nx">coordinates</span><span class="p">,</span> <span class="p">[</span>
+        <span class="p">[</span>   <span class="mi">5</span><span class="p">,</span>        <span class="mi">52</span>      <span class="p">],</span>
+        <span class="p">[</span>  <span class="o">-</span><span class="mf">3.805036</span><span class="p">,</span> <span class="mf">57.05083</span><span class="p">],</span>
+        <span class="p">[</span> <span class="o">-</span><span class="mf">15.122869</span><span class="p">,</span> <span class="mf">61.30118</span><span class="p">],</span>
+        <span class="p">[</span> <span class="o">-</span><span class="mf">29.396213</span><span class="p">,</span> <span class="mf">64.34584</span><span class="p">],</span>
+        <span class="p">[</span> <span class="o">-</span><span class="mf">46.132729</span><span class="p">,</span> <span class="mf">65.72409</span><span class="p">],</span>
+        <span class="p">[</span> <span class="o">-</span><span class="mf">63.394401</span><span class="p">,</span> <span class="mf">65.15597</span><span class="p">],</span>
+        <span class="p">[</span> <span class="o">-</span><span class="mf">78.854311</span><span class="p">,</span> <span class="mf">62.76337</span><span class="p">],</span>
+        <span class="p">[</span> <span class="o">-</span><span class="mf">91.401599</span><span class="p">,</span> <span class="mf">58.96701</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">101.190927</span><span class="p">,</span> <span class="mf">54.21333</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">108.843633</span><span class="p">,</span> <span class="mf">48.83586</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">114.961152</span><span class="p">,</span> <span class="mf">43.05231</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">120</span><span class="p">,</span>        <span class="mi">37</span>      <span class="p">]</span>
+      <span class="p">],</span> <span class="p">.</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="nx">module</span><span class="p">);</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

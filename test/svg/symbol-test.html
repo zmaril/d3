@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › svg › symbol-test.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>symbol-test.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../env&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;vows&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">suite</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;d3.svg.symbol&quot;</span><span class="p">);</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s2">&quot;symbol&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">symbol</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;default symbol is a fixed-size circle&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">();</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(),</span> <span class="s2">&quot;M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;size accessor specifies shape area in square pixels&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">size</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0A0,0 0 1,1 0,0A0,0 0 1,1 0,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">),</span> <span class="s2">&quot;M0,1A1,1 0 1,1 0,-1A1,1 0 1,1 0,1Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">),</span> <span class="s2">&quot;M0,2A2,2 0 1,1 0,-2A2,2 0 1,1 0,2Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;size accessor is passed data and index&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">size</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">z</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">i</span><span class="p">;</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">({</span><span class="nx">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">},</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0A0,0 0 1,1 0,0A0,0 0 1,1 0,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">({</span><span class="nx">z</span><span class="o">:</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">},</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;M0,1.5225997130512636A1.5225997130512636,1.5225997130512636 0 1,1 0,-1.5225997130512636A1.5225997130512636,1.5225997130512636 0 1,1 0,1.5225997130512636Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">({</span><span class="nx">z</span><span class="o">:</span> <span class="mi">4</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">},</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;M0,2.938812646693828A2.938812646693828,2.938812646693828 0 1,1 0,-2.938812646693828A2.938812646693828,2.938812646693828 0 1,1 0,2.938812646693828Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;supports cross symbol type&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;cross&quot;</span><span class="p">).</span><span class="nx">size</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0H0V0H0V0H0V0H0V0H0V0H0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="s2">&quot;M-3,-1H-1V-3H1V-1H3V1H1V3H-1V1H-3Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;supports diamond symbol type&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;diamond&quot;</span><span class="p">).</span><span class="nx">size</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0L0,0 0,0 0,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot;M0,-2.9428309563827124L1.6990442448471224,0 0,2.9428309563827124 -1.6990442448471224,0Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;supports square symbol type&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">).</span><span class="nx">size</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0L0,0 0,0 0,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;M-1,-1L1,-1 1,1 -1,1Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="s2">&quot;M-2,-2L2,-2 2,2 -2,2Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;supports triangle-down symbol type&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;triangle-down&quot;</span><span class="p">).</span><span class="nx">size</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0L0,0 0,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot;M0,2.0808957251439084L2.4028114141347543,-2.0808957251439084 -2.4028114141347543,-2.0808957251439084Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;supports triangle-up symbol type&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s2">&quot;triangle-up&quot;</span><span class="p">).</span><span class="nx">size</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;M0,0L0,0 0,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot;M0,-2.0808957251439084L2.4028114141347543,2.0808957251439084 -2.4028114141347543,2.0808957251439084Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;unknown symbol type defaults to circle&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nb">String</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(),</span> <span class="s2">&quot;M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;invalid&quot;</span><span class="p">),</span> <span class="s2">&quot;M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;hasOwnProperty&quot;</span><span class="p">),</span> <span class="s2">&quot;M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;can specify type accessor as a function&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">symbol</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">symbol</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nb">String</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">),</span> <span class="s2">&quot;M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;cross&quot;</span><span class="p">),</span> <span class="s2">&quot;M-5.366563145999495,-1.7888543819998317H-1.7888543819998317V-5.366563145999495H1.7888543819998317V-1.7888543819998317H5.366563145999495V1.7888543819998317H1.7888543819998317V5.366563145999495H-1.7888543819998317V1.7888543819998317H-5.366563145999495Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;diamond&quot;</span><span class="p">),</span> <span class="s2">&quot;M0,-7.444838872816797L4.298279727294167,0 0,7.444838872816797 -4.298279727294167,0Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">),</span> <span class="s2">&quot;M-4,-4L4,-4 4,4 -4,4Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;triangle-down&quot;</span><span class="p">),</span> <span class="s2">&quot;M0,5.26429605180997L6.078685485212741,-5.26429605180997 -6.078685485212741,-5.26429605180997Z&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">pathEqual</span><span class="p">(</span><span class="nx">a</span><span class="p">(</span><span class="s2">&quot;triangle-up&quot;</span><span class="p">),</span> <span class="s2">&quot;M0,-5.26429605180997L6.078685485212741,5.26429605180997 -6.078685485212741,5.26429605180997Z&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;symbolTypes&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">symbolTypes</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;contains circle&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">types</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;contains cross&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">types</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;cross&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;contains diamond&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">types</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;diamond&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;contains square&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">types</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;contains triangle-down&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">types</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;triangle-down&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;contains triangle-up&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">types</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">types</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;triangle-up&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="nx">module</span><span class="p">);</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

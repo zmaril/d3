@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › scale › linear.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>linear.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3_scale_linear</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolate</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_scale_linear</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">range</span><span class="p">,</span> <span class="nx">interpolate</span><span class="p">,</span> <span class="nx">clamp</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">output</span><span class="p">,</span>
+      <span class="nx">input</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">rescale</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">linear</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">domain</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">range</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">?</span> <span class="nx">d3_scale_polylinear</span> <span class="o">:</span> <span class="nx">d3_scale_bilinear</span><span class="p">,</span>
+        <span class="nx">uninterpolate</span> <span class="o">=</span> <span class="nx">clamp</span> <span class="o">?</span> <span class="nx">d3_uninterpolateClamp</span> <span class="o">:</span> <span class="nx">d3_uninterpolateNumber</span><span class="p">;</span>
+    <span class="nx">output</span> <span class="o">=</span> <span class="nx">linear</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">range</span><span class="p">,</span> <span class="nx">uninterpolate</span><span class="p">,</span> <span class="nx">interpolate</span><span class="p">);</span>
+    <span class="nx">input</span> <span class="o">=</span> <span class="nx">linear</span><span class="p">(</span><span class="nx">range</span><span class="p">,</span> <span class="nx">domain</span><span class="p">,</span> <span class="nx">uninterpolate</span><span class="p">,</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolate</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">scale</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">scale</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">output</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Note: requires range is coercible to number!</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">scale</span><span class="p">.</span><span class="nx">invert</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">input</span><span class="p">(</span><span class="nx">y</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">domain</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">domain</span><span class="p">;</span>
+    <span class="nx">domain</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nb">Number</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">rescale</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">range</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">range</span><span class="p">;</span>
+    <span class="nx">range</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">rescale</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">rangeRound</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">scale</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="nx">x</span><span class="p">).</span><span class="nx">interpolate</span><span class="p">(</span><span class="nx">d3</span><span class="p">.</span><span class="nx">interpolateRound</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">clamp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">clamp</span><span class="p">;</span>
+    <span class="nx">clamp</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">rescale</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">interpolate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">interpolate</span><span class="p">;</span>
+    <span class="nx">interpolate</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">rescale</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">ticks</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">d3_scale_linearTicks</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">tickFormat</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">d3_scale_linearTickFormat</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">nice</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">d3_scale_nice</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">d3_scale_linearNice</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">rescale</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="nx">scale</span><span class="p">.</span><span class="nx">copy</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">d3_scale_linear</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">range</span><span class="p">,</span> <span class="nx">interpolate</span><span class="p">,</span> <span class="nx">clamp</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">rescale</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_scale_linearRebind</span><span class="p">(</span><span class="nx">scale</span><span class="p">,</span> <span class="nx">linear</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">rebind</span><span class="p">(</span><span class="nx">scale</span><span class="p">,</span> <span class="nx">linear</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span><span class="p">,</span> <span class="s2">&quot;rangeRound&quot;</span><span class="p">,</span> <span class="s2">&quot;interpolate&quot;</span><span class="p">,</span> <span class="s2">&quot;clamp&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_scale_linearNice</span><span class="p">(</span><span class="nx">dx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">dx</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dx</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">LN10</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">floor</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">x</span> <span class="o">/</span> <span class="nx">dx</span><span class="p">)</span> <span class="o">*</span> <span class="nx">dx</span><span class="p">;</span> <span class="p">},</span>
+    <span class="nx">ceil</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">x</span> <span class="o">/</span> <span class="nx">dx</span><span class="p">)</span> <span class="o">*</span> <span class="nx">dx</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_scale_linearTickRange</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">extent</span> <span class="o">=</span> <span class="nx">d3_scaleExtent</span><span class="p">(</span><span class="nx">domain</span><span class="p">),</span>
+      <span class="nx">span</span> <span class="o">=</span> <span class="nx">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">step</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">span</span> <span class="o">/</span> <span class="nx">m</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">LN10</span><span class="p">)),</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">m</span> <span class="o">/</span> <span class="nx">span</span> <span class="o">*</span> <span class="nx">step</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Filter ticks to get closer to the desired count.</p></td><td class="code"><div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">&lt;=</span> <span class="p">.</span><span class="mi">15</span><span class="p">)</span> <span class="nx">step</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">&lt;=</span> <span class="p">.</span><span class="mi">35</span><span class="p">)</span> <span class="nx">step</span> <span class="o">*=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">&lt;=</span> <span class="p">.</span><span class="mi">75</span><span class="p">)</span> <span class="nx">step</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Round start and stop values to step interval.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nx">step</span><span class="p">)</span> <span class="o">*</span> <span class="nx">step</span><span class="p">;</span>
+  <span class="nx">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nx">step</span><span class="p">)</span> <span class="o">*</span> <span class="nx">step</span> <span class="o">+</span> <span class="nx">step</span> <span class="o">*</span> <span class="p">.</span><span class="mi">5</span><span class="p">;</span> <span class="c1">// inclusive</span>
+  <span class="nx">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">step</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">extent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_scale_linearTicks</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">range</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">d3</span><span class="p">,</span> <span class="nx">d3_scale_linearTickRange</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_scale_linearTickFormat</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="s2">&quot;,.&quot;</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">d3_scale_linearTickRange</span><span class="p">(</span><span class="nx">domain</span><span class="p">,</span> <span class="nx">m</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">LN10</span> <span class="o">+</span> <span class="p">.</span><span class="mi">01</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;f&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

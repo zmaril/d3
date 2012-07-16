@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › layout › tree.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>tree.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Node-link tree diagram using the Reingold-Tilford "tidy" algorithm</p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">tree</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">hierarchy</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">layout</span><span class="p">.</span><span class="nx">hierarchy</span><span class="p">().</span><span class="nx">sort</span><span class="p">(</span><span class="kc">null</span><span class="p">).</span><span class="nx">value</span><span class="p">(</span><span class="kc">null</span><span class="p">),</span>
+      <span class="nx">separation</span> <span class="o">=</span> <span class="nx">d3_layout_treeSeparation</span><span class="p">,</span>
+      <span class="nx">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">];</span> <span class="c1">// width, height</span>
+
+  <span class="kd">function</span> <span class="nx">tree</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nx">hierarchy</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">),</span>
+        <span class="nx">root</span> <span class="o">=</span> <span class="nx">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="kd">function</span> <span class="nx">firstWalk</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">,</span>
+          <span class="nx">layout</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">))</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">n</span><span class="p">,</span>
+            <span class="nx">firstChild</span> <span class="o">=</span> <span class="nx">children</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nx">previousChild</span><span class="p">,</span>
+            <span class="nx">ancestor</span> <span class="o">=</span> <span class="nx">firstChild</span><span class="p">,</span>
+            <span class="nx">child</span><span class="p">,</span>
+            <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">child</span> <span class="o">=</span> <span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+          <span class="nx">firstWalk</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">previousChild</span><span class="p">);</span>
+          <span class="nx">ancestor</span> <span class="o">=</span> <span class="nx">apportion</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">previousChild</span><span class="p">,</span> <span class="nx">ancestor</span><span class="p">);</span>
+          <span class="nx">previousChild</span> <span class="o">=</span> <span class="nx">child</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">d3_layout_treeShift</span><span class="p">(</span><span class="nx">node</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">midpoint</span> <span class="o">=</span> <span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="nx">firstChild</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+</span> <span class="nx">child</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">previousSibling</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">layout</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">=</span> <span class="nx">previousSibling</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">);</span>
+          <span class="nx">layout</span><span class="p">.</span><span class="nx">mod</span> <span class="o">=</span> <span class="nx">layout</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">-</span> <span class="nx">midpoint</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">layout</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">=</span> <span class="nx">midpoint</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">previousSibling</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">layout</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">=</span> <span class="nx">previousSibling</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">secondWalk</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+</span> <span class="nx">x</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">))</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nx">n</span><span class="p">;</span>
+        <span class="nx">x</span> <span class="o">+=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">secondWalk</span><span class="p">(</span><span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">x</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">apportion</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">,</span> <span class="nx">ancestor</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">previousSibling</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">vip</span> <span class="o">=</span> <span class="nx">node</span><span class="p">,</span>
+            <span class="nx">vop</span> <span class="o">=</span> <span class="nx">node</span><span class="p">,</span>
+            <span class="nx">vim</span> <span class="o">=</span> <span class="nx">previousSibling</span><span class="p">,</span>
+            <span class="nx">vom</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">children</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nx">sip</span> <span class="o">=</span> <span class="nx">vip</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">,</span>
+            <span class="nx">sop</span> <span class="o">=</span> <span class="nx">vop</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">,</span>
+            <span class="nx">sim</span> <span class="o">=</span> <span class="nx">vim</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">,</span>
+            <span class="nx">som</span> <span class="o">=</span> <span class="nx">vom</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">,</span>
+            <span class="nx">shift</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nx">vim</span> <span class="o">=</span> <span class="nx">d3_layout_treeRight</span><span class="p">(</span><span class="nx">vim</span><span class="p">),</span> <span class="nx">vip</span> <span class="o">=</span> <span class="nx">d3_layout_treeLeft</span><span class="p">(</span><span class="nx">vip</span><span class="p">),</span> <span class="nx">vim</span> <span class="o">&amp;&amp;</span> <span class="nx">vip</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">vom</span> <span class="o">=</span> <span class="nx">d3_layout_treeLeft</span><span class="p">(</span><span class="nx">vom</span><span class="p">);</span>
+          <span class="nx">vop</span> <span class="o">=</span> <span class="nx">d3_layout_treeRight</span><span class="p">(</span><span class="nx">vop</span><span class="p">);</span>
+          <span class="nx">vop</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">ancestor</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+          <span class="nx">shift</span> <span class="o">=</span> <span class="nx">vim</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+</span> <span class="nx">sim</span> <span class="o">-</span> <span class="nx">vip</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">-</span> <span class="nx">sip</span> <span class="o">+</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">vim</span><span class="p">,</span> <span class="nx">vip</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">shift</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">d3_layout_treeMove</span><span class="p">(</span><span class="nx">d3_layout_treeAncestor</span><span class="p">(</span><span class="nx">vim</span><span class="p">,</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">ancestor</span><span class="p">),</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">shift</span><span class="p">);</span>
+            <span class="nx">sip</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+            <span class="nx">sop</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="nx">sim</span> <span class="o">+=</span> <span class="nx">vim</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">;</span>
+          <span class="nx">sip</span> <span class="o">+=</span> <span class="nx">vip</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">;</span>
+          <span class="nx">som</span> <span class="o">+=</span> <span class="nx">vom</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">;</span>
+          <span class="nx">sop</span> <span class="o">+=</span> <span class="nx">vop</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">vim</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">d3_layout_treeRight</span><span class="p">(</span><span class="nx">vop</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">vop</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">thread</span> <span class="o">=</span> <span class="nx">vim</span><span class="p">;</span>
+          <span class="nx">vop</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span> <span class="o">+=</span> <span class="nx">sim</span> <span class="o">-</span> <span class="nx">sop</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">vip</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">d3_layout_treeLeft</span><span class="p">(</span><span class="nx">vom</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">vom</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">thread</span> <span class="o">=</span> <span class="nx">vip</span><span class="p">;</span>
+          <span class="nx">vom</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">mod</span> <span class="o">+=</span> <span class="nx">sip</span> <span class="o">-</span> <span class="nx">som</span><span class="p">;</span>
+          <span class="nx">ancestor</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">ancestor</span><span class="p">;</span>
+    <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Initialize temporary layout variables.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">d3_layout_treeVisitAfter</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">ancestor</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span>
+        <span class="nx">prelim</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">mod</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">change</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">shift</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">number</span><span class="o">:</span> <span class="nx">previousSibling</span> <span class="o">?</span> <span class="nx">previousSibling</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">number</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span>
+      <span class="p">};</span>
+    <span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Compute the layout using Buchheim et al.'s algorithm.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">firstWalk</span><span class="p">(</span><span class="nx">root</span><span class="p">);</span>
+    <span class="nx">secondWalk</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="o">-</span><span class="nx">root</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">prelim</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>Compute the left-most, right-most, and depth-most nodes for extents.</p></td><td class="code"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="nx">d3_layout_treeSearch</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">d3_layout_treeLeftmost</span><span class="p">),</span>
+        <span class="nx">right</span> <span class="o">=</span> <span class="nx">d3_layout_treeSearch</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">d3_layout_treeRightmost</span><span class="p">),</span>
+        <span class="nx">deep</span> <span class="o">=</span> <span class="nx">d3_layout_treeSearch</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">d3_layout_treeDeepest</span><span class="p">),</span>
+        <span class="nx">x0</span> <span class="o">=</span> <span class="nx">left</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">x1</span> <span class="o">=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">separation</span><span class="p">(</span><span class="nx">right</span><span class="p">,</span> <span class="nx">left</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">y1</span> <span class="o">=</span> <span class="nx">deep</span><span class="p">.</span><span class="nx">depth</span> <span class="o">||</span> <span class="mi">1</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Clear temporary layout variables; transform x and y.</p></td><td class="code"><div class="highlight"><pre>    <span class="nx">d3_layout_treeVisitAfter</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nx">x1</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">*</span> <span class="nx">size</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">node</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">depth</span> <span class="o">/</span> <span class="nx">y1</span> <span class="o">*</span> <span class="nx">size</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="k">delete</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">nodes</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">tree</span><span class="p">.</span><span class="nx">separation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">separation</span><span class="p">;</span>
+    <span class="nx">separation</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">tree</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">tree</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">size</span><span class="p">;</span>
+    <span class="nx">size</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">tree</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">d3_layout_hierarchyRebind</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span> <span class="nx">hierarchy</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeSeparation</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">parent</span> <span class="o">==</span> <span class="nx">b</span><span class="p">.</span><span class="nx">parent</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>function d3<em>layout</em>treeSeparationRadial(a, b) {
+  return (a.parent == b.parent ? 1 : 2) / a.depth;
+}</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_layout_treeLeft</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">thread</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeRight</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">,</span>
+      <span class="nx">n</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">?</span> <span class="nx">children</span><span class="p">[</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">thread</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeSearch</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">compare</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">child</span><span class="p">,</span>
+        <span class="nx">n</span><span class="p">,</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">compare</span><span class="p">(</span><span class="nx">child</span> <span class="o">=</span> <span class="nx">d3_layout_treeSearch</span><span class="p">(</span><span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">compare</span><span class="p">),</span> <span class="nx">node</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">node</span> <span class="o">=</span> <span class="nx">child</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeRightmost</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeLeftmost</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">a</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeDeepest</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">depth</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">depth</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeVisitAfter</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">visit</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">children</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">n</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">child</span><span class="p">,</span>
+          <span class="nx">previousChild</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+          <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+          <span class="nx">n</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">child</span> <span class="o">=</span> <span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">visit</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">previousChild</span><span class="p">);</span>
+        <span class="nx">previousChild</span> <span class="o">=</span> <span class="nx">child</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">previousSibling</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">visit</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeShift</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">shift</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">change</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">children</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">children</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">child</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">child</span> <span class="o">=</span> <span class="nx">children</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">_tree</span><span class="p">;</span>
+    <span class="nx">child</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+    <span class="nx">child</span><span class="p">.</span><span class="nx">mod</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+    <span class="nx">shift</span> <span class="o">+=</span> <span class="nx">child</span><span class="p">.</span><span class="nx">shift</span> <span class="o">+</span> <span class="p">(</span><span class="nx">change</span> <span class="o">+=</span> <span class="nx">child</span><span class="p">.</span><span class="nx">change</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeMove</span><span class="p">(</span><span class="nx">ancestor</span><span class="p">,</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">shift</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ancestor</span> <span class="o">=</span> <span class="nx">ancestor</span><span class="p">.</span><span class="nx">_tree</span><span class="p">;</span>
+  <span class="nx">node</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">_tree</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">change</span> <span class="o">=</span> <span class="nx">shift</span> <span class="o">/</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">number</span> <span class="o">-</span> <span class="nx">ancestor</span><span class="p">.</span><span class="nx">number</span><span class="p">);</span>
+  <span class="nx">ancestor</span><span class="p">.</span><span class="nx">change</span> <span class="o">+=</span> <span class="nx">change</span><span class="p">;</span>
+  <span class="nx">node</span><span class="p">.</span><span class="nx">change</span> <span class="o">-=</span> <span class="nx">change</span><span class="p">;</span>
+  <span class="nx">node</span><span class="p">.</span><span class="nx">shift</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+  <span class="nx">node</span><span class="p">.</span><span class="nx">prelim</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+  <span class="nx">node</span><span class="p">.</span><span class="nx">mod</span> <span class="o">+=</span> <span class="nx">shift</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_layout_treeAncestor</span><span class="p">(</span><span class="nx">vim</span><span class="p">,</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">ancestor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">vim</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">ancestor</span><span class="p">.</span><span class="nx">parent</span> <span class="o">==</span> <span class="nx">node</span><span class="p">.</span><span class="nx">parent</span>
+      <span class="o">?</span> <span class="nx">vim</span><span class="p">.</span><span class="nx">_tree</span><span class="p">.</span><span class="nx">ancestor</span>
+      <span class="o">:</span> <span class="nx">ancestor</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

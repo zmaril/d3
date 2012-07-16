@@ -1,0 +1,13 @@
+f | quantile.js | s | 918B | 35 | Jason Davies | jason@jasondavies.com | 1329169493 |  | Remove a few more extraneous semicolons.
+f | polylinear.js | s | 541B | 19 | Mike Bostock | mbostock@gmail.com | 1329203465 |  | Define behavior for mismatched domain & range.
+f | nice.js | s | 408B | 20 | Mike Bostock | mbostock@gmail.com | 1318381285 |  | Merge branch 'nice' of https://github.com/jasondavies/d3 into nice
+f | quantize.js | s | 720B | 29 | Jason Davies | jason@jasondavies.com | 1329169493 |  | Remove a few more extraneous semicolons.
+f | log.js | s | 2.1K | 71 | Jason Davies | jason@jasondavies.com | 1329169493 |  | Remove a few more extraneous semicolons.
+f | linear.js | s | 2.9K | 89 | Mike Bostock | mbostock@gmail.com | 1329594032 |  | Merge branch 'tweaks' of https://github.com/jasondavies/d3 into v2.8.0
+f | pow.js | s | 1.2K | 43 | Jason Davies | jason@jasondavies.com | 1329169493 |  | Remove a few more extraneous semicolons.
+f | bilinear.js | s | 212B | 7 | Mike Bostock | mbostock@gmail.com | 1304835602 |  | Refactor polylinear scales.  This commit adds a d3_uninterpolate method (private, for now), which is essentially the inverse of d3.interpolate. It's used to map a value in the domain to the unit range [0,1], which can then be passed to an interpolator.
+f | identity.js | s | 603B | 22 | Mike Bostock | mbostock@gmail.com | 1330021962 |  | Add tests for d3.scale.identity.  Also, we need to coerce the input values to numbers, since this is a quantitative scale and the ticks and tickFormat methods assume numbers.
+f | category.js | s | 1.4K | 46 | Michael Bostock | mbostock@gmail.com | 1289894722 |  | RGB-HSL and HSL-RGB conversion. New categorical colors.
+f | scale.js | s | 283B | 8 | Mike Bostock | mbostock@gmail.com | 1322080249 |  | Brushing for ordinal scales.  Since the ordinal scale's domain is not continuous, the brush extent is reported in the range rather than in the domain for ordinal scales. We'll leave it to the caller to interpret this as desired.
+f | sqrt.js | s | 70B | 3 | Michael Bostock | mbostock@gmail.com | 1288478531 |  | Break d3 into {core,scale,svg} modules.  Also enable ADVANCED_OPTIMIZATIONS for the Google compiler.
+f | ordinal.js | s | 2.4K | 74 | Mike Bostock | mbostock@gmail.com | 1329948390 |  | Fix a bug with descending rangeBands.

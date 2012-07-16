@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » examples › cartogram › cartogram.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>cartogram.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>Ratio of Obese (BMI >= 30) in U.S. Adults, CDC 2008</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">,</span> <span class="p">.</span><span class="mi">187</span><span class="p">,</span> <span class="p">.</span><span class="mi">198</span><span class="p">,</span> <span class="p">,</span> <span class="p">.</span><span class="mi">133</span><span class="p">,</span> <span class="p">.</span><span class="mi">175</span><span class="p">,</span> <span class="p">.</span><span class="mi">151</span><span class="p">,</span> <span class="p">,</span> <span class="p">.</span><span class="mi">1</span><span class="p">,</span> <span class="p">.</span><span class="mi">125</span><span class="p">,</span> <span class="p">.</span><span class="mi">171</span><span class="p">,</span> <span class="p">,</span> <span class="p">.</span><span class="mi">172</span><span class="p">,</span> <span class="p">.</span><span class="mi">133</span><span class="p">,</span> <span class="p">,</span> <span class="p">.</span><span class="mi">108</span><span class="p">,</span>
+  <span class="p">.</span><span class="mi">142</span><span class="p">,</span> <span class="p">.</span><span class="mi">167</span><span class="p">,</span> <span class="p">.</span><span class="mi">201</span><span class="p">,</span> <span class="p">.</span><span class="mi">175</span><span class="p">,</span> <span class="p">.</span><span class="mi">159</span><span class="p">,</span> <span class="p">.</span><span class="mi">169</span><span class="p">,</span> <span class="p">.</span><span class="mi">177</span><span class="p">,</span> <span class="p">.</span><span class="mi">141</span><span class="p">,</span> <span class="p">.</span><span class="mi">163</span><span class="p">,</span> <span class="p">.</span><span class="mi">117</span><span class="p">,</span> <span class="p">.</span><span class="mi">182</span><span class="p">,</span> <span class="p">.</span><span class="mi">153</span><span class="p">,</span> <span class="p">.</span><span class="mi">195</span><span class="p">,</span>
+  <span class="p">.</span><span class="mi">189</span><span class="p">,</span> <span class="p">.</span><span class="mi">134</span><span class="p">,</span> <span class="p">.</span><span class="mi">163</span><span class="p">,</span> <span class="p">.</span><span class="mi">133</span><span class="p">,</span> <span class="p">.</span><span class="mi">151</span><span class="p">,</span> <span class="p">.</span><span class="mi">145</span><span class="p">,</span> <span class="p">.</span><span class="mi">13</span><span class="p">,</span> <span class="p">.</span><span class="mi">139</span><span class="p">,</span> <span class="p">.</span><span class="mi">169</span><span class="p">,</span> <span class="p">.</span><span class="mi">164</span><span class="p">,</span> <span class="p">.</span><span class="mi">175</span><span class="p">,</span> <span class="p">.</span><span class="mi">135</span><span class="p">,</span> <span class="p">.</span><span class="mi">152</span><span class="p">,</span>
+  <span class="p">.</span><span class="mi">169</span><span class="p">,</span> <span class="p">,</span> <span class="p">.</span><span class="mi">132</span><span class="p">,</span> <span class="p">.</span><span class="mi">167</span><span class="p">,</span> <span class="p">.</span><span class="mi">139</span><span class="p">,</span> <span class="p">.</span><span class="mi">184</span><span class="p">,</span> <span class="p">.</span><span class="mi">159</span><span class="p">,</span> <span class="p">.</span><span class="mi">14</span><span class="p">,</span> <span class="p">.</span><span class="mi">146</span><span class="p">,</span> <span class="p">.</span><span class="mi">157</span><span class="p">,</span> <span class="p">,</span> <span class="p">.</span><span class="mi">139</span><span class="p">,</span> <span class="p">.</span><span class="mi">183</span><span class="p">,</span> <span class="p">.</span><span class="mi">16</span><span class="p">,</span> <span class="p">.</span><span class="mi">143</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#chart&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="mi">960</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>
+
+<span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;../data/us-states.json&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">geo</span><span class="p">.</span><span class="nx">path</span><span class="p">();</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>A thick black stroke for the exterior.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">json</span><span class="p">.</span><span class="nx">features</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="nx">path</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>A white overlay to hide interior black strokes.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">json</span><span class="p">.</span><span class="nx">features</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="nx">path</span><span class="p">);</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>The polygons, scaled!</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;grey&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">json</span><span class="p">.</span><span class="nx">features</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="nx">path</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">centroid</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">centroid</span><span class="p">(</span><span class="nx">d</span><span class="p">),</span>
+            <span class="nx">x</span> <span class="o">=</span> <span class="nx">centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nx">y</span> <span class="o">=</span> <span class="nx">centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="k">return</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="nx">x</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;scale(&quot;</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="o">+</span><span class="nx">d</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">||</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;translate(&quot;</span> <span class="o">+</span> <span class="o">-</span><span class="nx">x</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="o">-</span><span class="nx">y</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">;</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;stroke-width&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="o">+</span><span class="nx">d</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">||</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="p">});</span>
+
+<span class="p">});</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

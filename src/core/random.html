@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › random.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>random.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>An object that holds onto distributions of random variables. Currently only contains the normal distribution. As far as I can tell, random.normal exists only <a href="https://github.com/mbostock/d3/commit/a475cd5e5cef8e00a2a1ca47bb78fc16b2f2bb51">to be used for examples</a>. </p></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">random</span> <span class="o">=</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>A function which generates normal distribution with the given parameters. Reverts back to standard normal if no arguments are passed. 
+To understand the algorithm, first look at the standard normal case. The generated function keeps sampling two uniform variables from the interval [-1,1] via Math.random and a linear transformation. Then it takes the distance of the sampled variables from the origin. If the distance is less than 1, then we know the given point is within the unit circle. Once we have sampled a point from the middle of the unit circle, it uses the <a href="http://en.wikipedia.org/wiki/Marsaglia_polar_method">Marsaglia polar method</a> to generate a standard random normal variable. With some stats 101 knowledge, we can transform the standard normal variable into the desired distribution by multiplying by the deviation and adding in the mean.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">normal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mean</span><span class="p">,</span> <span class="nx">deviation</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="nx">deviation</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="nx">mean</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">r</span><span class="p">;</span>
+      <span class="k">do</span> <span class="p">{</span>
+        <span class="nx">x</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nx">y</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nx">r</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nx">r</span> <span class="o">||</span> <span class="nx">r</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">mean</span> <span class="o">+</span> <span class="nx">deviation</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="o">/</span> <span class="nx">r</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Next: <a href="/d3/src/core/number.html">core/number.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

@@ -1,0 +1,7 @@
+f | science.js | s | 5.6K | 210 | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
+f | science.lin.min.js | g | 209B |  | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
+f | science.stats.js | s | 18K | 641 | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
+f | science.min.js | g | 3.0K |  | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
+f | science.lin.js | s | 599B | 27 | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
+f | science.stats.min.js | g | 6.9K |  | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
+f | LICENSE | g | 1.4K |  | Jason Davies | jason@jasondavies.com | 1309975034 |  | Move d3.stats to external lib, science.stats.js!

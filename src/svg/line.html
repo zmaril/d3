@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › svg › line.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>line.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_line</span><span class="p">(</span><span class="nx">projection</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">d3_svg_lineX</span><span class="p">,</span>
+      <span class="nx">y</span> <span class="o">=</span> <span class="nx">d3_svg_lineY</span><span class="p">,</span>
+      <span class="nx">defined</span> <span class="o">=</span> <span class="nx">d3_true</span><span class="p">,</span>
+      <span class="nx">interpolate</span> <span class="o">=</span> <span class="nx">d3_svg_lineInterpolatorDefault</span><span class="p">,</span>
+      <span class="nx">interpolator</span> <span class="o">=</span> <span class="nx">d3_svg_lineLinear</span><span class="p">,</span>
+      <span class="nx">tension</span> <span class="o">=</span> <span class="p">.</span><span class="mi">7</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">line</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">segments</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">points</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nx">n</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="nx">d</span><span class="p">,</span>
+        <span class="nx">fx</span> <span class="o">=</span> <span class="nx">d3_functor</span><span class="p">(</span><span class="nx">x</span><span class="p">),</span>
+        <span class="nx">fy</span> <span class="o">=</span> <span class="nx">d3_functor</span><span class="p">(</span><span class="nx">y</span><span class="p">);</span>
+
+    <span class="kd">function</span> <span class="nx">segment</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="nx">interpolator</span><span class="p">(</span><span class="nx">projection</span><span class="p">(</span><span class="nx">points</span><span class="p">),</span> <span class="nx">tension</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">defined</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">points</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="o">+</span><span class="nx">fx</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">),</span> <span class="o">+</span><span class="nx">fy</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)]);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">segment</span><span class="p">();</span>
+        <span class="nx">points</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="nx">segment</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nx">segments</span><span class="p">.</span><span class="nx">length</span> <span class="o">?</span> <span class="nx">segments</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">line</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">line</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">line</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">y</span><span class="p">;</span>
+    <span class="nx">y</span> <span class="o">=</span> <span class="nx">_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">line</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">line</span><span class="p">.</span><span class="nx">defined</span>  <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">defined</span><span class="p">;</span>
+    <span class="nx">defined</span> <span class="o">=</span> <span class="nx">_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">line</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">line</span><span class="p">.</span><span class="nx">interpolate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">interpolate</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">d3_svg_lineInterpolators</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">_</span> <span class="o">+=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">d3_svg_lineInterpolatorDefault</span><span class="p">;</span>
+    <span class="nx">interpolator</span> <span class="o">=</span> <span class="nx">d3_svg_lineInterpolators</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">interpolate</span> <span class="o">=</span> <span class="nx">_</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">line</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">line</span><span class="p">.</span><span class="nx">tension</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span> <span class="nx">tension</span><span class="p">;</span>
+    <span class="nx">tension</span> <span class="o">=</span> <span class="nx">_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">line</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">line</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">line</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d3_svg_line</span><span class="p">(</span><span class="nx">d3_identity</span><span class="p">);</span>
+<span class="p">};</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>The default <code>x</code> property, which references d[0].</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineX</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>The default <code>y</code> property, which references d[1].</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineY</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">d3_svg_lineInterpolatorDefault</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-4"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-4">&#182;</a></div><p>The various interpolators supported by the <code>line</code> class.</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">d3_svg_lineInterpolators</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">map</span><span class="p">({</span>
+  <span class="s2">&quot;linear&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineLinear</span><span class="p">,</span>
+  <span class="s2">&quot;step-before&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineStepBefore</span><span class="p">,</span>
+  <span class="s2">&quot;step-after&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineStepAfter</span><span class="p">,</span>
+  <span class="s2">&quot;basis&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineBasis</span><span class="p">,</span>
+  <span class="s2">&quot;basis-open&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineBasisOpen</span><span class="p">,</span>
+  <span class="s2">&quot;basis-closed&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineBasisClosed</span><span class="p">,</span>
+  <span class="s2">&quot;bundle&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineBundle</span><span class="p">,</span>
+  <span class="s2">&quot;cardinal&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineCardinal</span><span class="p">,</span>
+  <span class="s2">&quot;cardinal-open&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineCardinalOpen</span><span class="p">,</span>
+  <span class="s2">&quot;cardinal-closed&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineCardinalClosed</span><span class="p">,</span>
+  <span class="s2">&quot;monotone&quot;</span><span class="o">:</span> <span class="nx">d3_svg_lineMonotone</span>
+<span class="p">});</span></pre></div></td></tr>
+
+
+<tr id="section-5"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-5">&#182;</a></div><p>Linear interpolation; generates "L" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">path</span> <span class="o">=</span> <span class="p">[</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]];</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">path</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-6"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-6">&#182;</a></div><p>Step interpolation; generates "H" and "V" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineStepBefore</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">path</span> <span class="o">=</span> <span class="p">[</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]];</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">path</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">])[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-7"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-7">&#182;</a></div><p>Step interpolation; generates "H" and "V" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineStepAfter</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">path</span> <span class="o">=</span> <span class="p">[</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]];</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="nx">path</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-8"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-8">&#182;</a></div><p>Open cardinal spline interpolation; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineCardinalOpen</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">4</span>
+      <span class="o">?</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span>
+      <span class="o">:</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">d3_svg_lineHermite</span><span class="p">(</span><span class="nx">points</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="nx">d3_svg_lineCardinalTangents</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">));</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-9"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-9">&#182;</a></div><p>Closed cardinal spline interpolation; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineCardinalClosed</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span>
+      <span class="o">?</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span>
+      <span class="o">:</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">d3_svg_lineHermite</span><span class="p">((</span><span class="nx">points</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nx">points</span><span class="p">),</span>
+        <span class="nx">d3_svg_lineCardinalTangents</span><span class="p">([</span><span class="nx">points</span><span class="p">[</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]]</span>
+        <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="p">[</span><span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span> <span class="nx">tension</span><span class="p">));</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-10"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-10">&#182;</a></div><p>Cardinal spline interpolation; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineCardinal</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">,</span> <span class="nx">closed</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span>
+      <span class="o">?</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span>
+      <span class="o">:</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">d3_svg_lineHermite</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span>
+        <span class="nx">d3_svg_lineCardinalTangents</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">));</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-11"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-11">&#182;</a></div><p>Hermite spline construction; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineHermite</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tangents</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">tangents</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">1</span>
+      <span class="o">||</span> <span class="p">(</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="nx">tangents</span><span class="p">.</span><span class="nx">length</span>
+      <span class="o">&amp;&amp;</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="nx">tangents</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">quad</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="nx">tangents</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nx">p0</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+      <span class="nx">t0</span> <span class="o">=</span> <span class="nx">tangents</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">t</span> <span class="o">=</span> <span class="nx">t0</span><span class="p">,</span>
+      <span class="nx">pi</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">quad</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">path</span> <span class="o">+=</span> <span class="s2">&quot;Q&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">t0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">t0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nx">p0</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nx">pi</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">tangents</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">tangents</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">pi</span><span class="p">];</span>
+    <span class="nx">pi</span><span class="o">++</span><span class="p">;</span>
+    <span class="nx">path</span> <span class="o">+=</span> <span class="s2">&quot;C&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">t0</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">t0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">tangents</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">,</span> <span class="nx">pi</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">pi</span><span class="p">];</span>
+      <span class="nx">t</span> <span class="o">=</span> <span class="nx">tangents</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="nx">path</span> <span class="o">+=</span> <span class="s2">&quot;S&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+          <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">quad</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">lp</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">pi</span><span class="p">];</span>
+    <span class="nx">path</span> <span class="o">+=</span> <span class="s2">&quot;Q&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">lp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">lp</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">path</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-12"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-12">&#182;</a></div><p>Generates tangents for a cardinal spline.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineCardinalTangents</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">tangents</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">a</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">tension</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">p0</span><span class="p">,</span>
+      <span class="nx">p1</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">p2</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">p0</span> <span class="o">=</span> <span class="nx">p1</span><span class="p">;</span>
+    <span class="nx">p1</span> <span class="o">=</span> <span class="nx">p2</span><span class="p">;</span>
+    <span class="nx">p2</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">tangents</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">a</span> <span class="o">*</span> <span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nx">a</span> <span class="o">*</span> <span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">])]);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">tangents</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-13"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-13">&#182;</a></div><p>B-spline interpolation; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineBasis</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="k">return</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">x0</span> <span class="o">=</span> <span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">y0</span> <span class="o">=</span> <span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+      <span class="nx">px</span> <span class="o">=</span> <span class="p">[</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">x0</span><span class="p">,</span> <span class="nx">x0</span><span class="p">,</span> <span class="p">(</span><span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]],</span>
+      <span class="nx">py</span> <span class="o">=</span> <span class="p">[</span><span class="nx">y0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+      <span class="nx">path</span> <span class="o">=</span> <span class="p">[</span><span class="nx">x0</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">y0</span><span class="p">];</span>
+  <span class="nx">d3_svg_lineBasisBezier</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">px</span><span class="p">,</span> <span class="nx">py</span><span class="p">);</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">px</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">px</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="nx">py</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">py</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="nx">d3_svg_lineBasisBezier</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">px</span><span class="p">,</span> <span class="nx">py</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">px</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">px</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="nx">py</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">py</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="nx">d3_svg_lineBasisBezier</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">px</span><span class="p">,</span> <span class="nx">py</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-14"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-14">&#182;</a></div><p>Open B-spline interpolation; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineBasisOpen</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="k">return</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">pi</span><span class="p">,</span>
+      <span class="nx">px</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">py</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">px</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="nx">py</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="nx">path</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier3</span><span class="p">,</span> <span class="nx">px</span><span class="p">)</span>
+    <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier3</span><span class="p">,</span> <span class="nx">py</span><span class="p">));</span>
+  <span class="o">--</span><span class="nx">i</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">px</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">px</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="nx">py</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">py</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="nx">d3_svg_lineBasisBezier</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">px</span><span class="p">,</span> <span class="nx">py</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-15"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-15">&#182;</a></div><p>Closed B-spline interpolation; generates "C" commands.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineBasisClosed</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">path</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">m</span> <span class="o">=</span> <span class="nx">n</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="nx">pi</span><span class="p">,</span>
+      <span class="nx">px</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">py</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span> <span class="o">%</span> <span class="nx">n</span><span class="p">];</span>
+    <span class="nx">px</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="nx">py</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="nx">path</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier3</span><span class="p">,</span> <span class="nx">px</span><span class="p">),</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span>
+    <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier3</span><span class="p">,</span> <span class="nx">py</span><span class="p">)</span>
+  <span class="p">];</span>
+  <span class="o">--</span><span class="nx">i</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">pi</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span> <span class="o">%</span> <span class="nx">n</span><span class="p">];</span>
+    <span class="nx">px</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">px</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="nx">py</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="nx">py</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">pi</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="nx">d3_svg_lineBasisBezier</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">px</span><span class="p">,</span> <span class="nx">py</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_svg_lineBundle</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">tension</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">x0</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">y0</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+      <span class="nx">dx</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">n</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">,</span>
+      <span class="nx">dy</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">n</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">y0</span><span class="p">,</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">p</span><span class="p">,</span>
+      <span class="nx">t</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">p</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">/</span> <span class="nx">n</span><span class="p">;</span>
+    <span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">tension</span> <span class="o">*</span> <span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">tension</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nx">x0</span> <span class="o">+</span> <span class="nx">t</span> <span class="o">*</span> <span class="nx">dx</span><span class="p">);</span>
+    <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">tension</span> <span class="o">*</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">tension</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nx">y0</span> <span class="o">+</span> <span class="nx">t</span> <span class="o">*</span> <span class="nx">dy</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">d3_svg_lineBasis</span><span class="p">(</span><span class="nx">points</span><span class="p">);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-16"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-16">&#182;</a></div><p>Returns the dot product of the given four-element vectors.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="nx">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="nx">b</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-17"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-17">&#182;</a></div><p>Matrix to transform basis (b-spline) control points to bezier
+control points. Derived from FvD 11.2.8.</p></td><td class="code"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">d3_svg_lineBasisBezier1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="nx">d3_svg_lineBasisBezier2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="nx">d3_svg_lineBasisBezier3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">];</span></pre></div></td></tr>
+
+
+<tr id="section-18"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-18">&#182;</a></div><p>Pushes a "C" Bézier curve onto the specified path array, given the
+two specified four-element arrays which define the control points.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineBasisBezier</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">path</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+      <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier1</span><span class="p">,</span> <span class="nx">x</span><span class="p">),</span>
+      <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier1</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span>
+      <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier2</span><span class="p">,</span> <span class="nx">x</span><span class="p">),</span>
+      <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier2</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span>
+      <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier3</span><span class="p">,</span> <span class="nx">x</span><span class="p">),</span>
+      <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nx">d3_svg_lineDot4</span><span class="p">(</span><span class="nx">d3_svg_lineBasisBezier3</span><span class="p">,</span> <span class="nx">y</span><span class="p">));</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-19"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-19">&#182;</a></div><p>Computes the slope from points p0 to p1.</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineSlope</span><span class="p">(</span><span class="nx">p0</span><span class="p">,</span> <span class="nx">p1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-20"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-20">&#182;</a></div><p>Compute three-point differences for the given points.
+http://en.wikipedia.org/wiki/Cubic<em>Hermite</em>spline#Finite_difference</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineFiniteDifferences</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">m</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">p0</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">p1</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+      <span class="nx">d</span> <span class="o">=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">d3_svg_lineSlope</span><span class="p">(</span><span class="nx">p0</span><span class="p">,</span> <span class="nx">p1</span><span class="p">);</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">d</span> <span class="o">+</span> <span class="p">(</span><span class="nx">d</span> <span class="o">=</span> <span class="nx">d3_svg_lineSlope</span><span class="p">(</span><span class="nx">p0</span> <span class="o">=</span> <span class="nx">p1</span><span class="p">,</span> <span class="nx">p1</span> <span class="o">=</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]));</span>
+  <span class="p">}</span>
+  <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">d</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">m</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-21"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-21">&#182;</a></div><p>Interpolates the given points using Fritsch-Carlson Monotone cubic Hermite
+interpolation. Returns an array of tangent vectors. For details, see
+http://en.wikipedia.org/wiki/Monotone<em>cubic</em>interpolation</p></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">d3_svg_lineMonotoneTangents</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">tangents</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">d</span><span class="p">,</span>
+      <span class="nx">a</span><span class="p">,</span>
+      <span class="nx">b</span><span class="p">,</span>
+      <span class="nx">s</span><span class="p">,</span>
+      <span class="nx">m</span> <span class="o">=</span> <span class="nx">d3_svg_lineFiniteDifferences</span><span class="p">(</span><span class="nx">points</span><span class="p">),</span>
+      <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-22"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-22">&#182;</a></div><p>The first two steps are done by computing finite-differences:
+1. Compute the slopes of the secant lines between successive points.
+2. Initialize the tangents at every point as the average of the secants.</p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-23"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-23">&#182;</a></div><p>Then, for each segment…</p></td><td class="code"><div class="highlight"><pre>  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span> <span class="o">=</span> <span class="nx">d3_svg_lineSlope</span><span class="p">(</span><span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">points</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span></pre></div></td></tr>
+
+
+<tr id="section-24"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-24">&#182;</a></div><ol>
+<li>If two successive yk = y{k + 1} are equal (i.e., d is zero), then set
+mk = m{k + 1} = 0 as the spline connecting these points must be flat to
+preserve monotonicity. Ignore step 4 and 5 for those k.</li>
+</ol></td><td class="code"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="nx">e</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">m</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></pre></div></td></tr>
+
+
+<tr id="section-25"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-25">&#182;</a></div><ol>
+<li>Let ak = mk / dk and bk = m{k + 1} / dk.</li>
+</ol></td><td class="code"><div class="highlight"><pre>      <span class="nx">a</span> <span class="o">=</span> <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">/</span> <span class="nx">d</span><span class="p">;</span>
+      <span class="nx">b</span> <span class="o">=</span> <span class="nx">m</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nx">d</span><span class="p">;</span></pre></div></td></tr>
+
+
+<tr id="section-26"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-26">&#182;</a></div><ol>
+<li>Prevent overshoot and ensure monotonicity by restricting the
+magnitude of vector <ak, bk> to a circle of radius 3.</li>
+</ol></td><td class="code"><div class="highlight"><pre>      <span class="nx">s</span> <span class="o">=</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">s</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">s</span> <span class="o">=</span> <span class="nx">d</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span>
+        <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">s</span> <span class="o">*</span> <span class="nx">a</span><span class="p">;</span>
+        <span class="nx">m</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">s</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-27"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-27">&#182;</a></div><p>Compute the normalized tangent vector from the slopes. Note that if x is
+not monotonic, it's possible that the slope will be infinite, so we protect
+against NaN by setting the coordinate to zero.</p></td><td class="code"><div class="highlight"><pre>  <span class="nx">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">s</span> <span class="o">=</span> <span class="p">(</span><span class="nx">points</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">j</span><span class="p">,</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nx">points</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">*</span> <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+    <span class="nx">tangents</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">s</span> <span class="o">||</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">m</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">*</span> <span class="nx">s</span> <span class="o">||</span> <span class="mi">0</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">tangents</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_svg_lineMonotone</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">points</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span>
+      <span class="o">?</span> <span class="nx">d3_svg_lineLinear</span><span class="p">(</span><span class="nx">points</span><span class="p">)</span>
+      <span class="o">:</span> <span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">d3_svg_lineHermite</span><span class="p">(</span><span class="nx">points</span><span class="p">,</span> <span class="nx">d3_svg_lineMonotoneTangents</span><span class="p">(</span><span class="nx">points</span><span class="p">));</span>
+<span class="p">}</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

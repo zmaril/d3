@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » test › core › selection-filter-test.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>selection-filter-test.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;../env&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;vows&quot;</span><span class="p">),</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;assert&quot;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">suite</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;selection.filter&quot;</span><span class="p">);</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s2">&quot;selectAll(div)&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">).</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="nx">d</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">return</span> <span class="p">[</span><span class="nx">d</span><span class="p">,</span> <span class="nx">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span> <span class="p">})</span>
+        <span class="p">.</span><span class="nx">enter</span><span class="p">().</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;preserves matching elements&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">i</span> <span class="o">===</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="nx">span</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="nx">span</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;removes non-matching elements&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}));</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">span</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">span</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;preserves data&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">__data__</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">__data__</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;preserves grouping&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;preserves parent node&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">parentNode</span> <span class="o">===</span> <span class="nx">span</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">parentNode</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">parentNode</span> <span class="o">===</span> <span class="nx">span</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">parentNode</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;does not preserve index&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">indexes</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="nx">indexes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">indexes</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;ignores null nodes&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">span</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">);</span>
+      <span class="nx">span</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="nx">span</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;can be specified as a selector&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">span</span><span class="p">.</span><span class="nx">classed</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+      <span class="kd">var</span> <span class="nx">some</span> <span class="o">=</span> <span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="s2">&quot;.foo&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">some</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;returns a new selection&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">span</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">span</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">})</span> <span class="o">===</span> <span class="nx">span</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="nx">module</span><span class="p">);</span>
+
+</pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html><head><title>zmaril/d3 » src › core › ease.js
+
+</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Docco">
+<link rel="stylesheet" media="all" href="../../stylesheets/docco.min.css" />
+
+
+</head>
+<body>
+<div id="container">
+<div id="background"></div>
+<table cellpadding="0" cellspacing="0">
+<thead><tr><th class="docs"><a id="home" href="../../index.html"></a><h1>ease.js</h1></th><th class="code"></th></tr></thead>
+<tbody>
+
+
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * TERMS OF USE - EASING EQUATIONS</span>
+<span class="cm"> *</span>
+<span class="cm"> * Open source under the BSD License.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2001 Robert Penner</span>
+<span class="cm"> * All rights reserved.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<span class="cm"> * modification, are permitted provided that the following conditions are met:</span>
+<span class="cm"> *</span>
+<span class="cm"> * - Redistributions of source code must retain the above copyright notice, this</span>
+<span class="cm"> *   list of conditions and the following disclaimer.</span>
+<span class="cm"> *</span>
+<span class="cm"> * - Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="cm"> *   this list of conditions and the following disclaimer in the documentation</span>
+<span class="cm"> *   and/or other materials provided with the distribution.</span>
+<span class="cm"> *</span>
+<span class="cm"> * - Neither the name of the author nor the names of contributors may be used to</span>
+<span class="cm"> *   endorse or promote products derived from this software without specific</span>
+<span class="cm"> *   prior written permission.</span>
+<span class="cm"> *</span>
+<span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="cm"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="cm"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE</span>
+<span class="cm"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="cm"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="cm"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="cm"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="cm"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="cm"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="cm"> * POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">d3_ease_quad</span> <span class="o">=</span> <span class="nx">d3_ease_poly</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+    <span class="nx">d3_ease_cubic</span> <span class="o">=</span> <span class="nx">d3_ease_poly</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+    <span class="nx">d3_ease_default</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_identity</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">d3_ease</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">map</span><span class="p">({</span>
+  <span class="nx">linear</span><span class="o">:</span> <span class="nx">d3_ease_default</span><span class="p">,</span>
+  <span class="nx">poly</span><span class="o">:</span> <span class="nx">d3_ease_poly</span><span class="p">,</span>
+  <span class="nx">quad</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_quad</span><span class="p">;</span> <span class="p">},</span>
+  <span class="nx">cubic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_cubic</span><span class="p">;</span> <span class="p">},</span>
+  <span class="nx">sin</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_sin</span><span class="p">;</span> <span class="p">},</span>
+  <span class="nx">exp</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_exp</span><span class="p">;</span> <span class="p">},</span>
+  <span class="nx">circle</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_circle</span><span class="p">;</span> <span class="p">},</span>
+  <span class="nx">elastic</span><span class="o">:</span> <span class="nx">d3_ease_elastic</span><span class="p">,</span>
+  <span class="nx">back</span><span class="o">:</span> <span class="nx">d3_ease_back</span><span class="p">,</span>
+  <span class="nx">bounce</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_bounce</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">d3_ease_mode</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">map</span><span class="p">({</span>
+  <span class="s2">&quot;in&quot;</span><span class="o">:</span> <span class="nx">d3_ease_identity</span><span class="p">,</span>
+  <span class="s2">&quot;out&quot;</span><span class="o">:</span> <span class="nx">d3_ease_reverse</span><span class="p">,</span>
+  <span class="s2">&quot;in-out&quot;</span><span class="o">:</span> <span class="nx">d3_ease_reflect</span><span class="p">,</span>
+  <span class="s2">&quot;out-in&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d3_ease_reflect</span><span class="p">(</span><span class="nx">d3_ease_reverse</span><span class="p">(</span><span class="nx">f</span><span class="p">));</span> <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">d3</span><span class="p">.</span><span class="nx">ease</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">),</span>
+      <span class="nx">t</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">name</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">m</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="nx">name</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="s2">&quot;in&quot;</span><span class="p">;</span>
+  <span class="nx">t</span> <span class="o">=</span> <span class="nx">d3_ease</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="o">||</span> <span class="nx">d3_ease_default</span><span class="p">;</span>
+  <span class="nx">m</span> <span class="o">=</span> <span class="nx">d3_ease_mode</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="o">||</span> <span class="nx">d3_ease_identity</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">d3_ease_clamp</span><span class="p">(</span><span class="nx">m</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">))));</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_clamp</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="nx">t</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="nx">f</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_reverse</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="nx">f</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">t</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_reflect</span><span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="nx">t</span> <span class="o">&lt;</span> <span class="p">.</span><span class="mi">5</span> <span class="o">?</span> <span class="nx">f</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nx">t</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="nx">f</span><span class="p">(</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">t</span><span class="p">)));</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_identity</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_poly</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_sin</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_exp</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="nx">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_circle</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nx">t</span> <span class="o">*</span> <span class="nx">t</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_elastic</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">s</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="nx">p</span> <span class="o">=</span> <span class="mf">0.45</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">p</span> <span class="o">/</span> <span class="mi">4</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">else</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">p</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">asin</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nx">a</span><span class="p">);</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="o">-</span><span class="nx">t</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">((</span><span class="nx">t</span> <span class="o">-</span> <span class="nx">s</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="nx">p</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_back</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">s</span><span class="p">)</span> <span class="nx">s</span> <span class="o">=</span> <span class="mf">1.70158</span><span class="p">;</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">t</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">*</span> <span class="p">((</span><span class="nx">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">-</span> <span class="nx">s</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">d3_ease_bounce</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">2.75</span> <span class="o">?</span> <span class="mf">7.5625</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">*</span> <span class="nx">t</span>
+      <span class="o">:</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">/</span> <span class="mf">2.75</span> <span class="o">?</span> <span class="mf">7.5625</span> <span class="o">*</span> <span class="p">(</span><span class="nx">t</span> <span class="o">-=</span> <span class="mf">1.5</span> <span class="o">/</span> <span class="mf">2.75</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">+</span> <span class="p">.</span><span class="mi">75</span>
+      <span class="o">:</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="mf">2.5</span> <span class="o">/</span> <span class="mf">2.75</span> <span class="o">?</span> <span class="mf">7.5625</span> <span class="o">*</span> <span class="p">(</span><span class="nx">t</span> <span class="o">-=</span> <span class="mf">2.25</span> <span class="o">/</span> <span class="mf">2.75</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">+</span> <span class="p">.</span><span class="mi">9375</span>
+      <span class="o">:</span> <span class="mf">7.5625</span> <span class="o">*</span> <span class="p">(</span><span class="nx">t</span> <span class="o">-=</span> <span class="mf">2.625</span> <span class="o">/</span> <span class="mf">2.75</span><span class="p">)</span> <span class="o">*</span> <span class="nx">t</span> <span class="o">+</span> <span class="p">.</span><span class="mi">984375</span><span class="p">;</span>
+<span class="p">}</span></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Next: <a href="/d3/src/core/event.html">core/event.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+</tbody>
+</table>
+</div>
+
+</body>
+<script>docas={repo:"zmaril/d3",depth:2}</script>
+<script>document.write('<script src=' + ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js' : 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')+'><\\/script>')</script>
+<script src="http://baoshan.github.com/moment/min/moment.min.js"></script>
+<script src="../../javascript/docco.min.js"></script>
+</html>
