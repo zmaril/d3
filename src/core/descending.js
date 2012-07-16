@@ -1,6 +1,7 @@
 //The opposite of the d3.ascending ordering function. 
  
 //An alternative implementation for this could have been the following: 
+// 
 //              d3.descending= function(a,b){
 //                return -d3.ascending(a,b);
 //              }
