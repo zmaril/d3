@@ -1,65 +1,65 @@
-d | clock |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333685793 |  | Bring clock example up-to-date
-d | partition |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333730221 |  | Bring partition example up-to-date
 d | zoom |  | 2 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333773380 |  | Bring zoom example up-to-date
+d | partition |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333730221 |  | Bring partition example up-to-date
+d | clock |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333685793 |  | Bring clock example up-to-date
 d | marker |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333729340 |  | Bring marker example up-to-date
 d | bubble |  | 3 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
-d | calendar |  | 8 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | great-arc |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333711177 |  | Bring great-arc example up-to-date
+d | calendar |  | 8 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | showreel |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333762009 |  | Bring showreel example up-to-date
 d | cluster |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333685971 |  | Bring cluster example up-to-date
 d | marimekko |  | 2 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333729249 |  | Bring marimekko example up-to-date
-d | line |  | 4 items |  | Mike Bostock | mbostock@gmail.com | 1333561462 |  | Bring area & line examples up-to-date.  Related #565.
 d | hull |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333728640 |  | Bring hull example up-to-date
+d | line |  | 4 items |  | Mike Bostock | mbostock@gmail.com | 1333561462 |  | Bring area & line examples up-to-date.  Related #565.
+d | population |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333730544 |  | Bring population example up-to-date
 d | bullet |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | transform |  | 2 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333764238 |  | Bring transform example up-to-date
-d | population |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333730544 |  | Bring population example up-to-date
 f | button.css | g | 930B |  | Mike Bostock | mbostock@gmail.com | 1299993247 |  | Expose d3.layout.hierarchy.sort.  Also, add nifty transitions to the sunburst example.
-d | chord |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | choropleth |  | 6 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
-d | custom |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333686622 |  | Bring custom example up-to-date
 d | cartogram |  | 9 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
+d | custom |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333686622 |  | Bring custom example up-to-date
+d | chord |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | voroboids |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333773214 |  | Bring voroboids examples up-to-date
 d | mouse |  | 1 items |  | Jason Davies | jason@jasondavies.com | 1329693630 |  | Fix d3 reference.
-d | mercator |  | 3 items |  | Jason Davies | jason@jasondavies.com | 1336688611 |  | Add missing semicolon to mercator example.
 d | hello-world |  | 14 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
+d | mercator |  | 3 items |  | Jason Davies | jason@jasondavies.com | 1336688611 |  | Add missing semicolon to mercator example.
+d | spline |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333762535 |  | Bring spline example up-to-date
 d | albers |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
 d | bonne |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
-d | spline |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333762535 |  | Bring spline example up-to-date
 d | touch |  | 1 items |  | Jason Davies | jason@jasondavies.com | 1329682687 |  | Merge branch 'master' into mouse  Conflicts: 	Makefile 	d3.min.js 	d3.v2.js 	examples/zoom/zoom.html
-d | sizzle |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
 d | hive |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333728436 |  | Bring hive examples up-to-date
-d | tree |  | 7 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333772993 |  | Bring tree examples up-to-date
 d | crimea |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
+d | sizzle |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
+d | tree |  | 7 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333772993 |  | Bring tree examples up-to-date
 d | histogram |  | 2 items |  | Carlos Scheidegger | cscheid@research.att.com | 1331076960 |  | fix typo on path
 d | rollup |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333761664 |  | Bring rollup example up-to-date
 d | stream |  | 7 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333763332 |  | Bring stream examples up-to-date
 d | pie |  | 2 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333730389 |  | Bring pie examples up-to-date
 d | azimuthal |  | 3 items |  | Zack Maril | zack@zacharymaril.com | 1337290597 |  | Starting up the whole documenting process
-d | node-canvas |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
 d | force |  | 12 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333711125 |  | Bring force examples up-to-date
+d | node-canvas |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
 d | voronoi |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333773266 |  | Bring voronoi example up-to-date
 d | sort |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333762410 |  | Bring sort example up-to-date
-d | drag |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333709392 |  | Bring drag example up-to-date
-d | area |  | 4 items |  | Mike Bostock | mbostock@gmail.com | 1333561462 |  | Bring area & line examples up-to-date.  Related #565.
 d | bar |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
-d | splom |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333762775 |  | Bring splom example up-to-date
+d | area |  | 4 items |  | Mike Bostock | mbostock@gmail.com | 1333561462 |  | Bring area & line examples up-to-date.  Related #565.
+d | drag |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333709392 |  | Bring drag example up-to-date
 d | symbol-map |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329602641 |  | Consolidate everything into d3.v2.js.  Rather than producing separate files for each module, the default build now produces a single file. This should encourage better page-load performance as the files were relatively small. Also, it's easier to deal with only one file rather than many, especially if you're not quite sure what the dependencies are. You may still create minimized builds, if you don't want every feature.  This commit also demotes the chart components to the examples directory, rather than keeping them as part of the core library. As always, D3 is not a charting library, and these were ever only intended to serve as examples.
 d | data |  | 17 items |  | Mike Bostock | mbostock@gmail.com | 1318872477 |  | Add state names.
 d | parallel |  | 2 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333729829 |  | Bring parallel example up-to-date
+d | splom |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333762775 |  | Bring splom example up-to-date
 d | treemap |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333773046 |  | Bring treemap examples up-to-date
-d | quadtree |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333761447 |  | Bring quadtree example up-to-date
 d | pack |  | 3 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333729605 |  | Bring pack example up-to-date
 d | superformula |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333763996 |  | Bring superformula examples up-to-date
+d | quadtree |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333761447 |  | Bring quadtree example up-to-date
 d | contour |  | 1 items |  | Mike Bostock | mbostock@gmail.com | 1329849075 |  | Add selection.datum. Fixes #489.
-d | brush |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | axis |  | 6 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | qq |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333761343 |  | Bring qq example up-to-date
-d | donut |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333709231 |  | Bring donut example up-to-date
-d | box |  | 3 items |  | Mike Bostock | mbostock@gmail.com | 1334525452 |  | Fix two errors in examples.
+d | brush |  | 5 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
 d | bundle |  | 7 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333708942 |  | Follow coding conventions
+d | box |  | 3 items |  | Mike Bostock | mbostock@gmail.com | 1334525452 |  | Fix two errors in examples.
+d | donut |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333709231 |  | Bring donut example up-to-date
 d | delaunay |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333686894 |  | Bring delaunay example up-to-date
-d | moire |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333729531 |  | Bring moire example up-to-date
-d | zoom-pan |  | 2 items |  | Mike Bostock | mbostock@gmail.com | 1329686896 |  | Merge branch 'zoom-extent' into v2.8.0
-d | horizon |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333728572 |  | Bring horizon example up-to-date
 d | dot |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333709338 |  | Bring dot example up-to-date
+d | moire |  | 1 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333729531 |  | Bring moire example up-to-date
+d | horizon |  | 4 items |  | Kristofer Monisit | kmonisit@gmail.com | 1333728572 |  | Bring horizon example up-to-date
+d | zoom-pan |  | 2 items |  | Mike Bostock | mbostock@gmail.com | 1329686896 |  | Merge branch 'zoom-extent' into v2.8.0
 d | kde |  | 3 items |  | Mike Bostock | mbostock@gmail.com | 1334525452 |  | Fix two errors in examples.

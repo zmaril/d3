@@ -1,13 +1,13 @@
-d | geom |  | 7 items |  | Mike Bostock | mbostock@gmail.com | 1327876154 |  | Fix polygon.centroid for open polygons.  The implementation assumed closed polygons, but it should work on either. This is a partial fix for #443.
-d | layout |  | 13 items |  | Jason Davies | jason@jasondavies.com | 1336744188 |  | Fix dangling global in d3.layout.pie.
 f | package.js | s | 749B | 21 | Mike Bostock | mbostock@gmail.com | 1336584562 |  | Fix commit 637896b to use src/package.js.
 d | svg |  | 14 items |  | Mike Bostock | mbostock@gmail.com | 1334799022 |  | Fix background events for d3.svg.brush.  This reverts previous IE9 fixes to @4f55282.
+d | geom |  | 7 items |  | Mike Bostock | mbostock@gmail.com | 1327876154 |  | Fix polygon.centroid for open polygons.  The implementation assumed closed polygons, but it should work on either. This is a partial fix for #443.
+d | layout |  | 13 items |  | Jason Davies | jason@jasondavies.com | 1336744188 |  | Fix dangling global in d3.layout.pie.
 f | end.js | s | 125B | 3 | Zack Maril | zack@zacharymaril.com | 1337290597 |  | Starting up the whole documenting process
+d | compat |  | 2 items |  | Zack Maril | zack@zacharymaril.com | 1337973900 |  | Get rid of poor commit message
 d | scale |  | 13 items |  | Mike Bostock | mbostock@gmail.com | 1330021962 |  | Add tests for d3.scale.identity.  Also, we need to coerce the input values to numbers, since this is a quantitative scale and the ticks and tickFormat methods assume numbers.
 f | start.js | s | 316B | 4 | Zack Maril | zack@zacharymaril.com | 1337470799 |  | Testing out if it can successfully trace through the file path
-d | compat |  | 2 items |  | Zack Maril | zack@zacharymaril.com | 1337973900 |  | Get rid of poor commit message
-d | csv |  | 3 items |  | Mike Bostock | mbostock@gmail.com | 1313357844 |  | Add test for csv.parse.  Woot, caught my first bug!
 d | geo |  | 12 items |  | Mike Bostock | mbostock@gmail.com | 1331943452 |  | Use d3_identity instead of Object.
 d | behavior |  | 3 items |  | Michael Meisel | michael@thousandeyes.com | 1333069227 |  | Capture click events in zoom behavior to ensure they're cancelled.
 d | time |  | 14 items |  | Jason Davies | jason@jasondavies.com | 1333458044 |  | Remove stray global "d3_time_weekdays".
-d | core |  | 93 items |  | Zack Maril | zack@zacharymaril.com | 1342403841 |  | Did not know the round function did what it did.
+d | csv |  | 3 items |  | Mike Bostock | mbostock@gmail.com | 1313357844 |  | Add test for csv.parse.  Woot, caught my first bug!
+d | core |  | 93 items |  | Zack Maril | zack@zacharymaril.com | 1342448890 |  | Starting in on XHR stuff

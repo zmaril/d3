@@ -1,3 +1,3 @@
-f | format.js | s | 300B | 11 | Michael Bostock | mbostock@gmail.com | 1288934841 |  | Add CSV module.  It's not part of the standard build, but it's easy to pull in if you want to use it.
 f | csv.js | s | 130B | 5 | Michael Bostock | mbostock@gmail.com | 1288935223 |  | d3.csv is now a function, like d3.json.
 f | parse.js | s | 1.8K | 66 | Mike Bostock | mbostock@gmail.com | 1313357844 |  | Add test for csv.parse.  Woot, caught my first bug!
+f | format.js | s | 300B | 11 | Michael Bostock | mbostock@gmail.com | 1288934841 |  | Add CSV module.  It's not part of the standard build, but it's easy to pull in if you want to use it.

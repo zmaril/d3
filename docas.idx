@@ -1,4 +1,4 @@
-d | src |  | 13 items |  | Zack Maril | zack@zacharymaril.com | 1342403841 |  | Did not know the round function did what it did.
+d | src |  | 13 items |  | Zack Maril | zack@zacharymaril.com | 1342448890 |  | Starting in on XHR stuff
 f | README.md | s | 774B | 9 | Zack Maril | zack@zacharymaril.com | 1340940364 |  | Updating
 f | Makefile | g | 4.9K |  | webmonarch | eric@collectivegenius.net | 1335457655 |  | Removing make prepare target.
 f | index.js | s | 629B | 17 | Mike Bostock | mbostock@gmail.com | 1333083615 |  | Fix index and package specification.
@@ -6,10 +6,10 @@ d | examples |  | 65 items |  | Zack Maril | zack@zacharymaril.com | 1337290597 
 d | docs |  | 170 items |  | Zack Maril | zack@zacharymaril.com | 1337683605 |  | Added in ascending, descending, mean comments
 d | lib |  | 8 items |  | Jason Davies | jason@jasondavies.com | 1315607879 |  | Update science.js to 1.7.0: fix science.stats.kde.
 f | LICENSE | g | 1.4K |  | Mike Bostock | mbostock@gmail.com | 1329687309 |  | Update copyright year.
+f | package.json | g | 732B |  | Mike Bostock | mbostock@gmail.com | 1337187438 |  | Merge branch '2.9.2'
 d | test |  | 12 items |  | Mike Bostock | mbostock@gmail.com | 1335417482 |  | Fix another rounding bug with SI-format.  Turns out 1400 * .001 is 1.4000000000000001, but 1400 / 1000 is 1.4.
 d | docas |  | 1 items |  | Zack Maril | zack@zacharymaril.com | 1339422070 |  | Putting the files in the correct places
-f | package.json | g | 732B |  | Mike Bostock | mbostock@gmail.com | 1337187438 |  | Merge branch '2.9.2'
 f | d3.v2.js | s | 248K | 8244 | Mike Bostock | mbostock@gmail.com | 1337187438 |  | Merge branch '2.9.2'
 f | d3.v2.min.js | g | 108K |  | Mike Bostock | mbostock@gmail.com | 1337187438 |  | Merge branch '2.9.2'
-f | doc | g | 49B |  | Zack Maril | zack@zacharymaril.com | 1337290597 |  | Starting up the whole documenting process
 f | index-browserify.js | s | 40B | 2 | Lachèze Alexandre | alexandre.lacheze@gmail.com | 1335882958 |  | add browserify compatibility
+f | doc | g | 49B |  | Zack Maril | zack@zacharymaril.com | 1337290597 |  | Starting up the whole documenting process

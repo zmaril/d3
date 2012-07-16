@@ -16,7 +16,17 @@
 <tbody>
 
 
-<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">xhr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">mime</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+<tr id="section-1"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-1">&#182;</a></div><p>A method that creates an xhr request, and, using the supplied
+arguments, sends the request. Not too complicated beyond just calling
+the <code>XMLHttpRequest</code> API and using status codes correctly. Not used
+all that much outside of the library. It's been used to implement
+other json requests, as we'll see next.</p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+
+
+<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Example:</p>
+
+<pre><code>         d3.xhr("file.html","text/html", parseHTMLCallback)
+</code></pre></td><td class="code"><div class="highlight"><pre><span class="nx">d3</span><span class="p">.</span><span class="nx">xhr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">mime</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">req</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">;</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="nx">callback</span> <span class="o">=</span> <span class="nx">mime</span><span class="p">,</span> <span class="nx">mime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">mime</span> <span class="o">&amp;&amp;</span> <span class="nx">req</span><span class="p">.</span><span class="nx">overrideMimeType</span><span class="p">)</span> <span class="nx">req</span><span class="p">.</span><span class="nx">overrideMimeType</span><span class="p">(</span><span class="nx">mime</span><span class="p">);</span>
@@ -32,7 +42,7 @@
 <span class="p">};</span></pre></div></td></tr>
 
 
-<tr id="section-2"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-2">&#182;</a></div><p>Next: <a href="/d3/src/core/text.html">core/text.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
+<tr id="section-3"><td class="docs"><div class="pilwrap"><a class="pilcrow" href="#section-3">&#182;</a></div><p>Next: <a href="/d3/src/core/text.html">core/text.js</a></p></td><td class="code"><div class="highlight"><pre></pre></div></td></tr>
 
 </tbody>
 </table>
