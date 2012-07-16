@@ -4,7 +4,7 @@
 //           
 // 
 //              var ob = {a:1, b:2, c:3}
-//              d3.keys(ob) == ["a","b","c"]
+//              d3.keys(ob)// ["a","b","c"]
 d3.keys = function(map) {
   var keys = [];
   for (var key in map) keys.push(key);
