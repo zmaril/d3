@@ -9,7 +9,7 @@
 //Be careful with decimal step sizes. Never trust the precision of a
 //floating number to be exactly what you expect it to be. d3 does the
 //right thing and multiples and divides by magnitudes to calculate the
-//values from integers. Still, Floating point bugs can be subtle.
+//values from integers. Still, floating point bugs can be subtle.
 // 
 //         d3.range(3,4,0.1) // [3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9]
 d3.range = function(start, stop, step) {
@@ -31,7 +31,7 @@ d3.range = function(start, stop, step) {
   return range;
 };
 
-//This calculates the order of magnitude needed to be able to manipulate the floating point values safely. So `f(1)->1, f(0.1)-> 10, f(0.2)->10,f(Math.PI-3)->100000000000000000`. 
+//This calculates the order of magnitude needed to be able to manipulate the floating point values safely. So `f(1)->1, f(0.1)-> 10, f(0.2)->10,f(Math.PI-3)->100000000000000000`. That last one with Pi? Hitting the limit of floating point precison in javascript. 
 function d3_range_integerScale(x) {
   var k = 1;
   while (x * k % 1) k *= 10;
